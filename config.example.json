@@ -1,0 +1,20 @@
+{
+    "discord_token": "DISCORD TOKEN GOES HERE",
+    "module_blacklist": [],
+    "prefix": "YOUR PREFIX GOES HERE MEOW",
+    "myanimelist_username": "immaweeb",
+    "myanimelist_password": "lol",
+    "description": "A DESCRIPTION IS YOU",
+    "dbots_token": "FOR USE ON bots.discord.pw",
+    "weebsh_token": "Token for weeb.sh, only supports Wolke tokens (leave out Wolke in the token entry here)",
+    "biography": {
+        "title": "Title goes here :3",
+        "description": "Kon kon this is a description kon",
+        "fields": [
+            {
+                "name": "Floof level",
+                "value": 9001
+            }
+        ]
+    }
+}

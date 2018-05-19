@@ -1,0 +1,7 @@
+-e git+https://github.com/Rapptz/discord.py@rewrite#egg=discord
+-e git+https://gitlab.com/n303p4/kitsuchan#egg=kitsuchan
+requests
+webcolors
+beautifulsoup4
+html2text
+pytz
