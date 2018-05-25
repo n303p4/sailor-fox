@@ -10,6 +10,8 @@ from sailor import commands, exceptions
 @commands.command(name="sh", owner_only=True)
 async def shell(ctx, *args):
     """Execute a system command. Bot owner only."""
+    if not args:
+        raise exceptions.UserInputError("No shell command given.")
     process = subprocess.Popen(
         args,
         universal_newlines=True,
@@ -19,6 +21,7 @@ async def shell(ctx, *args):
     try:
         output, _ = process.communicate(timeout=8)
         process.terminate()
+        output = ctx.f.codeblock(output)
     except subprocess.TimeoutExpired:
         process.kill()
         output = "Command timed out. x.x"
@@ -33,7 +36,9 @@ async def _exec(ctx, *, code):
     }
     exec(code, {}, variables)
     del variables["ctx"], variables["create_task"]
-    output = "\n".join([f"{type(value).__name__} {key}: {value}" for key, value in variables.items()])
+    output = "\n".join([
+        f"{type(value).__name__} {key}: {value}" for key, value in variables.items()
+    ])
     if output:
         await ctx.send(ctx.f.codeblock(output))
     else:

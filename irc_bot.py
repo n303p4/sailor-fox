@@ -9,7 +9,7 @@ import logging
 
 import irc.bot
 
-from sailor import commands
+from sailor import commands, exceptions
 
 FORMAT = '%(asctime)-15s %(message)s'
 logging.basicConfig(format=FORMAT)
@@ -37,22 +37,22 @@ class Bot(irc.bot.SingleServerIRCBot):
     def on_pubmsg(self, _, e):
         """On message, invoke the command processor."""
 
-        async def callback_send(message):
-            """Define a custom send callback for processor.
-
-            IRC doesn't like newlines, so we split the message by newlines.
+        def split_notice(message):
+            """A helper function. IRC doesn't like newlines, so we split the message by newlines.
             """
             for line in message.split("\n"):
                 self.connection.notice(e.source.nick, line)
 
+        async def send(message):
+            """Define a custom send callback for the processor."""
+            split_notice(message)
+
         message = e.arguments[0]
 
         try:
-            self.processor.loop.run_until_complete(
-                self.processor.process(message, character_limit=512, callback_send=callback_send)
-            )
-        except Exception as error:
-            self.processor.loop.run_until_complete(callback_send(f"{error}"))
+            self.processor.process_sync(message, character_limit=512, callback_send=send)
+        except (exceptions.CommandError, exceptions.CommandProcessorError) as error:
+            split_notice(f"{error}")
 
 
 def main():
