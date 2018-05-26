@@ -32,16 +32,16 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    """Broadly handle on_message events from Discord."""
-    if message.author.bot:  # Ignore other bots.
+    """Handle on_message events from Discord and forward them to the processor."""
+    if message.author.bot:
         return
 
-    # Check if the message author is the bot owner.
     application_info = await client.application_info()
-    is_owner = message.author.id == application_info.owner.id
+    is_owner = (message.author.id == application_info.owner.id)
 
     try:
         await processor.process(message.content, is_owner=is_owner,
+                                prefixes=[processor.prefix, client.user.mention],
                                 callback_send=message.channel.send, character_limit=2000)
     except (exceptions.CommandError, exceptions.CommandProcessorError) as error:
         await message.channel.send(error)
