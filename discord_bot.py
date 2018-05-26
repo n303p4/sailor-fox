@@ -18,9 +18,9 @@ logger.setLevel(logging.INFO)
 
 client = discord.AutoShardedClient()
 
-formatter = sailor.formatters.discord.DiscordFormatter()
+discord_formatter = sailor.formatters.discord.DiscordFormatter()
 processor = commands.Processor(loop=client.loop, logout=client.logout,
-                               formatter=formatter, config_file="config.json")
+                               formatter=discord_formatter)
 
 
 @client.event
@@ -29,15 +29,17 @@ async def on_ready():
     game = discord.Game(name=f"Type {processor.prefix} help for help!")
     await client.change_presence(activity=game)
 
+
 @client.event
 async def on_message(message):
     """Broadly handle on_message events from Discord."""
     if message.author.bot:  # Ignore other bots.
         return
+
     # Check if the message author is the bot owner.
     application_info = await client.application_info()
     is_owner = message.author.id == application_info.owner.id
-    # Transfer processing to the sailor command handler.
+
     try:
         await processor.process(message.content, is_owner=is_owner,
                                 callback_send=message.channel.send, character_limit=2000)
