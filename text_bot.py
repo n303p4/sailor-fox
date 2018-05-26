@@ -15,9 +15,10 @@ async def send(message):
 
 def main():
     """Main method to start the bot."""
-    processor = commands.Processor(prefix="sf", logout=sys.exit)
+    processor = commands.Processor(logout=sys.exit)
 
     processor.load_config()
+    processor.prefix = processor.config.get("prefix", "")
 
     blacklist = processor.config.get("module_blacklist", [])
     processor.add_modules_from_dir("cogs", blacklist=blacklist)
