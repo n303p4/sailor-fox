@@ -5,7 +5,7 @@
 
 import random
 
-from sailor import commands, exceptions
+from sailor import commands
 
 systemrandom = random.SystemRandom()
 
