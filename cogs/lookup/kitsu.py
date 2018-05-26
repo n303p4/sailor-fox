@@ -6,8 +6,7 @@ Ported from Oxylibrium's Nestbot.
 """
 
 import async_timeout
-import discord
-from sailor import commands, exceptions
+from sailor import commands
 from sailor.web_exceptions import WebAPIInvalidResponse, WebAPIUnreachable
 
 BASE_URL_KITSUIO = "https://kitsu.io/api/edge/{0}"

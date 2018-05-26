@@ -2,7 +2,6 @@
 
 """A basic command-line bot made using sailor's command handler."""
 
-import asyncio
 import sys
 
 from sailor import commands, exceptions
@@ -30,7 +29,7 @@ def main():
         message = input("> ")
         try:
             processor.process_sync(message, is_owner=True, callback_send=send)
-        except (exceptions.CommandProcessorError, exceptions.CommandError) as error:
+        except (exceptions.CommandProcessorError, exceptions.CommandError):
             pass
 
 

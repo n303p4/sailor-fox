@@ -1,11 +1,9 @@
-#!/usr/bin/env python3
-
 """jisho.org query command."""
 
 import urllib.parse
 
 import async_timeout
-from sailor import commands, exceptions
+from sailor import commands
 from sailor.web_exceptions import WebAPIInvalidResponse, WebAPINoResultsFound, WebAPIUnreachable
 
 BASE_URL_JISHO_API = "http://jisho.org/api/v1/search/words?{0}"

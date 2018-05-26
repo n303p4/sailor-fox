@@ -5,7 +5,7 @@
 import urllib.parse
 
 import async_timeout
-from sailor import commands, exceptions
+from sailor import commands
 from sailor.web_exceptions import WebAPIInvalidResponse, WebAPINoResultsFound, WebAPIUnreachable
 
 BASE_URL_WIKIPEDIA_API = "https://en.wikipedia.org/w/api.php?{0}"

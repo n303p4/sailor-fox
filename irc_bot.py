@@ -20,34 +20,49 @@ logger.setLevel(logging.INFO)
 class Bot(irc.bot.SingleServerIRCBot):
     """Custom bot subclass that uses sailor."""
 
-    def __init__(self, channel, nickname, server, processor, realname=None, port=6667):
-        irc.bot.SingleServerIRCBot.__init__(
-            self, [(server, port)], nickname, realname or nickname)
-        self.channel = channel
-        self.processor = processor
+    def __init__(self, quick_init=False):
+        self.channel = None
+        self.processor = commands.Processor()
+        if quick_init:
+            self.processor.load_config()
 
-    def on_nicknameinuse(self, c, _):
+            nick = self.processor.config.get("nick")
+            self.channel = self.processor.config.get("channel")
+            network = self.processor.config.get("network")
+            port = self.processor.config.get("port", 6667)
+            realname = self.processor.config.get("realname", nick)
+
+            self.processor.prefix = self.processor.config.get("prefix", "")
+
+            blacklist = self.processor.config.get("module_blacklist", [])
+
+            self.processor.add_modules_from_dir("cogs", blacklist=blacklist)
+
+            irc.bot.SingleServerIRCBot.__init__(
+                self, [(network, port)], nick, realname or nick)
+
+    def on_nicknameinuse(self, connection, _):
         """If the bot's nickname collides, add a _ after it."""
-        c.nick(c.get_nickname() + "_")
+        connection.nick(connection.get_nickname() + "_")
 
-    def on_welcome(self, c, _):
+    def on_welcome(self, connection, _):
         """Join the channel specified in config."""
-        c.join(self.channel)
+        connection.join(self.channel)
 
-    def on_pubmsg(self, _, e):
+    def on_pubmsg(self, _, event):
         """On message, invoke the command processor."""
 
         def split_notice(message):
             """A helper function. IRC doesn't like newlines, so we split the message by newlines.
             """
             for line in message.split("\n"):
-                self.connection.notice(e.source.nick, line)
+                self.connection.notice(event.source.nick, line)
 
         async def send(message):
             """Define a custom send callback for the processor."""
             split_notice(message)
 
-        message = e.arguments[0]
+        message = event.arguments[0]
 
         try:
             self.processor.process_sync(message, character_limit=512, callback_send=send)
@@ -57,22 +72,7 @@ class Bot(irc.bot.SingleServerIRCBot):
 
 def main():
     """Main function to start the bot."""
-    processor = commands.Processor(config_file="config.json")
-    processor.load_config()
-
-    nick = processor.config.get("nick")
-    channel = processor.config.get("channel")
-    network = processor.config.get("network")
-    port = processor.config.get("port", 6667)
-    realname = processor.config.get("realname", nick)
-
-    processor.prefix = processor.config.get("prefix", "")
-
-    blacklist = processor.config.get("module_blacklist", [])
-
-    processor.add_modules_from_dir("cogs", blacklist=blacklist)
-
-    bot = Bot(channel, nick, network, processor, realname=realname, port=port)
+    bot = Bot(quick_init=True)
     bot.start()
 
 
