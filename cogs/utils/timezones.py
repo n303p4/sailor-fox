@@ -11,8 +11,6 @@ URL = "https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
 FORMAT = "%H:%M:%S %Z%z"
 
 
-"""A time command."""
-
 @commands.cooldown(6, 12)
 @commands.command(aliases=["timein", "tz", "timezone"])
 async def time(ctx, *, timezone):
