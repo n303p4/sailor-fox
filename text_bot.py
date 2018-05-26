@@ -15,8 +15,7 @@ async def send(message):
 
 def main():
     """Main method to start the bot."""
-    loop = asyncio.get_event_loop()
-    processor = commands.Processor(loop=loop, prefix="sf", logout=sys.exit)
+    processor = commands.Processor(prefix="sf", logout=sys.exit)
 
     processor.load_config()
 
@@ -31,7 +30,7 @@ def main():
         try:
             processor.process_sync(message, is_owner=True, callback_send=send)
         except (exceptions.CommandProcessorError, exceptions.CommandError) as error:
-            print(error)
+            pass
 
 
 if __name__ == "__main__":
