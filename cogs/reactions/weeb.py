@@ -54,7 +54,7 @@ def setup(bot):
 
     @commands.cooldown(6, 12)
     @commands.command(aliases=image_types)
-    async def weeb(ctx, image_type: str = None):
+    async def weeb(ctx, *, image_type=None):
         """Fetch a random weeb.sh image. Can be used directly as an alias."""
         if ctx.invoked_with not in image_types and image_type not in image_types:
             message = f"Invalid type supplied. Valid types are: {', '.join(image_types)}"
