@@ -40,12 +40,12 @@ async def a(ctx):
 
 @commands.cooldown(10, 5)
 @commands.command(aliases=["snipe"])
-async def throw(ctx, *, something):
-    """Throw something at something!"""
+async def throw(ctx, *, someone):
+    """Throw something at someone!"""
     hit = systemrandom.randint(0, 5)
     thing = systemrandom.choice(THROWABLE_OBJECTS)
     if hit:
-        message = f":{thing}: {something} got a {thing} thrown at them! :3"
+        message = f":{thing}: {someone} got a {thing} thrown at them! :3"
     else:
         message = f":{thing}: You missed! :3"
     await ctx.send(message)
