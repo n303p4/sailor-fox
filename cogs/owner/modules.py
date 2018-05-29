@@ -6,7 +6,7 @@ from sailor import commands
 
 
 @commands.command(owner_only=True)
-async def load(ctx, name):
+async def load(ctx, *, name):
     """Load a sailor module by name. Owner only.
 
     Example usage:
@@ -16,14 +16,12 @@ async def load(ctx, name):
     if name in ctx.bot.config["module_blacklist"]:
         ctx.bot.config["module_blacklist"].remove(name)
         ctx.bot.save_config()
-        ctx.bot.add_module(name, skip_duplicate_commands=True)
-        await ctx.send(f"Loaded module {name}")
-        return
-    await ctx.send(f"{name} is already loaded.")
+    ctx.bot.add_module(name, skip_duplicate_commands=True)
+    await ctx.send(f"Loaded module {name}")
 
 
 @commands.command(owner_only=True)
-async def reload(ctx, name):
+async def reload(ctx, *, name):
     """Reload a sailor module by name. Owner only.
 
     Example usage:
@@ -53,7 +51,7 @@ async def reloadall(ctx):
 
 
 @commands.command(owner_only=True)
-async def unload(ctx, name):
+async def unload(ctx, *, name):
     """Unload a sailor module by name. Owner only.
 
     Example usage:
@@ -63,7 +61,5 @@ async def unload(ctx, name):
     if name not in ctx.bot.config["module_blacklist"]:
         ctx.bot.config["module_blacklist"].append(name)
         ctx.bot.save_config()
-        ctx.bot.remove_module(name)
-        await ctx.send(f"Unloaded module {name}")
-        return
-    await ctx.send(f"{name} is not currently loaded.")
+    ctx.bot.remove_module(name)
+    await ctx.send(f"Unloaded module {name}")
