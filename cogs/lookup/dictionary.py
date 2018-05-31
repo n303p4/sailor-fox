@@ -82,7 +82,7 @@ async def define(event, word: str):
     * define fox
     """
     url = generate_search_url(word)
-    response_content = await search(event.bot.session, url)
+    response_content = await search(event.processor.session, url)
     results = generate_parsed_results(response_content)
 
     combined_results = []

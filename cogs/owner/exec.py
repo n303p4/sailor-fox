@@ -32,7 +32,7 @@ async def _exec(event, *, code):
     """Execute arbitrary Python code. Bot owner only."""
     variables = {
         "event": event,
-        "create_task": event.bot.loop.create_task,
+        "create_task": event.processor.loop.create_task,
     }
     exec(code, {}, variables)
     del variables["event"], variables["create_task"]

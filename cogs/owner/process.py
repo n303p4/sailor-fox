@@ -15,12 +15,12 @@ async def halt(event):
         await event.reply("Dead! x.x")
     else:
         await event.reply("Good night~")
-    await event.bot.logout()
+    await event.processor.logout()
 
 
 @commands.command(owner_only=True)
 async def restart(event):
     """Restart the bot. Owner only."""
     await event.reply("I'll be back soon~")
-    await event.bot.logout()
+    await event.processor.logout()
     os.execl(sys.executable, sys.executable, *sys.argv)

@@ -67,7 +67,7 @@ async def jisho(event, *, query):
     jisho test
     """
     url = generate_search_url(query)
-    response_content = await search(event.bot.session, url)
+    response_content = await search(event.processor.session, url)
     result = generate_parsed_result(response_content)
 
     fields = {

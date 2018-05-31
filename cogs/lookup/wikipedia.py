@@ -63,7 +63,7 @@ async def wiki(event, *, query):
     * query - A string to be used in the search criteria.
     """
     url = generate_search_url(query)
-    response_content = await search(event.bot.session, url)
+    response_content = await search(event.processor.session, url)
     results = generate_parsed_results(response_content)
 
     combined_results = []

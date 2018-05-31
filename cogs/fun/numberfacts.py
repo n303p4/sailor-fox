@@ -37,5 +37,5 @@ async def numfact(event, number: int):
     """Display a random fact about a number."""
     kind = systemrandom.choice(OPTIONS_NUMBERS_API)
     url = generate_query_url(number, kind)
-    fact = await query(event.bot.session, url)
+    fact = await query(event.processor.session, url)
     await event.reply(fact)

@@ -12,11 +12,11 @@ async def load(event, *, name):
     Example usage:
     load modules.core.ping
     """
-    event.bot.config.setdefault("module_blacklist", [])
-    if name in event.bot.config["module_blacklist"]:
-        event.bot.config["module_blacklist"].remove(name)
-        event.bot.save_config()
-    event.bot.add_module(name, skip_duplicate_commands=True)
+    event.processor.config.setdefault("module_blacklist", [])
+    if name in event.processor.config["module_blacklist"]:
+        event.processor.config["module_blacklist"].remove(name)
+        event.processor.save_config()
+    event.processor.add_module(name, skip_duplicate_commands=True)
     await event.reply(f"Loaded module {name}")
 
 
@@ -27,20 +27,20 @@ async def reload(event, *, name):
     Example usage:
     reload modules.core.ping
     """
-    event.bot.remove_module(name)
-    event.bot.add_module(name)
+    event.processor.remove_module(name)
+    event.processor.add_module(name)
     await event.reply(f"Reloaded module {name}")
 
 
 @reload.command(name="--all", aliases=["-a"], owner_only=True)
 async def reloadall(event):
     """Reload all modules."""
-    module_names = list(event.bot.modules.keys())
+    module_names = list(event.processor.modules.keys())
     errors = []
     for module_name in module_names:
         try:
-            event.bot.remove_module(module_name)
-            event.bot.add_module(module_name)
+            event.processor.remove_module(module_name)
+            event.processor.add_module(module_name)
         except Exception as error:
             errors.append((f"Could not reload module {module_name}: "
                            f"{error}"))
@@ -57,9 +57,9 @@ async def unload(event, *, name):
     Example usage:
     unload modules.core.ping
     """
-    event.bot.config.setdefault("module_blacklist", [])
-    if name not in event.bot.config["module_blacklist"]:
-        event.bot.config["module_blacklist"].append(name)
-        event.bot.save_config()
-    event.bot.remove_module(name)
+    event.processor.config.setdefault("module_blacklist", [])
+    if name not in event.processor.config["module_blacklist"]:
+        event.processor.config["module_blacklist"].append(name)
+        event.processor.save_config()
+    event.processor.remove_module(name)
     await event.reply(f"Unloaded module {name}")

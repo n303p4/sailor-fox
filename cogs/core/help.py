@@ -16,7 +16,7 @@ async def help_(event, *, command_name: str = None):
     help info
     """
     if command_name:
-        cmd = event.bot.all_commands.get(command_name)
+        cmd = event.processor.all_commands.get(command_name)
         if not cmd:
             await event.reply(f"{command_name} is not a valid command.")
         else:
@@ -24,7 +24,7 @@ async def help_(event, *, command_name: str = None):
     else:
         commands_list = []
 
-        for command in event.bot.commands.values():
+        for command in event.processor.commands.values():
             commands_list.append(command.name)
             if len(command.aliases) >= 10:
                 commands_list += command.aliases

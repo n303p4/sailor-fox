@@ -63,7 +63,7 @@ def setup(bot):
             image_type = event.invoked_with
 
         url = generate_image_query_url(image_type)
-        response_content = await random_image(event.bot.session, url, headers)
+        response_content = await random_image(event.processor.session, url, headers)
         await event.reply(response_content["url"])
 
     bot.add_command(weeb)

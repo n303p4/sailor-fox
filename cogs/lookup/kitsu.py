@@ -85,7 +85,7 @@ async def _kitsu(request_type, event, query):
         "page[limit]": 1
     }
 
-    response_content = await search(event.bot.session, url, params)
+    response_content = await search(event.processor.session, url, params)
     result = generate_parsed_result(response_content, request_type)
 
     url = result["url"]

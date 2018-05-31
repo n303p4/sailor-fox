@@ -35,7 +35,7 @@ async def query(session, url, service_name):
 @commands.command(aliases=["doge"])
 async def dog(event):
     """Fetch a random dog."""
-    response_content = await query(event.bot.session, URL_RANDOM_DOG_API, "random.dog")
+    response_content = await query(event.processor.session, URL_RANDOM_DOG_API, "random.dog")
     response_content = json.loads(response_content)
     url = response_content["url"]
     await event.reply(url)
@@ -45,7 +45,7 @@ async def dog(event):
 @commands.command(aliases=["feline"])
 async def cat(event):
     """Fetch a random cat."""
-    response_content = await query(event.bot.session, URL_RANDOM_CAT_API, "nekos.life")
+    response_content = await query(event.processor.session, URL_RANDOM_CAT_API, "nekos.life")
     response_content = json.loads(response_content)
     url = response_content["url"]
     await event.reply(url)
@@ -56,7 +56,7 @@ async def cat(event):
                            "foxgirl", "kitsune", "kitsunemimi"])
 async def kemono(event):
     """Fetch a random animal-eared person."""
-    response_content = await query(event.bot.session, URL_RANDOM_NEKO_API, "nekos.life")
+    response_content = await query(event.processor.session, URL_RANDOM_NEKO_API, "nekos.life")
     response_content = json.loads(response_content)
     url = response_content["neko"]
     await event.reply(url)
@@ -66,7 +66,7 @@ async def kemono(event):
 @commands.command()
 async def birb(event):
     """Fetch a random birb."""
-    response_content = await query(event.bot.session, URL_RANDOM_BIRB_API, "random.birb.pw")
+    response_content = await query(event.processor.session, URL_RANDOM_BIRB_API, "random.birb.pw")
     response_content = json.loads(response_content)
     url = URL_RANDOM_BIRB.format(response_content["file"])
     await event.reply(url)
@@ -77,7 +77,7 @@ async def birb(event):
 async def fox(event):
     """Fetch a random cat."""
     base_url = systemrandom.choice((URL_FOX_SUBREDDIT_TOP_API, URL_FOX_SUBREDDIT_NEW_API))
-    response_content = await query(event.bot.session, base_url, "Reddit")
+    response_content = await query(event.processor.session, base_url, "Reddit")
     response_content = json.loads(response_content)
     children = response_content["data"]["children"]
     foxxo = systemrandom.choice(children)
