@@ -13,7 +13,7 @@ FORMAT = "%H:%M:%S %Z%z"
 
 @commands.cooldown(6, 12)
 @commands.command(aliases=["timein", "tz", "timezone"])
-async def time(ctx, *, timezone):
+async def time(event, *, timezone):
     """A command that fetches the time in a given area."""
     try:
         timezone = pytz.timezone(timezone)
@@ -24,4 +24,4 @@ async def time(ctx, *, timezone):
     localized_datetime = utcmoment.astimezone(timezone)
     message = (f"The time in {timezone.zone} is currently "
                f"{localized_datetime.strftime(FORMAT)}.")
-    await ctx.send(message)
+    await event.reply(message)

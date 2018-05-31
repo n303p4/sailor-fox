@@ -54,16 +54,16 @@ def setup(bot):
 
     @commands.cooldown(6, 12)
     @commands.command(aliases=image_types)
-    async def weeb(ctx, *, image_type=None):
+    async def weeb(event, *, image_type=None):
         """Fetch a random weeb.sh image. Can be used directly as an alias."""
-        if ctx.invoked_with not in image_types and image_type not in image_types:
+        if event.invoked_with not in image_types and image_type not in image_types:
             message = f"Invalid type supplied. Valid types are: {', '.join(image_types)}"
             raise exceptions.UserInputError(message)
         elif image_type not in image_types:
-            image_type = ctx.invoked_with
+            image_type = event.invoked_with
 
         url = generate_image_query_url(image_type)
-        response_content = await random_image(ctx.bot.session, url, headers)
-        await ctx.send(response_content["url"])
+        response_content = await random_image(event.bot.session, url, headers)
+        await event.reply(response_content["url"])
 
     bot.add_command(weeb)

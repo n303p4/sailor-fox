@@ -33,53 +33,53 @@ async def query(session, url, service_name):
 
 @commands.cooldown(6, 12)
 @commands.command(aliases=["doge"])
-async def dog(ctx):
+async def dog(event):
     """Fetch a random dog."""
-    response_content = await query(ctx.bot.session, URL_RANDOM_DOG_API, "random.dog")
+    response_content = await query(event.bot.session, URL_RANDOM_DOG_API, "random.dog")
     response_content = json.loads(response_content)
     url = response_content["url"]
-    await ctx.send(url)
+    await event.reply(url)
 
 
 @commands.cooldown(6, 12)
 @commands.command(aliases=["feline"])
-async def cat(ctx):
+async def cat(event):
     """Fetch a random cat."""
-    response_content = await query(ctx.bot.session, URL_RANDOM_CAT_API, "nekos.life")
+    response_content = await query(event.bot.session, URL_RANDOM_CAT_API, "nekos.life")
     response_content = json.loads(response_content)
     url = response_content["url"]
-    await ctx.send(url)
+    await event.reply(url)
 
 
 @commands.cooldown(6, 12)
 @commands.command(aliases=["catgirl", "kneko", "nekomimi",
                            "foxgirl", "kitsune", "kitsunemimi"])
-async def kemono(ctx):
+async def kemono(event):
     """Fetch a random animal-eared person."""
-    response_content = await query(ctx.bot.session, URL_RANDOM_NEKO_API, "nekos.life")
+    response_content = await query(event.bot.session, URL_RANDOM_NEKO_API, "nekos.life")
     response_content = json.loads(response_content)
     url = response_content["neko"]
-    await ctx.send(url)
+    await event.reply(url)
 
 
 @commands.cooldown(6, 12)
 @commands.command()
-async def birb(ctx):
+async def birb(event):
     """Fetch a random birb."""
-    response_content = await query(ctx.bot.session, URL_RANDOM_BIRB_API, "random.birb.pw")
+    response_content = await query(event.bot.session, URL_RANDOM_BIRB_API, "random.birb.pw")
     response_content = json.loads(response_content)
     url = URL_RANDOM_BIRB.format(response_content["file"])
-    await ctx.send(url)
+    await event.reply(url)
 
 
 @commands.cooldown(6, 12)
 @commands.command()
-async def fox(ctx):
+async def fox(event):
     """Fetch a random cat."""
     base_url = systemrandom.choice((URL_FOX_SUBREDDIT_TOP_API, URL_FOX_SUBREDDIT_NEW_API))
-    response_content = await query(ctx.bot.session, base_url, "Reddit")
+    response_content = await query(event.bot.session, base_url, "Reddit")
     response_content = json.loads(response_content)
     children = response_content["data"]["children"]
     foxxo = systemrandom.choice(children)
     url = foxxo["data"]["url"]
-    await ctx.send(url)
+    await event.reply(url)

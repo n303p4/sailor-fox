@@ -33,9 +33,9 @@ async def query(session, url):
 
 @commands.cooldown(12, 12)
 @commands.command(aliases=["numberfact", "number"])
-async def numfact(ctx, number: int):
+async def numfact(event, number: int):
     """Display a random fact about a number."""
     kind = systemrandom.choice(OPTIONS_NUMBERS_API)
     url = generate_query_url(number, kind)
-    fact = await query(ctx.bot.session, url)
-    await ctx.send(fact)
+    fact = await query(event.bot.session, url)
+    await event.reply(fact)

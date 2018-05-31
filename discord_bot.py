@@ -22,11 +22,25 @@ discord_formatter = sailor.formatters.discord.DiscordFormatter()
 processor = commands.Processor(loop=client.loop, logout=client.logout,
                                formatter=discord_formatter)
 
+PREFIXES = []
+
+def split_first_word(text, prefixes):
+    """If a text string starts with a substring, return the substring and the text minus the
+    first instance of the substring; otherwise return None and the text.
+    """
+    for prefix in prefixes:
+        if text.startswith(prefix):
+            return prefix, text[len(prefix):].lstrip()
+    return None, text
+
 
 @client.event
 async def on_ready():
     """Set the bot's playing status to the help command."""
-    game = discord.Game(name=f"Type {processor.prefix} help for help!")
+    main_prefix = processor.config.get("prefix", "sf")
+    PREFIXES.append(client.user.mention)
+    PREFIXES.append(main_prefix)
+    game = discord.Game(name=f"Type {main_prefix} help for help!")
     await client.change_presence(activity=game)
 
 
@@ -39,12 +53,14 @@ async def on_message(message):
     application_info = await client.application_info()
     is_owner = (message.author.id == application_info.owner.id)
 
-    try:
-        await processor.process(message.content, is_owner=is_owner,
-                                prefixes=[processor.prefix, client.user.mention],
-                                callback_send=message.channel.send, character_limit=2000)
-    except (exceptions.CommandError, exceptions.CommandProcessorError) as error:
-        await message.channel.send(error)
+    prefix, message_text = split_first_word(message.content, PREFIXES)
+
+    if prefix:
+        try:
+            await processor.process(message_text, is_owner=is_owner,
+                                    reply_with=message.channel.send)
+        except (exceptions.CommandError, exceptions.CommandProcessorError) as error:
+            await message.channel.send(error)
 
 
 if __name__ == "__main__":
@@ -54,7 +70,6 @@ if __name__ == "__main__":
     assert (isinstance(processor.config.get("module_blacklist", []), list)), \
         "Blacklist must be a list."
 
-    processor.prefix = processor.config.get("prefix", "")
     if processor.config.get("description"):
         processor.description = processor.config["description"]
 

@@ -9,18 +9,18 @@ from sailor import commands
 
 
 @commands.command(aliases=["exit", "shutdown", "kys"], owner_only=True)
-async def halt(ctx):
+async def halt(event):
     """Halt the bot. Owner only."""
-    if ctx.invoked_with == "kys":
-        await ctx.send("Dead! x.x")
+    if event.invoked_with == "kys":
+        await event.reply("Dead! x.x")
     else:
-        await ctx.send("Good night~")
-    await ctx.bot.logout()
+        await event.reply("Good night~")
+    await event.bot.logout()
 
 
 @commands.command(owner_only=True)
-async def restart(ctx):
+async def restart(event):
     """Restart the bot. Owner only."""
-    await ctx.send("I'll be back soon~")
-    await ctx.bot.logout()
+    await event.reply("I'll be back soon~")
+    await event.bot.logout()
     os.execl(sys.executable, sys.executable, *sys.argv)

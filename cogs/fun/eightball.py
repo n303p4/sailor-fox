@@ -61,7 +61,7 @@ ANSWERS = [
 
 @commands.cooldown(6, 12)
 @commands.command(name="8ball", aliases=["eightball"])
-async def eightball_(ctx):
+async def eightball_(event):
     """Ask the Magic 8-Ball a question."""
     choice = systemrandom.choice(ANSWERS)
-    await ctx.send(choice)
+    await event.reply(choice)

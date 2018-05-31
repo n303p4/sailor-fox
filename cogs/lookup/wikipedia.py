@@ -57,20 +57,20 @@ def generate_parsed_results(response_content):
 
 @commands.cooldown(6, 12)
 @commands.command(aliases=["wikipedia"])
-async def wiki(ctx, *, query):
+async def wiki(event, *, query):
     """Search Wikipedia.
 
     * query - A string to be used in the search criteria.
     """
     url = generate_search_url(query)
-    response_content = await search(ctx.bot.session, url)
+    response_content = await search(event.bot.session, url)
     results = generate_parsed_results(response_content)
 
     combined_results = []
     for result in results:
-        link = ctx.f.no_embed_link(result['url'])
+        link = event.f.no_embed_link(result['url'])
         description = f"{link}\n{result['description']}"
-        combined_result = f"{ctx.f.bold(result['title'])}\n{description}"
+        combined_result = f"{event.f.bold(result['title'])}\n{description}"
         combined_results.append(combined_result)
 
-    await ctx.send("\n\n".join(combined_results))
+    await event.reply("\n\n".join(combined_results))

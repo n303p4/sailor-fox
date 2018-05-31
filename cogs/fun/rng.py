@@ -70,15 +70,15 @@ def parse_rolls(*expressions, **kwargs):
 
 @commands.cooldown(6, 12)
 @commands.command(aliases=["cflip", "coinflip"])
-async def coin(ctx):
+async def coin(event):
     """Flip a coin."""
     choice = systemrandom.choice(["Heads!", "Tails!"])
-    await ctx.send(choice)
+    await event.reply(choice)
 
 
 @commands.cooldown(6, 12)
 @commands.command()
-async def roll(ctx, *expressions):
+async def roll(event, *expressions):
     """Roll some dice, using D&D syntax.
 
     Examples:
@@ -93,7 +93,7 @@ async def roll(ctx, *expressions):
 
     if rolls:
         roll_join = "\n".join(rolls)
-        await ctx.send(ctx.f.codeblock(roll_join))
+        await event.reply(event.f.codeblock(roll_join))
 
     else:
         raise exceptions.UserInputError(("No valid rolls supplied. "

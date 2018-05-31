@@ -32,15 +32,15 @@ THROWABLE_OBJECTS = (
 
 @commands.cooldown(10, 5)
 @commands.command(aliases=["aa", "aaa"])
-async def a(ctx):
+async def a(event):
     """Aaaaaaa!"""
     message = systemrandom.choice(AAA) * systemrandom.randint(10, 200)
-    await ctx.send(message)
+    await event.reply(message)
 
 
 @commands.cooldown(10, 5)
 @commands.command(aliases=["snipe"])
-async def throw(ctx, *, someone):
+async def throw(event, *, someone):
     """Throw something at someone!"""
     hit = systemrandom.randint(0, 5)
     thing = systemrandom.choice(THROWABLE_OBJECTS)
@@ -48,4 +48,4 @@ async def throw(ctx, *, someone):
         message = f":{thing}: {someone} got a {thing} thrown at them! :3"
     else:
         message = f":{thing}: You missed! :3"
-    await ctx.send(message)
+    await event.reply(message)
