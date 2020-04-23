@@ -19,20 +19,17 @@ logger.setLevel(logging.INFO)
 
 client = discord.AutoShardedClient()
 
-discord_formatter = sailor.discord_helpers.TextFormatter()
 processor = ProcessorWithConfig(loop=client.loop)
-discord_formatter = sailor.discord_helpers.TextFormatter()
-processor.register_formatter(discord_formatter, "discord")
-processor.config = {}
+processor.default_formatter = sailor.discord_helpers.TextFormatter()
 
-PREFIXES = []
+prefixes = []
 
 
-def split_first_word(text, prefixes):
+def split_first_word(text, prefixes_):
     """If a text string starts with a substring, return the substring and the text minus the
     first instance of the substring; otherwise return None and the text.
     """
-    for prefix in prefixes:
+    for prefix in prefixes_:
         if text.startswith(prefix):
             return prefix, text[len(prefix):].lstrip()
     return None, text
@@ -42,8 +39,8 @@ def split_first_word(text, prefixes):
 async def on_ready():
     """Set the bot's playing status to the help command."""
     main_prefix = processor.config.get("prefix", "sf")
-    PREFIXES.append(client.user.mention)
-    PREFIXES.append(main_prefix)
+    prefixes.append(client.user.mention)
+    prefixes.append(main_prefix)
     game = discord.Game(name=f"Type {main_prefix} help for help!")
     await client.change_presence(activity=game)
 
@@ -57,12 +54,12 @@ async def on_message(message):
     application_info = await client.application_info()
     is_owner = (message.author.id == application_info.owner.id)
 
-    prefix, message_text = split_first_word(message.content, PREFIXES)
+    prefix, message_text = split_first_word(message.content, prefixes)
 
     if prefix:
         try:
             await processor.process(message_text, is_owner=is_owner,
-                                    reply_with=message.channel.send, format_name="discord")
+                                    reply_with=message.channel.send)
         except (sailor.exceptions.CommandError, sailor.exceptions.CommandProcessorError) as error:
             await message.channel.send(error)
 

@@ -42,7 +42,6 @@ def generate_parsed_results(response_content):
         for index in range(0, min(3, len(response_content[1]))):
             result = {
                 "title": response_content[1][index],
-                "description": response_content[2][index],
                 "url": response_content[3][index]
             }
             results.append(result)
@@ -66,9 +65,6 @@ async def wiki(event, *, query):
 
     combined_results = []
     for result in results:
-        link = event.f.no_embed_link(result['url'])
-        description = f"{link}\n{result['description']}"
-        combined_result = f"{event.f.bold(result['title'])}\n{description}"
-        combined_results.append(combined_result)
+        combined_results.append(f"{event.f.bold(result['title'])}\n{event.f.no_embed_link(result['url'])}")
 
-    await event.reply("\n".join(combined_results))
+    await event.reply("\n\n".join(combined_results))
