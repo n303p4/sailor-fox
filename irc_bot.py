@@ -66,10 +66,10 @@ class Bot(irc.bot.SingleServerIRCBot):
         message = event.arguments[0]
 
         try:
-            self.processor.loop.run_until_complete(
-                self.processor.process(message, character_limit=512, reply_with=send))
+            self.processor.loop.run_until_complete(self.processor.process(message, character_limit=512,
+                                                                          reply_with=send))
         except (exceptions.CommandError, exceptions.CommandProcessorError) as error:
-            split_notice(f"{error}")
+            split_notice(str(error))
 
 
 def main():

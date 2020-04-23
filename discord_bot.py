@@ -12,9 +12,8 @@ import sailor
 
 from sailor_fox import ProcessorWithConfig
 
-FORMAT = "%(asctime)-12s %(levelname)s %(message)s"
-logging.basicConfig(format=FORMAT)
-logger = logging.getLogger('discord')
+logging.basicConfig(format="%(asctime)-12s %(levelname)s %(message)s")
+logger = logging.getLogger("discord")
 logger.setLevel(logging.INFO)
 
 client = discord.AutoShardedClient()
@@ -26,8 +25,8 @@ prefixes = []
 
 
 def split_first_word(text, prefixes_):
-    """If a text string starts with a substring, return the substring and the text minus the
-    first instance of the substring; otherwise return None and the text.
+    """If a text string starts with a substring, return the substring and the text minus the first instance of the
+    substring; otherwise return None and the text.
     """
     for prefix in prefixes_:
         if text.startswith(prefix):
@@ -58,18 +57,16 @@ async def on_message(message):
 
     if prefix:
         try:
-            await processor.process(message_text, is_owner=is_owner,
-                                    reply_with=message.channel.send)
+            await processor.process(message_text, is_owner=is_owner, reply_with=message.channel.send)
         except (sailor.exceptions.CommandError, sailor.exceptions.CommandProcessorError) as error:
-            await message.channel.send(error)
+            await message.channel.send(str(error))
 
 
 if __name__ == "__main__":
     processor.load_config()
 
     assert (isinstance(processor.config.get("discord_token"), str)), "Bot token not valid."
-    assert (isinstance(processor.config.get("module_blacklist", []), list)), \
-        "Blacklist must be a list."
+    assert (isinstance(processor.config.get("module_blacklist", []), list)), "Blacklist must be a list."
 
     if processor.config.get("description"):
         processor.description = processor.config["description"]

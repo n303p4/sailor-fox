@@ -8,8 +8,8 @@ from sailor_fox import ProcessorWithConfig
 
 
 def split_first_word(text, prefix):
-    """If a text string starts with a substring, return the substring and the text minus the
-    first instance of the substring; otherwise return None and the text.
+    """If a text string starts with a substring, return the substring and the text minus the first instance of the
+    substring; otherwise return None and the text.
     """
     if text.startswith(prefix):
         return prefix, text[len(prefix):].lstrip()
@@ -38,8 +38,7 @@ def main():
         prefix, message = split_first_word(input("> "), global_prefix)
         if prefix:
             try:
-                processor.loop.run_until_complete(processor.process(message, reply_with=send,
-                                                                    is_owner=True))
+                processor.loop.run_until_complete(processor.process(message, reply_with=send, is_owner=True))
             except (exceptions.CommandProcessorError, exceptions.CommandError):
                 pass
 
