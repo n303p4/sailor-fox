@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """Bot help command."""
 
 from sailor import commands

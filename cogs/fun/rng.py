@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
-# pylint: disable=C0103
-
 """Commands that invoke random things, part 1."""
+
+# pylint: disable=invalid-name
 
 import random
 import re

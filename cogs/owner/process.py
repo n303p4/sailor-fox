@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """Commands that affect the bot's execution."""
 
 import sys

@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
-# pylint: disable=C0103
-
 """Lookup commands that query various image APIs."""
+
+# pylint: disable=invalid-name
 
 import json
 import random

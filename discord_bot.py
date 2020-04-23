@@ -1,28 +1,32 @@
-#!/usr/bin/env python3
-
 """A basic Discord bot made using sailor's command handler.
 
-Requires Python 3.6+ and discord.py rewrite (1.0).
+Requires Python 3.6+ and discord.py 1.0 or higher.
 """
+
+# pylint: disable=invalid-name
 
 import logging
 
 import discord
-from sailor import commands, exceptions
-import sailor.formatters.discord
+import sailor
 
-FORMAT = '%(asctime)-12s %(levelname)s %(message)s'
+from sailor_fox import ProcessorWithConfig
+
+FORMAT = "%(asctime)-12s %(levelname)s %(message)s"
 logging.basicConfig(format=FORMAT)
 logger = logging.getLogger('discord')
 logger.setLevel(logging.INFO)
 
 client = discord.AutoShardedClient()
 
-discord_formatter = sailor.formatters.discord.DiscordFormatter()
-processor = commands.Processor(loop=client.loop, logout=client.logout,
-                               formatter=discord_formatter)
+discord_formatter = sailor.discord_helpers.TextFormatter()
+processor = ProcessorWithConfig(loop=client.loop)
+discord_formatter = sailor.discord_helpers.TextFormatter()
+processor.register_formatter(discord_formatter, "discord")
+processor.config = {}
 
 PREFIXES = []
+
 
 def split_first_word(text, prefixes):
     """If a text string starts with a substring, return the substring and the text minus the
@@ -58,8 +62,8 @@ async def on_message(message):
     if prefix:
         try:
             await processor.process(message_text, is_owner=is_owner,
-                                    reply_with=message.channel.send)
-        except (exceptions.CommandError, exceptions.CommandProcessorError) as error:
+                                    reply_with=message.channel.send, format_name="discord")
+        except (sailor.exceptions.CommandError, sailor.exceptions.CommandProcessorError) as error:
             await message.channel.send(error)
 
 

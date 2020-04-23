@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """Extension that handles kitsu.io queries.
 
 Ported from Oxylibrium's Nestbot.

@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """A command that ships two things together."""
 
 from sailor import commands

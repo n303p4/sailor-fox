@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
-# pylint: disable=C0103
-
 """Commands inspired by Roadcrosser's bots."""
+
+# pylint: disable=invalid-name
 
 import random
 

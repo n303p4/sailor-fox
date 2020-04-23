@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
-# pylint: disable=C0103
-
 """A Magic 8-Ball command."""
+
+# pylint: disable=invalid-name
 
 import random
 

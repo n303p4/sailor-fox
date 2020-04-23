@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """This cog contains a Wikipedia query command."""
 
 import urllib.parse
@@ -73,4 +71,4 @@ async def wiki(event, *, query):
         combined_result = f"{event.f.bold(result['title'])}\n{description}"
         combined_results.append(combined_result)
 
-    await event.reply("\n\n".join(combined_results))
+    await event.reply("\n".join(combined_results))

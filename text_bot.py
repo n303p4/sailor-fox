@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
-
 """A basic command-line bot made using sailor's command handler."""
 
 import sys
 
-from sailor import commands, exceptions
+from sailor import exceptions
+
+from sailor_fox import ProcessorWithConfig
 
 
 def split_first_word(text, prefix):
@@ -23,7 +23,7 @@ async def send(message):
 
 def main():
     """Main method to start the bot."""
-    processor = commands.Processor(logout=sys.exit)
+    processor = ProcessorWithConfig(logout=sys.exit)
 
     processor.load_config()
     global_prefix = processor.config.get("prefix", "")

@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """Module loading and unloading commands."""
 
 from sailor import commands
@@ -41,7 +39,7 @@ async def reloadall(event):
         try:
             event.processor.remove_module(module_name)
             event.processor.add_module(module_name)
-        except Exception as error:
+        except Exception as error:  # pylint: disable=broad-except
             errors.append((f"Could not reload module {module_name}: "
                            f"{error}"))
 

@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
-# pylint: disable=C0103
-
 """Trivia module with a trivia command."""
+
+# pylint: disable=invalid-name
 
 import random
 

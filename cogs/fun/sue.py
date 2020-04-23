@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
-# pylint: disable=C0103
-
 """A command that sues someone or something."""
+
+# pylint: disable=invalid-name
 
 import random
 import re

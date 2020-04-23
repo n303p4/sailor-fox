@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
-
 """Expression evaluation commands."""
+
+# pylint: disable=exec-used
 
 import subprocess
 
@@ -26,6 +26,7 @@ async def shell(event, *args):
         process.kill()
         output = "Command timed out. x.x"
     await event.reply(output)
+
 
 @commands.command(name="exec", owner_only=True)
 async def _exec(event, *, code):

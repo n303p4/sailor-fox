@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """Dictionary lookup command."""
 
 import re

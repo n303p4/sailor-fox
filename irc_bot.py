@@ -1,15 +1,16 @@
-#!/usr/bin/env python3
-
 """A basic IRC bot made using sailor's command handler.
 
 Requires Python 3.6+ and irc.
 """
 
+# pylint: disable=invalid-name
+
 import logging
 
 import irc.bot
+from sailor import exceptions
 
-from sailor import commands, exceptions
+from sailor_fox import ProcessorWithConfig
 
 FORMAT = '%(asctime)-15s %(message)s'
 logging.basicConfig(format=FORMAT)
@@ -22,7 +23,7 @@ class Bot(irc.bot.SingleServerIRCBot):
 
     def __init__(self, quick_init=False):
         self.channel = None
-        self.processor = commands.Processor()
+        self.processor = ProcessorWithConfig()
         if quick_init:
             self.processor.load_config()
 
@@ -65,7 +66,8 @@ class Bot(irc.bot.SingleServerIRCBot):
         message = event.arguments[0]
 
         try:
-            self.processor.process_sync(message, character_limit=512, callback_send=send)
+            self.processor.loop.run_until_complete(
+                self.processor.process(message, character_limit=512, reply_with=send))
         except (exceptions.CommandError, exceptions.CommandProcessorError) as error:
             split_notice(f"{error}")
 
