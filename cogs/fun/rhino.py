@@ -1,12 +1,11 @@
-#!/usr/bin/env python3
-# pylint: disable=C0103
-
 """An assorted collection of meme commands."""
 
-import asyncio
-import random
+# pylint: disable=invalid-name
 
-from sailor import commands
+import asyncio
+import secrets
+
+import sailor
 
 SUMMONABLES = [
     ("Red-Eyes Black Dragon", "https://i.imgur.com/MiWwmqq.png"),
@@ -22,38 +21,36 @@ PLAY_MESSAGES = [
     "Yay, let's play! Try using the help command for a list of commands~ :3"
 ]
 
-systemrandom = random.SystemRandom()
 
-
-@commands.cooldown(6, 12)
-@commands.command()
-async def play(ctx):
+@sailor.commands.cooldown(6, 12)
+@sailor.command()
+async def play(event):
     """Play a game!"""
-    message = systemrandom.choice(PLAY_MESSAGES)
-    await ctx.send(message)
+    message = secrets.choice(PLAY_MESSAGES)
+    await event.reply(message)
 
 
-@commands.cooldown(6, 12)
-@commands.command(name="np", aliases=["noproblem"])
-async def np_(ctx):
+@sailor.commands.cooldown(6, 12)
+@sailor.command(name="np", aliases=["noproblem"])
+async def np_(event):
     """No problem!"""
-    await ctx.send("No problem! :3")
+    await event.reply("No problem! :3")
 
 
-@commands.cooldown(6, 12)
-@commands.command()
-async def pause(ctx):
+@sailor.commands.cooldown(6, 12)
+@sailor.command()
+async def pause(event):
     """Pause for a bit."""
-    await ctx.send("...")
+    await event.reply("...")
     await asyncio.sleep(5)
-    await ctx.send("...? o.o")
+    await event.reply("...? o.o")
 
 
-@commands.cooldown(6, 12)
-@commands.command()
-async def summon(ctx):
+@sailor.commands.cooldown(6, 12)
+@sailor.command()
+async def summon(event):
     """Summon a monster!"""
-    choice = systemrandom.choice(SUMMONABLES)
+    choice = secrets.choice(SUMMONABLES)
     name = choice[0]
     image = choice[1]
-    await ctx.send(f"I-I summon {name}! o.o\n{image}")
+    await event.reply(f"I-I summon {name}! o.o\n{image}")

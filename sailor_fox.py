@@ -1,0 +1,24 @@
+"""Subclass sailor Processor."""
+
+import json
+
+import sailor
+
+
+class ProcessorWithConfig(sailor.commands.Processor):
+    """Subclass of Processor with configuration."""
+
+    def __init__(self, *args, **kwargs):
+        super(ProcessorWithConfig, self).__init__(*args, **kwargs)
+        self.description = "This is a bot."
+        self.config = {}
+
+    def load_config(self, filename="config.json"):
+        """Load configuration."""
+        with open(filename, "r") as file_object:
+            self.config = json.load(file_object)
+
+    def save_config(self, filename="config.json"):
+        """Save configuration."""
+        with open(filename, "w") as file_object:
+            json.dump(self.config, file_object)

@@ -1,13 +1,10 @@
-#!/usr/bin/env python3
-# pylint: disable=C0103
-
 """A Magic 8-Ball command."""
 
-import random
+# pylint: disable=invalid-name
+
+import secrets
 
 from sailor import commands
-
-systemrandom = random.SystemRandom()
 
 ANSWERS = [
     # Stock replies.
@@ -61,7 +58,7 @@ ANSWERS = [
 
 @commands.cooldown(6, 12)
 @commands.command(name="8ball", aliases=["eightball"])
-async def eightball_(ctx):
+async def eightball_(event):
     """Ask the Magic 8-Ball a question."""
-    choice = systemrandom.choice(ANSWERS)
-    await ctx.send(choice)
+    choice = secrets.choice(ANSWERS)
+    await event.reply(choice)

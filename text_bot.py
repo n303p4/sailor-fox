@@ -1,11 +1,19 @@
-#!/usr/bin/env python3
-
 """A basic command-line bot made using sailor's command handler."""
 
-import asyncio
 import sys
 
-from sailor import commands, exceptions
+from sailor import exceptions
+
+from sailor_fox import ProcessorWithConfig
+
+
+def split_first_word(text, prefix):
+    """If a text string starts with a substring, return the substring and the text minus the first instance of the
+    substring; otherwise return None and the text.
+    """
+    if text.startswith(prefix):
+        return prefix, text[len(prefix):].lstrip()
+    return None, text
 
 
 async def send(message):
@@ -15,23 +23,24 @@ async def send(message):
 
 def main():
     """Main method to start the bot."""
-    loop = asyncio.get_event_loop()
-    processor = commands.Processor(loop=loop, prefix="sf", logout=sys.exit)
+    processor = ProcessorWithConfig(logout=sys.exit)
 
     processor.load_config()
+    global_prefix = processor.config.get("prefix", "")
 
     blacklist = processor.config.get("module_blacklist", [])
     processor.add_modules_from_dir("cogs", blacklist=blacklist)
 
-    print(f"Enter commands here. Commands must start with {processor.prefix}")
-    print(f"For help, use {processor.prefix} help.")
+    print(f"Enter commands here. Commands must start with {global_prefix}")
+    print(f"For help, use {global_prefix} help.")
 
     while True:
-        message = input("> ")
-        try:
-            processor.process_sync(message, is_owner=True, callback_send=send)
-        except (exceptions.CommandProcessorError, exceptions.CommandError) as error:
-            print(error)
+        prefix, message = split_first_word(input("> "), global_prefix)
+        if prefix:
+            try:
+                processor.loop.run_until_complete(processor.process(message, reply_with=send, is_owner=True))
+            except (exceptions.CommandProcessorError, exceptions.CommandError):
+                pass
 
 
 if __name__ == "__main__":

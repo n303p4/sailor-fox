@@ -1,11 +1,9 @@
-#!/usr/bin/env python3
-
 """This cog contains a Wikipedia query command."""
 
 import urllib.parse
 
 import async_timeout
-from sailor import commands, exceptions
+from sailor import commands
 from sailor.web_exceptions import WebAPIInvalidResponse, WebAPINoResultsFound, WebAPIUnreachable
 
 BASE_URL_WIKIPEDIA_API = "https://en.wikipedia.org/w/api.php?{0}"
@@ -44,7 +42,6 @@ def generate_parsed_results(response_content):
         for index in range(0, min(3, len(response_content[1]))):
             result = {
                 "title": response_content[1][index],
-                "description": response_content[2][index],
                 "url": response_content[3][index]
             }
             results.append(result)
@@ -57,20 +54,17 @@ def generate_parsed_results(response_content):
 
 @commands.cooldown(6, 12)
 @commands.command(aliases=["wikipedia"])
-async def wiki(ctx, *, query):
+async def wiki(event, *, query):
     """Search Wikipedia.
 
     * query - A string to be used in the search criteria.
     """
     url = generate_search_url(query)
-    response_content = await search(ctx.bot.session, url)
+    response_content = await search(event.processor.session, url)
     results = generate_parsed_results(response_content)
 
     combined_results = []
     for result in results:
-        link = ctx.f.no_embed_link(result['url'])
-        description = f"{link}\n{result['description']}"
-        combined_result = f"{ctx.f.bold(result['title'])}\n{description}"
-        combined_results.append(combined_result)
+        combined_results.append(f"{event.f.bold(result['title'])}\n{event.f.no_embed_link(result['url'])}")
 
-    await ctx.send("\n\n".join(combined_results))
+    await event.reply("\n\n".join(combined_results))

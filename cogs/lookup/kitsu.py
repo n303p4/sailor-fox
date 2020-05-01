@@ -1,13 +1,10 @@
-#!/usr/bin/env python3
-
 """Extension that handles kitsu.io queries.
 
 Ported from Oxylibrium's Nestbot.
 """
 
 import async_timeout
-import discord
-from sailor import commands, exceptions
+from sailor import commands
 from sailor.web_exceptions import WebAPIInvalidResponse, WebAPIUnreachable
 
 BASE_URL_KITSUIO = "https://kitsu.io/api/edge/{0}"
@@ -77,7 +74,7 @@ def generate_parsed_result(response_content, request_type):
         raise WebAPIInvalidResponse(service="kitsu.io")
 
 
-async def _kitsu(request_type, ctx, query):
+async def _kitsu(request_type, event, query):
     request_type = filter_request_type(request_type)
     url = generate_search_url(request_type)
 
@@ -86,26 +83,26 @@ async def _kitsu(request_type, ctx, query):
         "page[limit]": 1
     }
 
-    response_content = await search(ctx.bot.session, url, params)
+    response_content = await search(event.processor.session, url, params)
     result = generate_parsed_result(response_content, request_type)
 
     url = result["url"]
-    field_data = "\n".join(f"{ctx.f.bold(n)}: {i}" for n, i in result["fields"].items())
+    field_data = "\n".join(f"{event.f.bold(n)}: {i}" for n, i in result["fields"].items())
 
     message = "\n".join([field_data, url])
 
-    await ctx.send(message)
+    await event.reply(message)
 
 
 @commands.cooldown(6, 12)
 @commands.command(aliases=["kitsu"])
-async def anime(ctx, *, query):
+async def anime(event, *, query):
     """Query kitsu.io for anime."""
-    await _kitsu("anime", ctx, query)
+    await _kitsu("anime", event, query)
 
 
 @commands.cooldown(6, 12)
 @commands.command()
-async def manga(ctx, *, query):
+async def manga(event, *, query):
     """Query kitsu.io for manga."""
-    await _kitsu("manga", ctx, query)
+    await _kitsu("manga", event, query)

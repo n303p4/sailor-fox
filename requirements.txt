@@ -1,4 +1,4 @@
--e git+https://github.com/Rapptz/discord.py@rewrite#egg=discord
+discord.py
 -e git+https://gitlab.com/n303p4/sailor#egg=sailor
 requests
 pytz

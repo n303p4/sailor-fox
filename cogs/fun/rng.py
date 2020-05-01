@@ -1,10 +1,9 @@
-#!/usr/bin/env python3
-# pylint: disable=C0103
-
 """Commands that invoke random things, part 1."""
 
-import random
+# pylint: disable=invalid-name
+
 import re
+import secrets
 
 from sailor import commands, exceptions
 
@@ -15,8 +14,6 @@ REGEX_OBJECT_DND = re.compile(REGEX_DND)
 MAX_ROLLS = 20
 MAX_ROLL_SIZE = 30
 MAX_DIE_SIZE = 2000
-
-systemrandom = random.SystemRandom()
 
 
 def trim_expressions(*expressions):
@@ -36,7 +33,7 @@ def generate_roll(die_count, die_size):
     """Given an amount of dice and the number of sides per die, simulate a dice roll and return
     a list of ints representing the outcome values.
     """
-    roll_ = [systemrandom.randint(1, die_size) for times in range(0, die_count)]
+    roll_ = [(secrets.randbelow(die_size) + 1) for times in range(0, die_count)]
     return roll_
 
 
@@ -70,15 +67,15 @@ def parse_rolls(*expressions, **kwargs):
 
 @commands.cooldown(6, 12)
 @commands.command(aliases=["cflip", "coinflip"])
-async def coin(ctx):
+async def coin(event):
     """Flip a coin."""
-    choice = systemrandom.choice(["Heads!", "Tails!"])
-    await ctx.send(choice)
+    choice = secrets.choice(["Heads!", "Tails!"])
+    await event.reply(choice)
 
 
 @commands.cooldown(6, 12)
 @commands.command()
-async def roll(ctx, *expressions):
+async def roll(event, *expressions):
     """Roll some dice, using D&D syntax.
 
     Examples:
@@ -93,7 +90,7 @@ async def roll(ctx, *expressions):
 
     if rolls:
         roll_join = "\n".join(rolls)
-        await ctx.send(ctx.f.codeblock(roll_join))
+        await event.reply(event.f.codeblock(roll_join))
 
     else:
         raise exceptions.UserInputError(("No valid rolls supplied. "
