@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """Ping command for a sailor-based bot."""
 
 from sailor import commands
@@ -7,6 +5,6 @@ from sailor import commands
 
 @commands.cooldown(6, 12)
 @commands.command()
-async def ping(ctx):
+async def ping(event):
     """Ping the bot."""
-    await ctx.send(":3")
+    await event.reply(":3")

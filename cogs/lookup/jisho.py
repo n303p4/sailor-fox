@@ -1,19 +1,17 @@
-#!/usr/bin/env python3
-
 """jisho.org query command."""
 
 import urllib.parse
 
 import async_timeout
-from sailor import commands, exceptions
+from sailor import commands
 from sailor.web_exceptions import WebAPIInvalidResponse, WebAPINoResultsFound, WebAPIUnreachable
 
 BASE_URL_JISHO_API = "http://jisho.org/api/v1/search/words?{0}"
 
 
-def embed(ctx, **fields):
+def embed(event, **fields):
     """Generate a fancy embed."""
-    field_data = "\n".join(f"{ctx.f.bold(n)}: {i}" for n, i in fields.items())
+    field_data = "\n".join(f"{event.f.bold(n)}: {i}" for n, i in fields.items())
     return field_data
 
 
@@ -62,14 +60,14 @@ def generate_parsed_result(response_content):
 
 @commands.cooldown(6, 12)
 @commands.command(aliases=["jp"])
-async def jisho(ctx, *, query):
+async def jisho(event, *, query):
     """Translate a word into Japanese.
 
     Example usage:
     jisho test
     """
     url = generate_search_url(query)
-    response_content = await search(ctx.bot.session, url)
+    response_content = await search(event.processor.session, url)
     result = generate_parsed_result(response_content)
 
     fields = {
@@ -79,4 +77,4 @@ async def jisho(ctx, *, query):
     }
     message = embed(**fields)
 
-    await ctx.send(message)
+    await event.reply(message)

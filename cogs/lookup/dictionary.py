@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """Dictionary lookup command."""
 
 import re
@@ -73,7 +71,7 @@ def generate_parsed_results(response_content):
 
 @commands.cooldown(6, 12)
 @commands.command()
-async def define(ctx, word: str):
+async def define(event, word: str):
     """Define a word.
 
     Example usage:
@@ -82,13 +80,13 @@ async def define(ctx, word: str):
     * define fox
     """
     url = generate_search_url(word)
-    response_content = await search(ctx.bot.session, url)
+    response_content = await search(event.processor.session, url)
     results = generate_parsed_results(response_content)
 
     combined_results = []
 
     for result in results:
-        combined_result = f"{ctx.f.bold(result['type'])}\n{result['description']}"
+        combined_result = f"{event.f.bold(result['type'])}\n{result['description']}"
         combined_results.append(combined_result)
 
-    await ctx.send("\n\n".join(combined_results))
+    await event.reply("\n\n".join(combined_results))
