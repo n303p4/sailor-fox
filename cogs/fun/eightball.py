@@ -2,11 +2,9 @@
 
 # pylint: disable=invalid-name
 
-import random
+import secrets
 
 from sailor import commands
-
-systemrandom = random.SystemRandom()
 
 ANSWERS = [
     # Stock replies.
@@ -62,5 +60,5 @@ ANSWERS = [
 @commands.command(name="8ball", aliases=["eightball"])
 async def eightball_(event):
     """Ask the Magic 8-Ball a question."""
-    choice = systemrandom.choice(ANSWERS)
+    choice = secrets.choice(ANSWERS)
     await event.reply(choice)

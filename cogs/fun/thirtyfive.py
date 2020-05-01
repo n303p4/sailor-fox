@@ -2,11 +2,9 @@
 
 # pylint: disable=invalid-name
 
-import random
+import secrets
 
 from sailor import commands
-
-systemrandom = random.SystemRandom()
 
 AAA = (
     "a",
@@ -33,7 +31,7 @@ THROWABLE_OBJECTS = (
 @commands.command(aliases=["aa", "aaa"])
 async def a(event):
     """Aaaaaaa!"""
-    message = systemrandom.choice(AAA) * systemrandom.randint(10, 200)
+    message = secrets.choice(AAA) * (secrets.randbelow(191) + 10)
     await event.reply(message)
 
 
@@ -41,8 +39,8 @@ async def a(event):
 @commands.command(aliases=["snipe"])
 async def throw(event, *, someone):
     """Throw something at someone!"""
-    hit = systemrandom.randint(0, 5)
-    thing = systemrandom.choice(THROWABLE_OBJECTS)
+    hit = secrets.randbelow(6)
+    thing = secrets.choice(THROWABLE_OBJECTS)
     if hit:
         message = f":{thing}: {someone} got a {thing} thrown at them! :3"
     else:

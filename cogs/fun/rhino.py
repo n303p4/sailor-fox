@@ -3,7 +3,7 @@
 # pylint: disable=invalid-name
 
 import asyncio
-import random
+import secrets
 
 import sailor
 
@@ -21,14 +21,12 @@ PLAY_MESSAGES = [
     "Yay, let's play! Try using the help command for a list of commands~ :3"
 ]
 
-systemrandom = random.SystemRandom()
-
 
 @sailor.commands.cooldown(6, 12)
 @sailor.command()
 async def play(event):
     """Play a game!"""
-    message = systemrandom.choice(PLAY_MESSAGES)
+    message = secrets.choice(PLAY_MESSAGES)
     await event.reply(message)
 
 
@@ -52,7 +50,7 @@ async def pause(event):
 @sailor.command()
 async def summon(event):
     """Summon a monster!"""
-    choice = systemrandom.choice(SUMMONABLES)
+    choice = secrets.choice(SUMMONABLES)
     name = choice[0]
     image = choice[1]
     await event.reply(f"I-I summon {name}! o.o\n{image}")

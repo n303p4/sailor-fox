@@ -2,7 +2,7 @@
 
 # pylint: disable=invalid-name
 
-import random
+import secrets
 
 import async_timeout
 from sailor import commands
@@ -10,8 +10,6 @@ from sailor.web_exceptions import WebAPIUnreachable
 
 URL_NUMBERS_API = "http://numbersapi.com/{0}/{1}"
 OPTIONS_NUMBERS_API = ["math", "trivia"]
-
-systemrandom = random.SystemRandom()
 
 
 def generate_query_url(number, kind):
@@ -32,9 +30,11 @@ async def query(session, url):
 
 @commands.cooldown(12, 12)
 @commands.command(aliases=["numberfact", "number"])
-async def numfact(event, number: int):
+async def numfact(event, number: int = None):
     """Display a random fact about a number."""
-    kind = systemrandom.choice(OPTIONS_NUMBERS_API)
+    if not isinstance(number, int):
+        number = secrets.randbelow(101)
+    kind = secrets.choice(OPTIONS_NUMBERS_API)
     url = generate_query_url(number, kind)
     fact = await query(event.processor.session, url)
     await event.reply(fact)

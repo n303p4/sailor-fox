@@ -2,8 +2,8 @@
 
 # pylint: disable=invalid-name
 
-import random
 import re
+import secrets
 
 from sailor import commands, exceptions
 
@@ -14,8 +14,6 @@ REGEX_OBJECT_DND = re.compile(REGEX_DND)
 MAX_ROLLS = 20
 MAX_ROLL_SIZE = 30
 MAX_DIE_SIZE = 2000
-
-systemrandom = random.SystemRandom()
 
 
 def trim_expressions(*expressions):
@@ -35,7 +33,7 @@ def generate_roll(die_count, die_size):
     """Given an amount of dice and the number of sides per die, simulate a dice roll and return
     a list of ints representing the outcome values.
     """
-    roll_ = [systemrandom.randint(1, die_size) for times in range(0, die_count)]
+    roll_ = [(secrets.randbelow(die_size) + 1) for times in range(0, die_count)]
     return roll_
 
 
@@ -71,7 +69,7 @@ def parse_rolls(*expressions, **kwargs):
 @commands.command(aliases=["cflip", "coinflip"])
 async def coin(event):
     """Flip a coin."""
-    choice = systemrandom.choice(["Heads!", "Tails!"])
+    choice = secrets.choice(["Heads!", "Tails!"])
     await event.reply(choice)
 
 

@@ -3,7 +3,7 @@
 # pylint: disable=invalid-name
 
 import json
-import random
+import secrets
 
 import async_timeout
 from sailor import commands
@@ -16,8 +16,6 @@ URL_RANDOM_BIRB_API = "https://random.birb.pw/tweet.json/"
 URL_RANDOM_NEKO_API = "https://nekos.life/api/neko"
 URL_FOX_SUBREDDIT_TOP_API = "https://www.reddit.com/r/foxes/top/.json"
 URL_FOX_SUBREDDIT_NEW_API = "https://www.reddit.com/r/foxes/new/.json"
-
-systemrandom = random.SystemRandom()
 
 async def query(session, url, service_name):
     """Given a ClientSession, URL, and service name, query an API."""
@@ -74,11 +72,11 @@ async def birb(event):
 @commands.cooldown(6, 12)
 @commands.command()
 async def fox(event):
-    """Fetch a random cat."""
-    base_url = systemrandom.choice((URL_FOX_SUBREDDIT_TOP_API, URL_FOX_SUBREDDIT_NEW_API))
+    """Fetch a random fox."""
+    base_url = secrets.choice((URL_FOX_SUBREDDIT_TOP_API, URL_FOX_SUBREDDIT_NEW_API))
     response_content = await query(event.processor.session, base_url, "Reddit")
     response_content = json.loads(response_content)
     children = response_content["data"]["children"]
-    foxxo = systemrandom.choice(children)
+    foxxo = secrets.choice(children)
     url = foxxo["data"]["url"]
     await event.reply(url)

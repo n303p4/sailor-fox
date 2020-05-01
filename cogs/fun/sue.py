@@ -2,12 +2,10 @@
 
 # pylint: disable=invalid-name
 
-import random
 import re
+import secrets
 
 from sailor import commands
-
-systemrandom = random.SystemRandom()
 
 
 @commands.cooldown(6, 12)
@@ -30,6 +28,6 @@ async def sue(event, *, target=""):
         reason = ""
     if target:
         target = f" {target}"
-    amount = event.f.bold(f"${str(systemrandom.randint(100, 1000000))}")
+    amount = event.f.bold(f"${secrets.randbelow(999901) + 100}")
     message = f"I-I'm going to sue{target} for {amount}{reason}! o.o"
     await event.reply(message)
