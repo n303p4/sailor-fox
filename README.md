@@ -16,20 +16,29 @@ In particular, it provides Discord and Twitch bots that may be of actual use.
 ## Dependencies
 
 sailor-fox requires Python 3.7 or higher.
-If you're on Windows or macOS, you should download and install Python from the
-[official Python website](http://python.org/).
-If you're on Linux, you should probably install Python from your package manager.
+If you run Windows or macOS, you should download and install Python from the
+[official website](http://python.org/).
+If you run Linux, you should probably install Python from your package manager.
 Most Linux distributions currently ship Python 3.7 or higher (as of September 2021).
 
 The Twitch bot additionally depends on Node.js 16.0.0 or higher, ~~because it's dumb~~.
+If you run Windows or macOS, you should download and install Node.js from the
+[official website](https://nodejs.org/).
+If you run Linux, note that many distros do not ship Node.js 16.x (as of September 2021).
+You may need to use
+[the upstream Node.js repository](https://nodejs.org/en/download/package-manager/) for your distro.
 
-Lastly, install additional dependencies:
+After installing Python (and optionally Node), install additional dependencies:
 
 ```bash
 python3 -m pip install --user -r requirements.txt
 
 npm install axios tmi.js  # For Twitch only
 ```
+
+> ### Note
+> If the above Python command does not work, note that `pip` is provided by a separate package
+on many Linux distros (e.g. `python3-pip` on Ubuntu).
 
 ## Configuration
 
