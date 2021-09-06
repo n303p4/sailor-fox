@@ -7,6 +7,7 @@ Requires Python 3.6+ and aiohttp.
 
 import json
 import logging
+import sys
 
 from aiohttp import web
 import sailor
@@ -23,7 +24,7 @@ def main():
 
     discord_formatter = sailor.discord_helpers.TextFormatter()
 
-    processor = ProcessorWithConfig()
+    processor = ProcessorWithConfig(logout=sys.exit)
     processor.register_formatter(discord_formatter, "discord")
 
     routes = web.RouteTableDef()

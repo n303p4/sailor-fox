@@ -2,6 +2,12 @@
     "discord_token": "Discord token",
     "discord_client_id": 1234567890,
     "discord_guild_id": 1234567890,
+    "twitch_owner": "User ID of bot owner",
+    "twitch_username": "Twitch username",
+    "twitch_token": "Twitch token",
+    "twitch_channels": [
+        "Twitch channel"
+    ],
     "module_blocklist": [],
     "prefix": "!",
     "description": "A description",

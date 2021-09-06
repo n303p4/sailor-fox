@@ -30,7 +30,7 @@ client.on("interactionCreate", async interaction => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Content-Length": data.length
+            "Content-Length": requestBody.length
         }
     };
 
