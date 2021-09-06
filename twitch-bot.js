@@ -67,7 +67,7 @@ function onMessage(channel, tags, message, self) {
             client.say(channel, response.data[0]);
         }
         else {
-            const pastebinRequestBody = new url.URLSearchParams({
+            let pastebinRequestBody = new url.URLSearchParams({
                 "text": response.data.join("\n"),
                 "title": "Multiline post",
                 "password": crypto
@@ -92,7 +92,7 @@ function onMessage(channel, tags, message, self) {
             });
         }
         catch {
-            reply = `An error occurred: ${error.code}`;
+            let reply = `An error occurred: ${error.code}`;
             console.error(reply);
             if (error.code === "ECONNREFUSED") {
                 client.say(channel, "My brain stopped working. Please contact my owner. :<");

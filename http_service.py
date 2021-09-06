@@ -1,4 +1,5 @@
-"""An HTTP service made using sailor's command handler.
+"""
+An HTTP service made using sailor's command handler.
 
 Requires Python 3.6+ and aiohttp.
 """
