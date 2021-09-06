@@ -14,17 +14,17 @@ AAA = (
     "\u30A1",
     "\u30A2"
 )
-THROWABLE_OBJECTS = (
-    "heart",
-    "cat",
-    "dog",
-    "fox",
-    "cookie",
-    "croissant",
-    "lollipop",
-    "book",
-    "tangerine"
-)
+THROWABLE_OBJECTS = {
+    "heart": "❤",
+    "cat": "🐱",
+    "dog": "🐶",
+    "fox": "🦊",
+    "cookie": "🍪",
+    "croissant": "🥐",
+    "lollipop": "🍭",
+    "book": "📕",
+    "tangerine": "🍊"
+}
 
 
 @commands.cooldown(10, 5)
@@ -40,9 +40,9 @@ async def a(event):
 async def throw(event, *, someone):
     """Throw something at someone!"""
     hit = secrets.randbelow(6)
-    thing = secrets.choice(THROWABLE_OBJECTS)
+    thing, emoji = secrets.choice(tuple(THROWABLE_OBJECTS.items()))
     if hit:
-        message = f":{thing}: {someone} got a {thing} thrown at them! :3"
+        message = f"{emoji} {someone} got a {thing} thrown at them! :3"
     else:
-        message = f":{thing}: You missed! :3"
+        message = f"{emoji} You missed! :3"
     await event.reply(message)

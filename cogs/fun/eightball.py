@@ -6,8 +6,8 @@ import secrets
 
 from sailor import commands
 
+
 ANSWERS = [
-    # Stock replies.
     "It it certain.",
     "It is decidedly so.",
     "Without a doubt.",
@@ -30,16 +30,16 @@ ANSWERS = [
     "My sources say no.",
     "Outlook not so good.",
     "Very doubtful.",
-
-    # Kitsuchan replies
+]
+ANSWERS_KITSUCHAN = [
     "Yay!",
-    ":fox:",
-    ":sunny: :3",
-    ":clap:",
+    "🦊",
+    "🌣 :3",
+    "👏",
     "Kon kon!",
     "+1",
     "Awau! :3",
-    ":thumbsup:",
+    "👍",
     "Yes. :3",
     ":3",
 
@@ -52,8 +52,9 @@ ANSWERS = [
     "Awau. :<",
     "Get bent. :3",
     "No. :<",
-    ":thumbsdown:",
-    "RIP"]
+    "👎",
+    "RIP"
+]
 
 
 @commands.cooldown(6, 12)
@@ -61,4 +62,12 @@ ANSWERS = [
 async def eightball_(event):
     """Ask the Magic 8-Ball a question."""
     choice = secrets.choice(ANSWERS)
-    await event.reply(choice)
+    await event.reply(f"🎱 {choice}")
+
+
+@commands.cooldown(6, 12)
+@commands.command(aliases=["kitsuball"])
+async def kball(event):
+    """Ask the Magic 8-Ball a question, with added Kitsuchan replies."""
+    choice = secrets.choice(ANSWERS + ANSWERS_KITSUCHAN)
+    await event.reply(f"🎱 {choice}")
