@@ -101,13 +101,13 @@ The backend contains an instance of `sailor.commands.Processor` that can interpr
 Commands are sent to the backend by HTTP POSTing a JSON object to `localhost`, default port `9980`.
 The JSON object should follow this structure:
 
-```json
+```
 {
-    "id": <optional request id, for logging convenience>,
-    "message": <message contents>,
-    "is_owner": <optional check for whether the person who sent the command is the bot owner>,
-    "character_limit": <character limit of the chat service>,
-    "format_name": <optional format name>
+    "id": <string, optional request id for logging convenience>,
+    "message": <string, message contents>,
+    "is_owner": <boolean, optional check for whether the person who sent the command is the bot owner>,
+    "character_limit": <int, per-post character limit of the chat service>,
+    "format_name": <string, optional format name>
 }
 ```
 
