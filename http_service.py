@@ -126,9 +126,6 @@ def main():
 
     assert (isinstance(processor.config.get("module_blocklist", []), list)), "Blocklist must be a list."
 
-    if processor.config.get("description"):
-        processor.description = processor.config["description"]
-
     processor.add_modules_from_dir("cogs", blocklist=processor.config.get("module_blocklist", []))
 
     app = web.Application()
