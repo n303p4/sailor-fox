@@ -29,8 +29,8 @@ async def search(session, url):
             if response.status == 200:
                 try:
                     response_content = await response.json()
-                except Exception:
-                    raise WebAPIInvalidResponse(service="jisho.org")
+                except Exception as error:
+                    raise WebAPIInvalidResponse(service="jisho.org") from error
             raise WebAPIUnreachable(service="jisho.org")
 
     return response_content
@@ -54,8 +54,8 @@ def generate_parsed_result(response_content):
 
         return result
 
-    except Exception:
-        raise WebAPIInvalidResponse(service="jisho.org")
+    except Exception as error:
+        raise WebAPIInvalidResponse(service="jisho.org") from error
 
 
 @commands.cooldown(6, 12)

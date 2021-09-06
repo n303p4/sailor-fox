@@ -39,8 +39,8 @@ async def search(session, url, params):
             if response.status == 200:
                 try:
                     resp_content = await response.json(content_type="application/vnd.api+json")
-                except Exception:
-                    raise WebAPIInvalidResponse(service="kitsu.io")
+                except Exception as error:
+                    raise WebAPIInvalidResponse(service="kitsu.io") from error
             else:
                 raise WebAPIUnreachable(service="kitsu.io")
 
@@ -70,8 +70,8 @@ def generate_parsed_result(response_content, request_type):
 
         return result
 
-    except Exception:
-        raise WebAPIInvalidResponse(service="kitsu.io")
+    except Exception as error:
+        raise WebAPIInvalidResponse(service="kitsu.io") from error
 
 
 async def _kitsu(request_type, event, query):

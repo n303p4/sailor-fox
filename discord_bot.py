@@ -66,11 +66,11 @@ if __name__ == "__main__":
     processor.load_config()
 
     assert (isinstance(processor.config.get("discord_token"), str)), "Bot token not valid."
-    assert (isinstance(processor.config.get("module_blacklist", []), list)), "Blacklist must be a list."
+    assert (isinstance(processor.config.get("module_blocklist", []), list)), "blocklist must be a list."
 
     if processor.config.get("description"):
         processor.description = processor.config["description"]
 
-    processor.add_modules_from_dir("cogs", blacklist=processor.config.get("module_blacklist", []))
+    processor.add_modules_from_dir("cogs", blocklist=processor.config.get("module_blocklist", []))
 
     client.run(processor.config["discord_token"])

@@ -10,9 +10,9 @@ async def load(event, *, name):
     Example usage:
     load modules.core.ping
     """
-    event.processor.config.setdefault("module_blacklist", [])
-    if name in event.processor.config["module_blacklist"]:
-        event.processor.config["module_blacklist"].remove(name)
+    event.processor.config.setdefault("module_blocklist", [])
+    if name in event.processor.config["module_blocklist"]:
+        event.processor.config["module_blocklist"].remove(name)
         event.processor.save_config()
     event.processor.add_module(name, skip_duplicate_commands=True)
     await event.reply(f"Loaded module {name}")
@@ -55,9 +55,9 @@ async def unload(event, *, name):
     Example usage:
     unload modules.core.ping
     """
-    event.processor.config.setdefault("module_blacklist", [])
-    if name not in event.processor.config["module_blacklist"]:
-        event.processor.config["module_blacklist"].append(name)
+    event.processor.config.setdefault("module_blocklist", [])
+    if name not in event.processor.config["module_blocklist"]:
+        event.processor.config["module_blocklist"].append(name)
         event.processor.save_config()
     event.processor.remove_module(name)
     await event.reply(f"Unloaded module {name}")

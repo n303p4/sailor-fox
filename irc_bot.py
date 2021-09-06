@@ -35,9 +35,9 @@ class Bot(irc.bot.SingleServerIRCBot):
 
             self.processor.prefix = self.processor.config.get("prefix", "")
 
-            blacklist = self.processor.config.get("module_blacklist", [])
+            blocklist = self.processor.config.get("module_blocklist", [])
 
-            self.processor.add_modules_from_dir("cogs", blacklist=blacklist)
+            self.processor.add_modules_from_dir("cogs", blocklist=blocklist)
 
             irc.bot.SingleServerIRCBot.__init__(
                 self, [(network, port)], nick, realname or nick)

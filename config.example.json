@@ -1,6 +1,6 @@
 {
     "discord_token": "Discord token",
-    "module_blacklist": [],
+    "module_blocklist": [],
     "prefix": "!",
     "description": "A description",
     "weebsh_token": "Token for weeb.sh, only supports Wolke tokens (leave out Wolke in the token entry here)"

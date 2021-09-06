@@ -23,8 +23,8 @@ async def search(session, url):
             if response.status == 200:
                 try:
                     response_content = await response.json()
-                except Exception:
-                    raise WebAPIInvalidResponse(service="Wikipedia")
+                except Exception as error:
+                    raise WebAPIInvalidResponse(service="Wikipedia") from error
             else:
                 raise WebAPIUnreachable(service="Wikipedia")
 
@@ -48,8 +48,8 @@ def generate_parsed_results(response_content):
 
         return results
 
-    except Exception:
-        raise WebAPIInvalidResponse(service="Wikipedia")
+    except Exception as error:
+        raise WebAPIInvalidResponse(service="Wikipedia") from error
 
 
 @commands.cooldown(6, 12)

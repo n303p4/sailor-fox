@@ -53,4 +53,4 @@ async def summon(event):
     choice = secrets.choice(SUMMONABLES)
     name = choice[0]
     image = choice[1]
-    await event.reply(f"I-I summon {name}! o.o\n{image}")
+    await event.reply(f"I summon {name}!\n{image}")

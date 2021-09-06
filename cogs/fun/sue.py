@@ -29,5 +29,5 @@ async def sue(event, *, target=""):
     if target:
         target = f" {target}"
     amount = event.f.bold(f"${secrets.randbelow(999901) + 100}")
-    message = f"I-I'm going to sue{target} for {amount}{reason}! o.o"
+    message = f"I'm going to sue{target} for {amount}{reason}!"
     await event.reply(message)

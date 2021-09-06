@@ -28,8 +28,8 @@ def main():
     processor.load_config()
     global_prefix = processor.config.get("prefix", "")
 
-    blacklist = processor.config.get("module_blacklist", [])
-    processor.add_modules_from_dir("cogs", blacklist=blacklist)
+    blocklist = processor.config.get("module_blocklist", [])
+    processor.add_modules_from_dir("cogs", blocklist=blocklist)
 
     print(f"Enter commands here. Commands must start with {global_prefix}")
     print(f"For help, use {global_prefix} help.")
