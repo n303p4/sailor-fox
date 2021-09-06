@@ -99,7 +99,7 @@ def main():
                 reply_with=append_to_message_stack
             )
         except (sailor.exceptions.CommandError, sailor.exceptions.CommandProcessorError) as error:
-            logger.error("id=%s | %s", request_id, to_one_liner(error))
+            logger.error("id=%s | %s", request_id, to_one_liner(str(error)))
             return web.Response(
                 text=json.dumps([str(error)]),
                 content_type="application/json",
