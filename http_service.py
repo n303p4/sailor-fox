@@ -47,19 +47,19 @@ def main():
 
         format_name = form_data.get("format_name")
         is_owner = form_data.get("is_owner", False)
-        message = form_data.get("message")
+        message = form_data.get("message", "")
 
-        reply_stack = []
-
-        async def append_to_message_stack(reply_contents):
-            reply_stack.append(reply_contents)
-
-        if not message:
+        if not message.strip():
             return web.Response(
                 text=json.dumps(["Invalid message"]),
                 content_type="application/json",
                 status=400
             )
+
+        reply_stack = []
+
+        async def append_to_message_stack(reply_contents):
+            reply_stack.append(reply_contents)
 
         try:
             await processor.process(
