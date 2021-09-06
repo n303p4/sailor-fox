@@ -75,7 +75,7 @@ def _process_post(post, formatter, base_url_post: str, max_length_tags: int=MAX_
     post_url = base_url_post.format(post["id"])
     lines = [
         formatter.bold("Original post: ") + formatter.no_embed_link(post_url),
-        formatter.bold("Image URL: ") + f"https:{post['file_url']}",
+        formatter.bold("Image URL: ") + post['file_url'],
         formatter.bold("Tags: ") + formatter.monospace(post["tags"][:max_length_tags].strip())
     ]
     return "\n".join(lines)
