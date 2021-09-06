@@ -40,6 +40,28 @@ function toOneLiner(data, maxLength=100) {
     return oneLiner;
 }
 
+function multiSay(channel, data) {
+    if (data.length === 1) {
+        client.say(channel, data[0]);
+    }
+    else {
+        let pastebinRequestBody = new url.URLSearchParams({
+            "text": data.join("\n"),
+            "title": "Multiline post",
+            "password": crypto
+                .randomBytes(32)
+                .toString("hex")
+        });
+        axios
+        .post(pastebinURL, pastebinRequestBody.toString())
+        .then((response) => {
+            let reply = `Multiline post: ${response.request.res.responseUrl}`;
+            console.log(reply);
+            client.say(channel, reply);
+        });
+    }
+}
+
 function onConnected(addr, port) {
     console.log(`Connected to ${addr}:${port}`);
 }
@@ -63,42 +85,28 @@ function onMessage(channel, tags, message, self) {
         }
         let replyOneLiner = toOneLiner(response.data);
         console.log(`sailor (${response.status}): ${replyOneLiner}`);
-        if (response.data.length === 1) {
-            client.say(channel, response.data[0]);
-        }
-        else {
-            let pastebinRequestBody = new url.URLSearchParams({
-                "text": response.data.join("\n"),
-                "title": "Multiline post",
-                "password": crypto
-                    .randomBytes(32)
-                    .toString("hex")
-            });
-            axios
-            .post(pastebinURL, pastebinRequestBody.toString())
-            .then((response) => {
-                let reply = `Multiline post: ${response.request.res.responseUrl}`;
-                console.log(reply);
-                client.say(channel, reply);
-            });
-        }
+        multiSay(channel, response.data);
     })
     .catch((error) => {
         try {
             let replyOneLiner = toOneLiner(error.response.data);
             console.log(`sailor (${error.response.status}): ${replyOneLiner}`);
-            error.response.data.forEach((reply) => {
-                client.say(channel, reply);
-            });
+            multiSay(channel, error.response.data);
         }
         catch {
-            let reply = `An error occurred: ${error.code}`;
-            console.error(reply);
+            let errorMessage;
+            if (error.code) {
+                errorMessage = `An error occurred: ${error.code}`;
+            }
+            else {
+                errorMessage = "An unknown error occurred.";
+            }
+            console.error(errorMessage);
             if (error.code === "ECONNREFUSED") {
                 client.say(channel, "My brain stopped working. Please contact my owner. :<");
             }
             else if (error.code !== "ECONNRESET") {
-                client.say(channel, reply);
+                client.say(channel, errorMessage);
             }
         }
     });
