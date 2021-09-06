@@ -57,10 +57,9 @@ def main():
     async def on_message(request):
         """Accept incoming messages and forward them to the processor."""
 
-        request_id = hashlib.md5(bytes(str(time.time()), encoding="utf-8")).hexdigest()
-
         options = await request.json()
 
+        request_id = options.get("id", hashlib.md5(bytes(str(time.time()), encoding="utf-8")).hexdigest())
         message = options.get("message", "")
         is_owner = options.get("is_owner", False)
         character_limit = options.get("character_limit", 2000)

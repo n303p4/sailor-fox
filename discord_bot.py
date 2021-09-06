@@ -77,6 +77,7 @@ async def on_message(message):
             await message.channel.send(reply_contents)
 
         request_body = {
+            "id": f"discord:{message.id}",
             "message": message_text,
             "is_owner": is_owner,
             "character_limit": 2000,
