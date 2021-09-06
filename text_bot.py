@@ -7,7 +7,7 @@ from sailor import exceptions
 from sailor_fox import ProcessorWithConfig
 
 
-def split_first_word(text, prefix):
+def get_prefix(text, prefix):
     """If a text string starts with a substring, return the substring and the text minus the first instance of the
     substring; otherwise return None and the text.
     """
@@ -35,7 +35,7 @@ def main():
     print(f"For help, use {global_prefix} help.")
 
     while True:
-        prefix, message = split_first_word(input("> "), global_prefix)
+        prefix, message = get_prefix(input("> "), global_prefix)
         if prefix:
             try:
                 processor.loop.run_until_complete(processor.process(message, reply_with=send, is_owner=True))

@@ -24,7 +24,7 @@ processor.default_formatter = sailor.discord_helpers.TextFormatter()
 prefixes = []
 
 
-def split_first_word(text, prefixes_):
+def get_prefix(text, prefixes_):
     """If a text string starts with a substring, return the substring and the text minus the first instance of the
     substring; otherwise return None and the text.
     """
@@ -53,7 +53,7 @@ async def on_message(message):
     application_info = await client.application_info()
     is_owner = (message.author.id == application_info.owner.id)
 
-    prefix, message_text = split_first_word(message.content, prefixes)
+    prefix, message_text = get_prefix(message.content, prefixes)
 
     if prefix and message_text.strip():
         try:
