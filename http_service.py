@@ -30,7 +30,7 @@ def main():
 
     @routes.get("/")
     async def command_list(_):
-        """Return a JSON dict of all commands. Mainly for Discord slash command registration."""
+        """Return JSON dict of all commands, minus their aliases. Mainly for Discord slash command registration."""
 
         command_list = {}
         for command in processor.commands.values():
@@ -43,7 +43,7 @@ def main():
     async def on_message(request):
         """Accept incoming messages and forward them to the processor."""
 
-        form_data = await request.post()
+        form_data = await request.json()
 
         format_name = form_data.get("format_name")
         is_owner = form_data.get("is_owner", False)

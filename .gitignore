@@ -94,3 +94,8 @@ config.json.*
 
 # Pip modules
 src/
+
+# Node stuff
+node_modules/
+package-lock.json
+package.json
