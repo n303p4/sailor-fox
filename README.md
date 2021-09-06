@@ -148,7 +148,7 @@ To create a complete and useful bot, there must also be a **frontend** to a chat
 Its job is to decide what messages in chat look like commands, and forward them to the backend.
 Results are then returned back to the frontend for further processing.
 
-> ## Note
+> ### Note
 > While the backend is written in Python, frontends can be written in any language.
 Multiple unrelated frontends can also share the same backend instance, allowing a common backend
 to serve more than one chat service (i.e. less system resources required).
