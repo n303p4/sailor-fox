@@ -60,7 +60,7 @@ def main():
         reply_stack = []
 
         async def append_to_message_stack(reply_contents):
-            reply_stack.append(reply_contents)
+            reply_stack.append(reply_contents.strip())
 
         try:
             await processor.process(
