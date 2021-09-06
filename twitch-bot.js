@@ -110,7 +110,7 @@ function onMessage(channel, tags, message, self) {
             else {
                 errorMessage = "An unknown error occurred.";
             }
-            console.error(errorMessage);
+            console.error(`id=${tags.id} | errorMessage`);
             if (error.code === "ECONNREFUSED") {
                 client.say(channel, "My brain stopped working. Please contact my owner. :<");
             }
