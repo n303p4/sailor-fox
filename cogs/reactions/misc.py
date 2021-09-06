@@ -8,7 +8,7 @@ import secrets
 import async_timeout
 
 from sailor import commands
-from sailor.web_exceptions import WebAPIUnreachable, WebAPINoResultsFound, WebAPIInvalidResponse
+from sailor.web_exceptions import WebAPIUnreachable, WebAPIInvalidResponse
 
 URL_RANDOM_DOG_API = "https://random.dog/woof.json"
 URL_RANDOM_CAT_API = "https://nekos.life/api/v2/img/meow"
