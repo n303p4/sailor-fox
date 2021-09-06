@@ -13,12 +13,12 @@ class ProcessorWithConfig(sailor.commands.Processor):
         self.description = "This is a bot."
         self.config = {}
 
-    def load_config(self, filename="config.json"):
+    def load_config(self, filename: str = "config.json"):
         """Load configuration."""
         with open(filename, "r") as file_object:
             self.config = json.load(file_object)
 
-    def save_config(self, filename="config.json"):
+    def save_config(self, filename: str = "config.json"):
         """Save configuration."""
         with open(filename, "w") as file_object:
             json.dump(self.config, file_object)
