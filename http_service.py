@@ -22,6 +22,16 @@ logger = logging.getLogger("discord")
 logger.setLevel(logging.INFO)
 
 
+def to_one_liner(text, max_length: int = 75):
+    """Truncates a string to a single line for logging"""
+    one_liner = " ".join(text.split("\n"))
+    if len(one_liner) > max_length:
+        one_liner = f"{one_liner[:max_length-1]}…"
+    if not one_liner:
+        one_liner = "<empty>"
+    return one_liner
+
+
 def main():
     """Factory to create and run everything."""
 
@@ -62,7 +72,7 @@ def main():
             is_owner,
             character_limit,
             format_name,
-            message
+            to_one_liner(message)
         )
 
         if not message.strip():
@@ -77,7 +87,7 @@ def main():
         reply_stack = []
 
         async def append_to_message_stack(reply_contents):
-            logger.info("id=%s | %s", request_id, reply_contents)
+            logger.info("id=%s | %s", request_id, to_one_liner(reply_contents))
             reply_stack.append(reply_contents.strip())
 
         try:
@@ -89,7 +99,7 @@ def main():
                 reply_with=append_to_message_stack
             )
         except (sailor.exceptions.CommandError, sailor.exceptions.CommandProcessorError) as error:
-            logger.error("id=%s | %s", request_id, str(error))
+            logger.error("id=%s | %s", request_id, to_one_liner(error))
             return web.Response(
                 text=json.dumps([str(error)]),
                 content_type="application/json",
