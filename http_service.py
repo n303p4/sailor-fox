@@ -27,7 +27,6 @@ def main():
     processor = ProcessorWithConfig()
     processor.register_formatter(discord_formatter, "discord")
 
-
     @routes.get("/commandlist")
     async def command_list(_):
         """Return a JSON dict of all commands. Mainly for Discord slash command registration."""
@@ -38,7 +37,6 @@ def main():
             for alias in command.aliases:
                 command_list[alias] = command.help
         return web.json_response(command_list)
-
 
     @routes.post("/")
     async def on_message(request):
@@ -56,7 +54,7 @@ def main():
             reply_stack.append(reply_contents)
 
         if not message:
-            return web.Response(text="Invalid message", status=400)
+            return web.json_response({0: "Invalid message"}, status=400)
 
         try:
             await processor.process(
@@ -66,9 +64,9 @@ def main():
                 reply_with=append_to_message_stack
             )
         except (sailor.exceptions.CommandError, sailor.exceptions.CommandProcessorError) as error:
-            return web.Response(text=str(error), status=500)
+            return web.json_response({0: str(error)}, status=500)
 
-        return web.Response(text="\n".join(reply_stack))
+        return web.json_response(dict(enumerate(reply_stack)))
 
     processor.load_config()
 
