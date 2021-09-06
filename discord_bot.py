@@ -90,7 +90,7 @@ async def on_message(message):
                     for reply_contents in reply_stack:
                         await send_and_log(reply_contents, error=(response.status != 200))
         except Exception as error:
-            logger.error("id=%s | %s", message.id, error)
+            logger.error("id=%s | %s", message.id, to_one_liner(error))
             await message.channel.send(str(error))
 
 
