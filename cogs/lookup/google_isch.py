@@ -73,7 +73,7 @@ async def image(event, *, query: str):
     search_result_url = await _google_isch_get_one(event.processor.session, query, SEARCH_HEADERS)
     image_url, website_url = await _google_isch_handle_one(event.processor.session, search_result_url, SEARCH_HEADERS)
     message = [
-        event.f.bold("Google Image Result: ") + search_result_url,
+        event.f.underline(event.f.bold("Google Image Result")),
         event.f.bold("Website: ") + event.f.no_embed_link(website_url),
         event.f.bold("Full-size image: ") + image_url,
         "Powered (but not endorsed) by Google Images"
