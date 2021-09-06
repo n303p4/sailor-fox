@@ -45,7 +45,7 @@ async def reloadall(event):
 
     if errors:
         await event.reply("\n".join(errors))
-    await event.reply(f"Reloaded all modules.")
+    await event.reply("Reloaded all modules.")
 
 
 @commands.command(owner_only=True)

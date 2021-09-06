@@ -5,47 +5,51 @@
 import re
 import secrets
 
-from sailor import commands, exceptions
+from sailor import commands
+from sailor.exceptions import UserInputError
 
-REGEX_DND = "[0-9]+[dD][0-9]+"
-REGEX_DND_SPLIT = "[dD]"
+
+REGEX_DND = r"([1-9][0-9]*)?[dD]([1-9][0-9]*)([\+\-][0-9]+)?"
 REGEX_OBJECT_DND = re.compile(REGEX_DND)
 
 MAX_ROLLS = 20
-MAX_ROLL_SIZE = 30
-MAX_DIE_SIZE = 2000
+MAX_DICE = 20
+MAX_SIDES = 2000
+MAX_MODIFIER = 2000
 
 
 def trim_expressions(*expressions):
     """Remove all expressions from a list that don't match D&D syntax."""
-    expressions = [e for e in expressions if REGEX_OBJECT_DND.fullmatch(e)]
-    return expressions
+    matches = [
+        m for m in [REGEX_OBJECT_DND.fullmatch(e.replace(" ", "")) for e in expressions] if m
+    ]
+    return matches
 
 
-def parse_roll(expression):
-    """Convert a D&D roll expression into a tuple of format (die_count, die_size)."""
-    expression_parts = re.split(REGEX_DND_SPLIT, expression)
-    roll_ = tuple(int(value) for value in expression_parts)
-    return roll_
+def parse_roll(match):
+    """Convert a D&D roll expression into a tuple of format (count, size, modifier)."""
+    return tuple(int(g) if isinstance(g, str) else 0 for g in match.groups())
 
 
-def generate_roll(die_count, die_size):
+def do_roll(dice: int, sides: int, _: int):
     """Given an amount of dice and the number of sides per die, simulate a dice roll and return
     a list of ints representing the outcome values.
+
+    Modifier is ignored.
     """
-    roll_ = [(secrets.randbelow(die_size) + 1) for times in range(0, die_count)]
-    return roll_
+    dice = dice or 1
+    sides = sides or 1
+    values = sorted(((secrets.randbelow(sides) + 1) for _ in range(0, dice)), reverse=True)
+    return values
 
 
-def parse_rolls(*expressions, **kwargs):
+def do_rolls(*expressions, **kwargs):
     """Given a list of D&D roll expressions, generate a series of rolls."""
 
-    if not expressions:
-        return []
-
     max_rolls = kwargs["max_rolls"]
-    max_roll_size = kwargs["max_roll_size"]
-    max_die_size = kwargs["max_die_size"]
+    max_dice = kwargs["max_dice"]
+    max_sides = kwargs["max_sides"]
+    max_modifier = kwargs["max_modifier"]
 
     rolls = []
 
@@ -53,14 +57,40 @@ def parse_rolls(*expressions, **kwargs):
 
     for expression in expressions[:max_rolls]:
 
-        roll_ = parse_roll(expression)
+        roll = parse_roll(expression)
+        modifier = roll[2]
 
-        if roll_[0] > max_roll_size or roll_[1] > max_die_size:
+        errors = []
+        if roll[0] > max_dice:
+            errors.append(f"{roll[0]} > max {max_dice}")
+        if roll[1] > max_sides:
+            errors.append(f"d{roll[1]} > max d{max_sides}")
+        if abs(modifier) > max_modifier:
+            errors.append(f"{modifier:+d} > max ±{max_modifier}")
+        if errors:
+            rolls.append(
+                f"{expression.group(0)} :: Invalid roll\n[ {' | '.join(errors)} ]"
+            )
             continue
 
-        elif roll_[1] > 1 and roll_[0] >= 1:
-            outcome = generate_roll(roll_[0], roll_[1])
-            rolls.append(f"{expression}: {outcome} ({sum(outcome)})")
+        values = do_roll(*roll)
+        outcome = sum(values)
+        values_string = f"= ({', '.join(str(v) for v in values)})"
+
+        outcome_string = str(outcome)
+
+        if modifier:
+            if modifier > 0:
+                outcome_string += f" + {modifier}"
+            else:
+                outcome_string += f" - {abs(modifier)}"
+            outcome_string += f" = {outcome+modifier}"
+        rolls.append(
+            f"{expression.group(0)} :: {outcome_string}\n{values_string}"
+        )
+
+    if len(expressions) > max_rolls:
+        rolls.append(f"Some rolls were omitted; max # of rolls allowed at a time is {max_rolls}")
 
     return rolls
 
@@ -74,27 +104,33 @@ async def coin(event):
 
 
 @commands.cooldown(6, 12)
-@commands.command()
-async def roll(event, *expressions):
+@commands.command(name="roll")
+async def _roll(event, *expressions):
     """Roll some dice, using D&D syntax.
 
     Examples:
-    roll 5d6 - Roll five six sided dice.
+    roll 5d6+2 - Roll five six sided dice with a modifier of 2.
     roll 1d20 2d8 - Roll one twenty sided die, and two eight sided dice.
+
+    Roll outcomes are always sorted in descending order.
     """
 
-    rolls = parse_rolls(*expressions,
-                        max_rolls=MAX_ROLLS,
-                        max_roll_size=MAX_ROLL_SIZE,
-                        max_die_size=MAX_DIE_SIZE)
 
-    if rolls:
-        roll_join = "\n".join(rolls)
-        await event.reply(event.f.codeblock(roll_join))
+    outcomes = do_rolls(*expressions,
+                        max_rolls=MAX_ROLLS,
+                        max_dice=MAX_DICE,
+                        max_sides=MAX_SIDES,
+                        max_modifier=MAX_MODIFIER)
+
+    if outcomes:
+        for outcome in outcomes:
+            await event.reply(event.f.codeblock(outcome, syntax="asciidoc"))
 
     else:
-        raise exceptions.UserInputError(("No valid rolls supplied. "
-                                         f"Please use D&D format, e.g. 5d6.\n"
-                                         "Individual rolls cannot have more than "
-                                         f"{MAX_ROLL_SIZE} dice, and individual dice cannot "
-                                         f"have more than {MAX_DIE_SIZE} sides."))
+        raise UserInputError((
+            "No valid rolls supplied. Please use D&D format, e.g. 5d6+2.\n"
+            "Individual rolls cannot have more than "
+            f"{MAX_DICE} dice, and individual dice must have "
+            f"between 1 and {MAX_SIDES} sides inclusive. The "
+            f"modifier must not exceed ±{MAX_MODIFIER}"
+        ))
