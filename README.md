@@ -145,7 +145,7 @@ If the HTTP status code is 200, the command completed normally.
 Any other status code should be understood as an error.
 
 To create a complete and useful bot, there must also be a **frontend** to a chat service.
-Its job is to decide what messages in chat look like commands, and forward them to the backend.
+Its job is to decide what messages in chat appear to be commands, and forward them to the backend.
 Results are then returned back to the frontend for further processing.
 
 > ### Note
