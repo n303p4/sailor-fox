@@ -14,9 +14,10 @@ CONTINENTS = ["Africa/", "America/", "America/Argentina/", "America/Indiana/", "
 @commands.cooldown(6, 12)
 @commands.command(aliases=["timein", "tz", "timezone"])
 async def time(event, *, location: str):
-    """A command that fetches the time in a given area using TZ database names.
+    """
+    A command that fetches the time in a given area using TZ database names.
 
-    Tries to do simple guesswork to accommodate invalid inputs.
+    Tries to do some guesswork to accommodate simplified inputs.
 
     Example usage:
     * time Europe/Berlin
@@ -39,9 +40,12 @@ async def time(event, *, location: str):
                 raise UnknownTimeZoneError()
         else:
             timezone = pytz.timezone(location)
-    except UnknownTimeZoneError:
-        raise exceptions.UserInputError(("Could not determine TZ database name from input. Please refer to "
-                                         f"{event.f.no_embed_link(URL)} for a complete list of TZ database names."))
+    except UnknownTimeZoneError as error:
+        raise exceptions.UserInputError((
+            "Could not determine TZ database name from input. Please refer to "
+            f"{event.f.no_embed_link(URL)} for a complete list of TZ database names. "
+            "(The part before the / is usually not needed)"
+        )) from error
     utcmoment = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
     localized_datetime = utcmoment.astimezone(timezone)
     human_readable_location = timezone.zone.split("/")[-1].replace("_", " ")
