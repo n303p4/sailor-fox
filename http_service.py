@@ -47,9 +47,6 @@ def main():
 
         options = await request.json()
 
-        format_name = options.get("format_name")
-        character_limit = options.get("character_limit", 2000)
-        is_owner = options.get("is_owner", False)
         message = options.get("message", "")
 
         if not message.strip():
@@ -58,6 +55,10 @@ def main():
                 content_type="application/json",
                 status=400
             )
+
+        is_owner = options.get("is_owner", False)
+        character_limit = options.get("character_limit", 2000)
+        format_name = options.get("format_name")
 
         reply_stack = []
 

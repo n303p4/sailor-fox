@@ -1,4 +1,4 @@
-// Twitch client for http_service.py
+// A Twitch client for http_service.py
 
 const crypto = require('crypto');
 const url = require("url");
@@ -32,6 +32,7 @@ client.on("connected", onConnected);
 
 client.connect();
 
+// Truncates an array of strings to a single line
 function toOneLiner(data, maxLength=100) {
     let oneLiner = data.join(" ").split("\n").join(" ");
     if (oneLiner.length > maxLength) {
@@ -40,7 +41,11 @@ function toOneLiner(data, maxLength=100) {
     return oneLiner;
 }
 
-function multiSay(channel, data) {
+/*
+Sends a message normally if it's short enough.
+Otherwise, posts the message to a pastebin site (currently Ghostbin) and sends the link in chat.
+*/
+function extSay(channel, data) {
     if (data.length === 1) {
         client.say(channel, data[0]);
     }
@@ -62,10 +67,12 @@ function multiSay(channel, data) {
     }
 }
 
+// Standard ready message
 function onConnected(addr, port) {
     console.log(`Connected to ${addr}:${port}`);
 }
 
+// Command handler (and potential other stuff)
 function onMessage(channel, tags, message, self) {
     if (self) return;
     if (!message.startsWith(prefix)) return;
@@ -85,13 +92,13 @@ function onMessage(channel, tags, message, self) {
         }
         let replyOneLiner = toOneLiner(response.data);
         console.log(`sailor (${response.status}): ${replyOneLiner}`);
-        multiSay(channel, response.data);
+        extSay(channel, response.data);
     })
     .catch((error) => {
         try {
             let replyOneLiner = toOneLiner(error.response.data);
             console.log(`sailor (${error.response.status}): ${replyOneLiner}`);
-            multiSay(channel, error.response.data);
+            extSay(channel, error.response.data);
         }
         catch {
             let errorMessage;
