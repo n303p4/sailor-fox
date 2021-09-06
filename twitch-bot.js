@@ -1,5 +1,7 @@
 // Twitch client for http_service.py
 
+const crypto = require('crypto');
+const url = require("url");
 const axios = require("axios");
 const tmi = require("tmi.js");
 
@@ -13,6 +15,7 @@ const {
     prefix
 } = require("./config.json");
 const sailorServiceURL = `http://localhost:${http_port}`;
+const pastebinURL = "https://ghostbin.com/paste/new";
 
 const clientOptions = {
     identity: {
@@ -60,9 +63,25 @@ function onMessage(channel, tags, message, self) {
         }
         let replyOneLiner = toOneLiner(response.data);
         console.log(`sailor (${response.status}): ${replyOneLiner}`);
-        response.data.forEach((reply) => {
-            client.say(channel, reply);
-        });
+        if (response.data.length === 1) {
+            client.say(channel, response.data[0]);
+        }
+        else {
+            const pastebinRequestBody = new url.URLSearchParams({
+                "text": response.data.join("\n"),
+                "title": "Multiline post",
+                "password": crypto
+                    .randomBytes(32)
+                    .toString("hex")
+            });
+            axios
+            .post(pastebinURL, pastebinRequestBody.toString())
+            .then((response) => {
+                let reply = `Multiline post: ${response.request.res.responseUrl}`;
+                console.log(reply);
+                client.say(channel, reply);
+            });
+        }
     })
     .catch((error) => {
         try {
