@@ -12,7 +12,6 @@ import logging
 import aiohttp
 import async_timeout
 import discord
-import sailor
 
 logging.basicConfig(format="%(asctime)-12s %(levelname)s %(message)s")
 logger = logging.getLogger("discord")
@@ -90,11 +89,9 @@ async def on_message(message):
                     reply_stack = await response.json()
                     for reply_contents in reply_stack:
                         await send_and_log(reply_contents, error=(response.status != 200))
-        except (sailor.exceptions.CommandError, sailor.exceptions.CommandProcessorError) as error:
-            logger.error("id=%s | %s", message.id, error)
-            await message.channel.send(str(error))
         except Exception as error:
             logger.error("id=%s | %s", message.id, error)
+            await message.channel.send(str(error))
 
 
 if __name__ == "__main__":
