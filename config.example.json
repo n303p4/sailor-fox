@@ -8,7 +8,10 @@
     "twitch_channels": [
         "Twitch channel"
     ],
-    "module_blocklist": [],
+    "module_blocklist": [
+        "cogs.owner.exec",
+        "cogs.owner.process"
+    ],
     "prefix": "!",
     "description": "A description",
     "http_port": 9980

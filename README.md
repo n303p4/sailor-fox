@@ -11,20 +11,9 @@ to the [sailor command framework](https://gitlab.com/n303p4/sailor), with some v
 provided as examples.
 In particular, it provides Discord and Twitch bots that may be of actual use.
 
-# Before you begin
-
-sailor-fox has a number of modules (cogs) that are likely **not** suitable for your
-Discord server/Twitch chat/IRC channel/etc.
-You should review them and disable what you don't need or want.
-
-To disable a module from the bot itself, run the command `unload <module name>`.
-For example, if you want to disable `exec.py` in `cogs/owner`, run `unload cogs.owner.exec`.
-To enable a module, use `load <module name>`.
-
-You can also manually edit the configuration if you prefer.
-Disabled modules are in `config.json` under `module_blocklist` (see next section for details).
-
 # How to run sailor-fox
+
+## Dependencies
 
 sailor-fox requires Python 3.7 or higher.
 If you're on Windows or macOS, you should download and install Python from the
@@ -32,18 +21,48 @@ If you're on Windows or macOS, you should download and install Python from the
 If you're on Linux, you should probably install Python from your package manager.
 Most Linux distributions currently ship Python 3.7 or higher (as of September 2021).
 
-The Twitch bot also depends on Node.js >= 16.0.0.
+The Twitch bot additionally depends on Node.js 16.0.0 or higher, ~~because it's dumb~~.
 
-The bot should include a sample configuration file called `config.example.json`.
-Rename or copy it to `config.json` and fill it out accordingly.
-For most chat services, you will also need a token to authenticate with the service.
-
-Install necessary dependencies:
+Lastly, install additional dependencies:
 
 ```bash
 python3 -m pip install --user -r requirements.txt
+
 npm install axios tmi.js  # For Twitch only
 ```
+
+## Configuration
+
+The bot should include a sample configuration file called `config.example.json`.
+Rename or copy it to `config.json` and fill it out accordingly.
+For most chat services, you will need a token to authenticate with the service.
+
+The bot's **prefix** is set in `config.json`.
+The bot will only respond to messages that start with the prefix.
+You should ideally set it to something that's easy to type.
+If the bot will share a chat with other bots, the prefix should be unique to avoid collisions.
+
+> ### Note
+> You can set the prefix to an empty string, which will make the bot respond to every message.
+However, this is discouraged.
+
+### Disabling commands
+
+sailor-fox includes a number of modules ("cogs"), each of which contains one or more commands.
+It is likely that some of these commands are **not** suitable for your
+Discord server/Twitch chat/IRC channel/etc.
+You should review them, and disable what you don't need or want.
+
+Disabled modules are listed in `config.json` under the array `module_blocklist`.
+For example, if you want to disable `cogs/owner/exec.py`, add `"cogs.owner.exec"` to the array.
+To enable a module, simply delete it from the array.
+It is currently not possible to disable or enable individual commands in a module.
+
+You can also enable and disable modules while the bot is running.
+To disable a module from the bot itself, run the command `unload <module.name>`
+(remember to start it with the prefix).
+For example, if you want to disable `cogs/owner/exec.py`, run `unload cogs.owner.exec`.
+To enable a module, run `load <module name>`.
 
 ## Discord
 
@@ -70,7 +89,7 @@ location of your Python installation.
 
 ## Twitch
 
-Refer to the [Twitch bot documentation](https://dev.twitch.tv/docs/irc).
+Refer to the [Twitch bot documentation](https://dev.twitch.tv/docs/irc) for details.
 
 In `config.json`, fill out the fields that start with `twitch_`.
 
@@ -97,7 +116,7 @@ TBD
 ## Architecture
 
 sailor-fox is primarily designed around the **backend** service `http_service.py`.
-This provides a JSON API over a local HTTP server (__not__ intended to be run over the web).
+This provides a JSON API over a local HTTP server (_not_ intended to be run over the web).
 The backend contains an instance of `sailor.commands.Processor` that can interpret commands.
 Commands are sent to the backend by HTTP POSTing a JSON object to `localhost`, default port `9980`.
 The JSON object should follow this structure:
@@ -120,7 +139,8 @@ To create a complete and useful bot, there must also be a **frontend** to a chat
 Its job is to decide what messages in chat look like commands, and forward them to the backend.
 Results are then returned back to the frontend for further processing.
 
-While the backend is written in Python, frontends can be written in any language.
+> ## Note
+> While the backend is written in Python, frontends can be written in any language.
 Multiple unrelated frontends can also share the same backend instance, allowing a common backend
 to serve more than one chat service (i.e. less system resources required).
 
