@@ -44,11 +44,12 @@ def main():
     async def on_message(request):
         """Accept incoming messages and forward them to the processor."""
 
-        form_data = await request.json()
+        options = await request.json()
 
-        format_name = form_data.get("format_name")
-        is_owner = form_data.get("is_owner", False)
-        message = form_data.get("message", "")
+        format_name = options.get("format_name")
+        character_limit = options.get("character_limit", 2000)
+        is_owner = options.get("is_owner", False)
+        message = options.get("message", "")
 
         if not message.strip():
             return web.Response(
@@ -65,6 +66,7 @@ def main():
         try:
             await processor.process(
                 message,
+                character_limit=character_limit,
                 format_name=format_name,
                 is_owner=is_owner,
                 reply_with=append_to_message_stack

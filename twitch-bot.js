@@ -2,6 +2,8 @@
 
 const axios = require("axios");
 const tmi = require("tmi.js");
+
+const characterLimit = 500;
 const {
     twitch_owner,
     twitch_username,
@@ -27,6 +29,14 @@ client.on("connected", onConnected);
 
 client.connect();
 
+function toOneLiner(data, maxLength=100) {
+    let oneLiner = data.join(" ").split("\n").join(" ");
+    if (oneLiner.length > maxLength) {
+        oneLiner = oneLiner.substring(0, maxLength-1) + "…";
+    }
+    return oneLiner;
+}
+
 function onConnected(addr, port) {
     console.log(`Connected to ${addr}:${port}`);
 }
@@ -40,22 +50,27 @@ function onMessage(channel, tags, message, self) {
     axios
     .post(sailorServiceURL, {
         "message": message.replace(prefix, ""),
-        "is_owner": tags["user-id"] === twitch_owner
+        "is_owner": tags["user-id"] === twitch_owner,
+        "character_limit": characterLimit
     })
     .then((response) => {
-        let reply = response.data.join(" | ").split("\n").join(" | ");
-        if (!reply) {
+        if (!response.data) {
             console.log(`sailor (${response.status}): <empty>`);
             return;
         }
-        console.log(`sailor (${response.status}): ${reply}`);
-        client.say(channel, reply);
+        let replyOneLiner = toOneLiner(response.data);
+        console.log(`sailor (${response.status}): ${replyOneLiner}`);
+        response.data.forEach((reply) => {
+            client.say(channel, reply);
+        });
     })
     .catch((error) => {
         try {
-            let reply = error.response.data.join(" | ").split("\n").join(" | ");
-            console.log(`sailor (${error.response.status}): ${reply}`);
-            client.say(channel, reply);
+            let replyOneLiner = toOneLiner(error.response.data);
+            console.log(`sailor (${error.response.status}): ${replyOneLiner}`);
+            error.response.data.forEach((reply) => {
+                client.say(channel, reply);
+            });
         }
         catch {
             reply = `An error occurred: ${error.code}`;
