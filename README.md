@@ -13,7 +13,8 @@ In particular, it provides Discord and Twitch bots that may be of actual use.
 
 # Before you begin
 
-sailor-fox has a number of modules (cogs) that are likely **not** suitable for your server.
+sailor-fox has a number of modules (cogs) that are likely **not** suitable for your
+Discord server/Twitch chat/IRC channel/etc.
 You should review them and disable what you don't need or want.
 
 To disable a module from the bot itself, run the command `unload <module name>`.
