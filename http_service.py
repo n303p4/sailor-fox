@@ -5,6 +5,7 @@ Requires Python 3.6+ and aiohttp.
 
 # pylint: disable=invalid-name
 
+import json
 import logging
 
 from aiohttp import web
@@ -27,7 +28,7 @@ def main():
     processor = ProcessorWithConfig()
     processor.register_formatter(discord_formatter, "discord")
 
-    @routes.get("/commandlist")
+    @routes.get("/")
     async def command_list(_):
         """Return a JSON dict of all commands. Mainly for Discord slash command registration."""
 
@@ -54,7 +55,11 @@ def main():
             reply_stack.append(reply_contents)
 
         if not message:
-            return web.json_response({0: "Invalid message"}, status=400)
+            return web.Response(
+                text=json.dumps(["Invalid message"]),
+                content_type="application/json",
+                status=400
+            )
 
         try:
             await processor.process(
@@ -64,9 +69,16 @@ def main():
                 reply_with=append_to_message_stack
             )
         except (sailor.exceptions.CommandError, sailor.exceptions.CommandProcessorError) as error:
-            return web.json_response({0: str(error)}, status=500)
+            return web.Response(
+                text=json.dumps([str(error)]),
+                content_type="application/json",
+                status=500
+            )
 
-        return web.json_response(dict(enumerate(reply_stack)))
+        return web.Response(
+            text=json.dumps(reply_stack),
+            content_type="application/json",
+        )
 
     processor.load_config()
 
