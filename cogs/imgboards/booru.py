@@ -70,7 +70,7 @@ async def _booru(session, base_url_api: str, tags: list = None, blacklist: list 
     raise WebAPIUnreachable(service="Safebooru")
 
 
-def _process_post(post, formatter, base_url_post: str, max_length_tags: int=MAX_LENGTH_TAGS):
+def _process_post(post, formatter, base_url_post: str, max_length_tags: int = MAX_LENGTH_TAGS):
     """Make an embed that renders a 'booru post."""
     post_url = base_url_post.format(post["id"])
     lines = [
