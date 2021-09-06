@@ -13,20 +13,20 @@ import sailor
 
 from sailor_fox import ProcessorWithConfig
 
+logging.basicConfig(format="%(asctime)-12s %(levelname)s %(message)s")
+logger = logging.getLogger("discord")
+logger.setLevel(logging.INFO)
+
 
 def main():
     """Factory to create and run everything."""
-
-    routes = web.RouteTableDef()
-
-    logging.basicConfig(format="%(asctime)-12s %(levelname)s %(message)s")
-    logger = logging.getLogger("discord")
-    logger.setLevel(logging.INFO)
 
     discord_formatter = sailor.discord_helpers.TextFormatter()
 
     processor = ProcessorWithConfig()
     processor.register_formatter(discord_formatter, "discord")
+
+    routes = web.RouteTableDef()
 
     @routes.get("/")
     async def command_list(_):
