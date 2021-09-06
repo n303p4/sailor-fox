@@ -1,7 +1,7 @@
 # sailor-fox
 
 [![MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://gitlab.com/n303p4/kitsuchan-2/blob/master/LICENSE.txt)
-[![Python](https://img.shields.io/badge/Python-3.6-brightgreen.svg)](https://python.org/)
+[![Python](https://img.shields.io/badge/Python-3.7-brightgreen.svg)](https://python.org/)
 
 **kitsuchan-bot** was a small, modular, command-oriented Discord bot written in `discord.py`,
 with a focus on readable, portable, and easy to maintain code.
