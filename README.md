@@ -37,6 +37,13 @@ The bot should include a sample configuration file called `config.example.json`.
 Rename or copy it to `config.json` and fill it out accordingly.
 For most chat services, you will also need a token to authenticate with the service.
 
+Install necessary dependencies:
+
+```bash
+python3 -m pip install --user -r requirements.txt
+npm install axios tmi.js  # For Twitch only
+```
+
 ## Discord
 
 Visit the [Discord Developer Portal](https://discord.com/developers/applications)
@@ -48,7 +55,6 @@ In `config.json`, fill out the fields that start with `discord_`.
 Then in a terminal, run:
 
 ```bash
-python3 -m pip install --user -r requirements.txt
 python3 http_service.py
 ```
 
@@ -70,14 +76,12 @@ In `config.json`, fill out the fields that start with `twitch_`.
 Then in a terminal, run:
 
 ```bash
-python3 -m pip install --user -r requirements.txt
 python3 http_service.py
 ```
 
 In a separate terminal, run:
 
 ```bash
-npm install axios tmi.js
 node twitch-bot.js
 ```
 
