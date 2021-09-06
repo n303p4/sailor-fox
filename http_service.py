@@ -59,11 +59,11 @@ def main():
 
         options = await request.json()
 
-        request_id = options.get("id", hashlib.md5(bytes(str(time.time()), encoding="utf-8")).hexdigest())
-        message = options.get("message", "")
+        request_id = str(options.get("id", hashlib.md5(bytes(str(time.time()), encoding="utf-8")).hexdigest()))
+        message = str(options.get("message", ""))
         is_owner = options.get("is_owner", False)
         character_limit = options.get("character_limit", 2000)
-        format_name = options.get("format_name")
+        format_name = str(options.get("format_name"))
 
         logger.info(
             "id=%s isOwner=%s characterLimit=%s formatName=%s | %s",
@@ -74,11 +74,20 @@ def main():
             to_one_liner(message)
         )
 
+        error_messages = []
+
         if not message.strip():
-            error_message = "Invalid message."
-            logger.error("id=%s | %s", request_id, error_message)
+            error_messages.append("Message cannot be only whitespace.")
+        if not isinstance(is_owner, bool):
+            error_messages.append("is_owner must be boolean.")
+        if not isinstance(character_limit, int):
+            error_messages.append("character_limit must be integer.")
+
+        if error_messages:
+            for error_message in error_messages:
+                logger.error("id=%s | %s", request_id, error_message)
             return web.Response(
-                text=json.dumps([error_message]),
+                text=json.dumps(error_messages),
                 content_type="application/json",
                 status=400
             )
