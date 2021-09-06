@@ -48,7 +48,7 @@ function toOneLiner(data, maxLength=75) {
 Sends a message normally if it's short enough.
 Otherwise, posts the message to a pastebin site (currently Ghostbin) and sends the link in chat.
 */
-function extSay(channel, data) {
+function extSay(channel, tags, data) {
     if (data.length === 0) {
         return;
     }
@@ -67,7 +67,7 @@ function extSay(channel, data) {
         .post(pastebinURL, pastebinRequestBody.toString())
         .then((response) => {
             let reply = `Multiline post: ${response.request.res.responseUrl}`;
-            console.log(reply);
+            console.log(`id=${tags.id} | ${reply}`);
             client.say(channel, reply);
         });
     }
@@ -95,13 +95,13 @@ function onMessage(channel, tags, message, self) {
     .then((response) => {
         let replyOneLiner = toOneLiner(response.data);
         console.log(`id=${tags.id} status=${response.status} | ${replyOneLiner}`);
-        extSay(channel, response.data);
+        extSay(channel, tags, response.data);
     })
     .catch((error) => {
         try {
             let replyOneLiner = toOneLiner(error.response.data);
             console.log(`id=${tags.id} status=${error.response.status} | ${replyOneLiner}`);
-            extSay(channel, error.response.data);
+            extSay(channel, tags, error.response.data);
         }
         catch {
             let errorMessage;
