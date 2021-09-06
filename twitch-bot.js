@@ -7,14 +7,14 @@ const tmi = require("tmi.js");
 
 const characterLimit = 500;
 const {
-    twitch_owner,
+    twitch_owner_id,
     twitch_username,
     twitch_token,
     twitch_channels,
-    http_port,
+    backend_port_number,
     prefix
 } = require("./config.json");
-const sailorServiceURL = `http://localhost:${http_port}`;
+const sailorServiceURL = `http://localhost:${backend_port_number}`;
 const pastebinURL = "https://ghostbin.com/paste/new";
 
 const clientOptions = {
@@ -53,7 +53,7 @@ function extSay(channel, data) {
         return;
     }
     else if (data.length === 1) {
-        client.say(channel, data[0]);
+        client.say(channel, data[0].split("\n").join(" | "));
     }
     else {
         let pastebinRequestBody = new url.URLSearchParams({
@@ -89,7 +89,7 @@ function onMessage(channel, tags, message, self) {
     .post(sailorServiceURL, {
         "id": `twitch:${tags.id}`,
         "message": message.replace(prefix, "").trim(),
-        "is_owner": tags["user-id"] === twitch_owner,
+        "is_owner": tags["user-id"] === twitch_owner_id,
         "character_limit": characterLimit
     })
     .then((response) => {

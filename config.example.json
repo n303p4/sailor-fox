@@ -2,17 +2,18 @@
     "prefix": "!",
     "name": "Bot name goes here",
     "description": "Bot description goes here",
-    "http_port": 9980,
     "module_blocklist": [
         "cogs.owner.exec",
         "cogs.owner.process"
     ],
 
+    "backend_port_number": 9980,
+
     "discord_token": "Discord token",
     "discord_client_id": "not used atm",
     "discord_guild_id": "not used atm",
 
-    "twitch_owner": "User ID of bot owner",
+    "twitch_owner_id": "User ID of bot owner",
     "twitch_username": "Twitch username",
     "twitch_token": "Twitch token",
     "twitch_channels": [

@@ -23,7 +23,7 @@ client_session = aiohttp.ClientSession(loop=client.loop)
 
 with open("config.json") as config_file:
     config = json.load(config_file)
-http_port = config.get("http_port", 9980)
+backend_port_number = config.get("backend_port_number", 9980)
 prefixes = []
 
 
@@ -98,7 +98,9 @@ async def on_message(message: discord.Message):
 
         try:
             async with async_timeout.timeout(10):
-                async with client_session.post(f"http://localhost:{http_port}", json=request_body) as response:
+                async with client_session.post(
+                    f"http://localhost:{backend_port_number}", json=request_body
+                ) as response:
                     reply_stack = await response.json()
                     for reply_contents in reply_stack:
                         await send_and_log(reply_contents, error=(response.status != 200))
