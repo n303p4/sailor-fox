@@ -55,7 +55,7 @@ async def on_message(message):
 
     prefix, message_text = split_first_word(message.content, prefixes)
 
-    if prefix:
+    if prefix and message_text.strip():
         try:
             await processor.process(message_text, is_owner=is_owner, reply_with=message.channel.send)
         except (sailor.exceptions.CommandError, sailor.exceptions.CommandProcessorError) as error:

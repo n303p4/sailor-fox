@@ -28,9 +28,22 @@ def main():
     processor.register_formatter(discord_formatter, "discord")
 
 
+    @routes.get("/commandlist")
+    async def command_list(_):
+        """Return a JSON dict of all commands. Mainly for Discord slash command registration."""
+
+        command_list = {}
+        for command in processor.commands.values():
+            command_list[command.name] = command.help
+            for alias in command.aliases:
+                command_list[alias] = command.help
+        return web.json_response(command_list)
+
+
     @routes.post("/")
     async def on_message(request):
-        """Handle on_message events from Discord and forward them to the processor."""
+        """Accept incoming messages and forward them to the processor."""
+
         form_data = await request.post()
 
         format_name = form_data.get("format_name")
