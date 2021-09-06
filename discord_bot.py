@@ -8,6 +8,7 @@ Requires Python 3.6+ and discord.py 1.0 or higher.
 
 import json
 import logging
+from typing import List
 
 import aiohttp
 import async_timeout
@@ -26,7 +27,7 @@ http_port = config.get("http_port", 9980)
 prefixes = []
 
 
-def to_one_liner(text, max_length: int = 75):
+def to_one_liner(text: str, max_length: int = 75):
     """Truncates a string to a single line for logging"""
     one_liner = " ".join(text.split("\n"))
     if len(one_liner) > max_length:
@@ -36,7 +37,7 @@ def to_one_liner(text, max_length: int = 75):
     return one_liner
 
 
-def get_prefix(text, prefixes_):
+def get_prefix(text: str, prefixes_: List[str]):
     """
     If a text string starts with a substring, return the substring and the text minus the first instance of the
     substring; otherwise return None and the text.
@@ -58,8 +59,9 @@ async def on_ready():
 
 
 @client.event
-async def on_message(message):
+async def on_message(message: discord.Message):
     """Handle on_message events from Discord and forward them to the processor."""
+
     if message.author.bot:
         return
 
@@ -69,7 +71,17 @@ async def on_message(message):
     prefix, message_text = get_prefix(message.content, prefixes)
 
     if prefix and message_text.strip():
-        async def send_and_log(reply_contents, error: bool = False):
+        logger.info(
+            "id=%s user=%s userId=%s guild=%s guildId=%s | %s",
+            message.id,
+            message.author,
+            message.author.id,
+            message.guild.name,
+            message.guild.id,
+            to_one_liner(message.content)
+        )
+
+        async def send_and_log(reply_contents: str, error: bool = False):
             if error:
                 logger.error("id=%s | %s", message.id, to_one_liner(reply_contents))
             else:

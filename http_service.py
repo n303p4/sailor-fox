@@ -22,7 +22,7 @@ logger = logging.getLogger("discord")
 logger.setLevel(logging.INFO)
 
 
-def to_one_liner(text, max_length: int = 75):
+def to_one_liner(text: str, max_length: int = 75):
     """Truncates a string to a single line for logging"""
     one_liner = " ".join(text.split("\n"))
     if len(one_liner) > max_length:
@@ -85,7 +85,7 @@ def main():
 
         reply_stack = []
 
-        async def append_to_message_stack(reply_contents):
+        async def append_to_message_stack(reply_contents: str):
             logger.info("id=%s | %s", request_id, to_one_liner(reply_contents))
             reply_stack.append(reply_contents.strip())
 
