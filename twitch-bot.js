@@ -32,11 +32,14 @@ client.on("connected", onConnected);
 
 client.connect();
 
-// Truncates an array of strings to a single line
-function toOneLiner(data, maxLength=100) {
+// Truncates an array of strings to a single line for logging
+function toOneLiner(data, maxLength=75) {
     let oneLiner = data.join(" ").split("\n").join(" ");
     if (oneLiner.length > maxLength) {
         oneLiner = oneLiner.substring(0, maxLength-1) + "…";
+    }
+    if (oneLiner.length === 0) {
+        oneLiner = "<empty>";
     }
     return oneLiner;
 }
@@ -46,7 +49,10 @@ Sends a message normally if it's short enough.
 Otherwise, posts the message to a pastebin site (currently Ghostbin) and sends the link in chat.
 */
 function extSay(channel, data) {
-    if (data.length === 1) {
+    if (data.length === 0) {
+        return;
+    }
+    else if (data.length === 1) {
         client.say(channel, data[0]);
     }
     else {
@@ -77,27 +83,23 @@ function onMessage(channel, tags, message, self) {
     if (self) return;
     if (!message.startsWith(prefix)) return;
 
-    console.log(`user=${tags.username} userId=${tags["user-id"]} channel=${channel} | ${message}`);
+    console.log(`id=${tags.id} user=${tags.username} userId=${tags["user-id"]} channel=${channel} | ${message}`);
 
     axios
     .post(sailorServiceURL, {
-        "message": message.replace(prefix, ""),
+        "message": message.replace(prefix, "").trim(),
         "is_owner": tags["user-id"] === twitch_owner,
         "character_limit": characterLimit
     })
     .then((response) => {
-        if (!response.data) {
-            console.log(`sailor (${response.status}): <empty>`);
-            return;
-        }
         let replyOneLiner = toOneLiner(response.data);
-        console.log(`sailor (${response.status}): ${replyOneLiner}`);
+        console.log(`id=${tags.id} status=${response.status} | ${replyOneLiner}`);
         extSay(channel, response.data);
     })
     .catch((error) => {
         try {
             let replyOneLiner = toOneLiner(error.response.data);
-            console.log(`sailor (${error.response.status}): ${replyOneLiner}`);
+            console.log(`id=${tags.id} status=${error.response.status} | ${replyOneLiner}`);
             extSay(channel, error.response.data);
         }
         catch {

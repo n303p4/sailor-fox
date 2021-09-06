@@ -6,9 +6,11 @@ Requires Python 3.6+ and aiohttp.
 
 # pylint: disable=invalid-name
 
+import hashlib
 import json
 import logging
 import sys
+import time
 
 from aiohttp import web
 import sailor
@@ -45,24 +47,37 @@ def main():
     async def on_message(request):
         """Accept incoming messages and forward them to the processor."""
 
+        request_id = hashlib.md5(bytes(str(time.time()), encoding="utf-8")).hexdigest()
+
         options = await request.json()
 
         message = options.get("message", "")
-
-        if not message.strip():
-            return web.Response(
-                text=json.dumps(["Invalid message"]),
-                content_type="application/json",
-                status=400
-            )
-
         is_owner = options.get("is_owner", False)
         character_limit = options.get("character_limit", 2000)
         format_name = options.get("format_name")
 
+        logger.info(
+            "id=%s isOwner=%s characterLimit=%s formatName=%s | %s",
+            request_id,
+            is_owner,
+            character_limit,
+            format_name,
+            message
+        )
+
+        if not message.strip():
+            error_message = "Invalid message."
+            logger.error("id=%s | %s", request_id, error_message)
+            return web.Response(
+                text=json.dumps([error_message]),
+                content_type="application/json",
+                status=400
+            )
+
         reply_stack = []
 
         async def append_to_message_stack(reply_contents):
+            logger.info("id=%s | %s", request_id, reply_contents)
             reply_stack.append(reply_contents.strip())
 
         try:
@@ -74,11 +89,15 @@ def main():
                 reply_with=append_to_message_stack
             )
         except (sailor.exceptions.CommandError, sailor.exceptions.CommandProcessorError) as error:
+            logger.error("id=%s | %s", request_id, str(error))
             return web.Response(
                 text=json.dumps([str(error)]),
                 content_type="application/json",
                 status=500
             )
+
+        if not reply_stack:
+            logger.info("id=%s | <empty>", request_id)
 
         return web.Response(
             text=json.dumps(reply_stack),
