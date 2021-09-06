@@ -70,7 +70,7 @@ async def on_message(message):
     prefix, message_text = get_prefix(message.content, prefixes)
 
     if prefix and message_text.strip():
-        async def send_and_log(reply_contents, error=False):
+        async def send_and_log(reply_contents, error: bool = False):
             if error:
                 logger.error("id=%s | %s", message.id, to_one_liner(reply_contents))
             else:
