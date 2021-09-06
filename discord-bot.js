@@ -1,3 +1,5 @@
+// discord.js client for http_service.py
+
 const https = require("https");
 const { Client, Intents } = require("discord.js");
 const { discord_token, http_port } = require("./config.json");
@@ -11,14 +13,18 @@ client.once("ready", () => {
 client.on("interactionCreate", async interaction => {
 	if (!interaction.isCommand()) return;
 
-	const { commandName } = interaction;
-	const { commandArguments } = await interaction.options.getString("input");
-    const data = JSON.stringify({
-        "message": `${commandName} ${commandArguments}`,
+	const commandName = interaction;
+	const commandArguments = await interaction.options.getString("input");
+    const fullCommand = `${commandName} ${commandArguments}`;
+
+    console.log(`${fullCommand} | ${interaction.user.tag} (${interaction.user.id})`);
+
+    const requestBody = JSON.stringify({
+        "message": fullCommand,
         "is_owner": false,
         "format_name": "discord"
     });
-    const options = {
+    const requestOptions = {
         hostname: "localhost",
         port: http_port,
         method: "POST",
@@ -28,20 +34,22 @@ client.on("interactionCreate", async interaction => {
         }
     };
 
-    const req = https.request(options, res => {
-        console.log(`statusCode: ${res.statusCode}`);
-
-        res.on("data", async d => {
-            await interaction.reply(d.join("\n"));
+    const request = https.request(requestOptions, (response) => {
+        console.log(`sailor service responded with ${response.statusCode}`);
+        if (response.statusCode !== 200) {
+            return;
+        }
+        response.on("data", async (messages) => {
+            await interaction.reply(messages.join("\n"));
         });
     });
 
-    req.on("error", error => {
+    request.on("error", error => {
         console.error(error);
     });
 
-    req.write(data);
-    req.end();
+    request.write(requestBody);
+    request.end();
 });
 
 client.login(discord_token);

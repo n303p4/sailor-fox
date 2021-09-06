@@ -1,3 +1,5 @@
+// Before running this, ensure that http_service.py is running
+
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
@@ -8,6 +10,7 @@ const sailorServiceURL = `http://localhost:${http_port}`;
 const commands = [];
 const serverCommandListResponse = request("GET", sailorServiceURL);
 const serverCommandList = JSON.parse(serverCommandListResponse.getBody("utf8"))[0];
+
 for (let commandName in serverCommandList) {
     if (!serverCommandList.hasOwnProperty(commandName)) {
         continue;
