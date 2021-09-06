@@ -76,7 +76,7 @@ def _process_post(post, formatter, base_url_post: str, max_length_tags: int=MAX_
     lines = [
         formatter.bold("Original post: ") + formatter.no_embed_link(post_url),
         formatter.bold("Image URL: ") + f"https:{post['file_url']}",
-        post["tags"][:max_length_tags]
+        formatter.bold("Tags: ") + formatter.monospace(post["tags"][:max_length_tags].strip())
     ]
     return "\n".join(lines)
 
@@ -90,7 +90,7 @@ async def safeboorutag(event, *, search_text):
     """
     result = await _booru_tag_search(event.processor.session, BASE_URLS["safebooru"]["tag_search"], search_text)
     formatted_results = "\n".join([r.replace("_", "\\_") for r in result])
-    message = ["Matching tags", formatted_results]
+    message = [event.f.bold("Matching tags"), formatted_results]
     await event.reply("\n".join(message))
 
 

@@ -91,3 +91,6 @@ ENV/
 # Config files
 config.json
 config.json.*
+
+# Pip modules
+src/
