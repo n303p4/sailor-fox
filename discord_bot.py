@@ -93,6 +93,8 @@ async def on_message(message):
         except (sailor.exceptions.CommandError, sailor.exceptions.CommandProcessorError) as error:
             logger.error("id=%s | %s", message.id, error)
             await message.channel.send(str(error))
+        except Exception as error:
+            logger.error("id=%s | %s", message.id, error)
 
 
 if __name__ == "__main__":
