@@ -1,4 +1,4 @@
-// A Twitch client for http_service.py
+// A Twitch frontend for http_service.py
 
 const crypto = require('crypto');
 const url = require("url");
@@ -7,12 +7,12 @@ const tmi = require("tmi.js");
 
 const characterLimit = 500;
 const {
+    prefix,
+    backend_port_number,
     twitch_owner_id,
     twitch_username,
     twitch_token,
-    twitch_channels,
-    backend_port_number,
-    prefix
+    twitch_channels
 } = require("./config.json");
 const sailorServiceURL = `http://localhost:${backend_port_number}`;
 const pastebinURL = "https://ghostbin.com/paste/new";

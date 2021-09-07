@@ -1,5 +1,5 @@
 """
-A Discord client for http_service.py
+A Discord frontend for http_service.py
 
 Requires Python 3.6+ and discord.py 1.0 or higher.
 """
