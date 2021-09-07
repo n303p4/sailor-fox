@@ -36,19 +36,20 @@ def main():
 
     while True:
         prefix, message = get_prefix(input("> "), prefix)
-        if prefix:
-            try:
-                response = requests.post(backend_url, json={
-                    "id": f"cli:{time.time()}",
-                    "message": message,
-                    "is_owner": True,
-                    "character_limit": 0
-                })
-                replies = response.json()
-                for reply in replies:
-                    print(reply)
-            except Exception:
-                print("Error: http_backend.py is not running!")
+        if not prefix:
+            continue
+        try:
+            response = requests.post(backend_url, json={
+                "id": f"cli:{time.time()}",
+                "message": message,
+                "is_owner": True,
+                "character_limit": 0
+            })
+            replies = response.json()
+            for reply in replies:
+                print(reply)
+        except Exception:
+            print("Error: http_backend.py is not running!")
 
 
 if __name__ == "__main__":

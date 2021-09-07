@@ -73,51 +73,52 @@ def main():
         if message.author.bot:
             return
 
+        prefix, message_text = get_prefix(message.content, prefixes)
+        if not prefix or not message_text:
+            return
+
         application_info = await client.application_info()
         is_owner = (message.author.id == application_info.owner.id)
 
-        prefix, message_text = get_prefix(message.content, prefixes)
+        logger.info(
+            "id=%s user=%s userId=%s guild=%s guildId=%s | %s",
+            message.id,
+            message.author,
+            message.author.id,
+            message.guild.name,
+            message.guild.id,
+            to_one_liner(message.content)
+        )
 
-        if prefix and message_text.strip():
-            logger.info(
-                "id=%s user=%s userId=%s guild=%s guildId=%s | %s",
-                message.id,
-                message.author,
-                message.author.id,
-                message.guild.name,
-                message.guild.id,
-                to_one_liner(message.content)
-            )
+        async def send_and_log(reply_contents: str, error: bool = False):
+            if error:
+                logger.error("id=%s | %s", message.id, to_one_liner(reply_contents))
+            else:
+                logger.info("id=%s | %s", message.id, to_one_liner(reply_contents))
+            await message.channel.send(reply_contents)
 
-            async def send_and_log(reply_contents: str, error: bool = False):
-                if error:
-                    logger.error("id=%s | %s", message.id, to_one_liner(reply_contents))
-                else:
-                    logger.info("id=%s | %s", message.id, to_one_liner(reply_contents))
-                await message.channel.send(reply_contents)
+        request_body = {
+            "id": f"discord:{message.id}",
+            "message": message_text,
+            "is_owner": is_owner,
+            "character_limit": 2000,
+            "format_name": "discord"
+        }
 
-            request_body = {
-                "id": f"discord:{message.id}",
-                "message": message_text,
-                "is_owner": is_owner,
-                "character_limit": 2000,
-                "format_name": "discord"
-            }
-
-            try:
-                async with async_timeout.timeout(10):
-                    async with client_session.post(
-                        f"http://localhost:{backend_port_number}", json=request_body
-                    ) as response:
-                        reply_stack = await response.json()
-                        for reply_contents in reply_stack:
-                            await send_and_log(reply_contents, error=(response.status != 200))
-            except Exception as error:
-                logger.error("id=%s | %s", message.id, to_one_liner(str(error)))
-                if isinstance(error, aiohttp.client_exceptions.ClientConnectorError):
-                    await message.channel.send("My brain stopped working. Please contact my owner. :<")
-                else:
-                    await message.channel.send(str(error))
+        try:
+            async with async_timeout.timeout(10):
+                async with client_session.post(
+                    f"http://localhost:{backend_port_number}", json=request_body
+                ) as response:
+                    reply_stack = await response.json()
+                    for reply_contents in reply_stack:
+                        await send_and_log(reply_contents, error=(response.status != 200))
+        except Exception as error:
+            logger.error("id=%s | %s", message.id, to_one_liner(str(error)))
+            if isinstance(error, aiohttp.client_exceptions.ClientConnectorError):
+                await message.channel.send("My brain stopped working. Please contact my owner. :<")
+            else:
+                await message.channel.send(str(error))
 
     client.run(config["discord_token"])
 
