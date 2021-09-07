@@ -31,7 +31,7 @@ def main():
         print(f" Commands must start with {prefix}")
     else:
         print()
-    prefix_space = " " if len(prefix) > 1 else ""
+    prefix_space = " " if prefix and prefix[-1].isalpha() else ""
     print(f"For help, type {prefix}{prefix_space}help")
 
     while True:
