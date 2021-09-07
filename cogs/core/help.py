@@ -1,5 +1,7 @@
 """Bot help command."""
 
+import inspect
+
 from sailor import commands
 
 
@@ -18,7 +20,18 @@ async def help_(event, *, command_name: str = None):
         if not cmd:
             await event.reply(f"{command_name} is not a valid command.")
         else:
-            await event.reply(event.f.codeblock(f"{cmd.help}"))
+            help_text = cmd.name
+            if cmd.aliases:
+                help_text += f" (aliases: {', '.join(cmd.aliases)})"
+            command_parameters = []
+            for parameter in list(cmd.signature.parameters.values())[1:]:
+                if parameter.default == inspect.Parameter.empty:
+                    command_parameters.append(f"*{parameter.name}")
+                else:
+                    command_parameters.append(parameter.name)
+            help_text += f"\nArguments: {', '.join(command_parameters)}"
+            help_text += f"\n\n{cmd.help}"
+            await event.reply(event.f.codeblock(help_text))
     else:
         commands_list = []
 
