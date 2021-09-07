@@ -13,7 +13,8 @@ const {
     twitch_owner_id,
     twitch_username,
     twitch_token,
-    twitch_channels
+    twitch_channels,
+    twitch_post_long_messages_to_ghostbin
 } = require("./config.json");
 const sailorServiceURL = `http://localhost:${backend_port_number}`;
 const pastebinURL = "https://ghostbin.com/paste/new";
@@ -53,8 +54,8 @@ function extSay(channel, tags, data) {
     if (data.length === 0) {
         return;
     }
-    else if (data.length === 1) {
-        client.say(channel, data[0].split("\n").join(" | "));
+    else if (data.length === 1 || twitch_post_long_messages_to_ghostbin === false) {
+        client.say(channel, data.join("\n").split("\n").join(" | "));
     }
     else {
         let pastebinRequestBody = new url.URLSearchParams({

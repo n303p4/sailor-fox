@@ -19,5 +19,6 @@
     "twitch_token": "Twitch token",
     "twitch_channels": [
         "Twitch channel"
-    ]
+    ],
+    "twitch_post_long_messages_to_ghostbin": false
 }
