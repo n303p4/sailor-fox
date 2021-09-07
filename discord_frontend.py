@@ -4,7 +4,7 @@ A Discord frontend for http_backend.py
 Requires Python 3.6+ and discord.py 1.0 or higher.
 """
 
-# pylint: disable=invalid-name
+# pylint: disable=invalid-name,broad-except
 
 import json
 import logging

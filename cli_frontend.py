@@ -1,5 +1,7 @@
 """A command-line frontend for http_backend.py."""
 
+# pylint: disable=broad-except
+
 import json
 import time
 
