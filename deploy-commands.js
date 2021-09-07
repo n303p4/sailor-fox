@@ -9,7 +9,7 @@ const sailorServiceURL = `http://localhost:${backend_port_number}`;
 
 const commands = [];
 const serverCommandListResponse = request("GET", sailorServiceURL);
-const serverCommandList = JSON.parse(serverCommandListResponse.getBody("utf8"))[0];
+const serverCommandList = JSON.parse(serverCommandListResponse.getBody("utf8"));
 
 for (let commandName in serverCommandList) {
     if (!serverCommandList.hasOwnProperty(commandName)) {
@@ -24,8 +24,8 @@ for (let commandName in serverCommandList) {
     .addStringOption(option =>
         option.setName("input")
             .setDescription(`Run /help ${commandName} for more details`)
-    );
-    commands.push(newCommand.toJSON());
+    ).toJSON();
+    commands.push(newCommand);
 }
 
 const rest = new REST({ version: "9" }).setToken(discord_token);
