@@ -4,7 +4,6 @@ const axios = require("axios");
 const { Client, Intents } = require("discord.js");
 
 const { discord_token, backend_port_number } = require("./config.json");
-
 const sailorServiceURL = `http://localhost:${backend_port_number}`;
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
