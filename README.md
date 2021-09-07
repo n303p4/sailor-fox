@@ -13,7 +13,7 @@ In particular, it provides Discord and Twitch bots that may be of actual use.
 sailor-fox is based on a client-server model that allows multiple chat frontends to share a common
 command handler backend, and/or a single frontend to use multiple backends.
 
-# How to run sailor-fox
+# Before you begin...
 
 ## Dependencies
 
@@ -57,7 +57,7 @@ If the bot will share a chat with other bots, the prefix should be unique to avo
 > You can set the prefix to an empty string, which will make the bot respond to every message.
 However, this is discouraged.
 
-### Disabling commands
+## Disabling commands
 
 sailor-fox includes a number of modules ("cogs"), each of which contains one or more commands.
 It is likely that some of these commands are **not** suitable for your
@@ -75,7 +75,30 @@ To disable a module from the bot itself, run the command `unload <module.name>`
 For example, if you want to disable `cogs/owner/exec.py`, run `unload cogs.owner.exec`.
 To enable a module, run `load <module name>`.
 
-## Command line
+## Discord setup
+
+Skip this step if you don't plan to run sailor-fox as a Discord bot.
+
+Visit the [Discord Developer Portal](https://discord.com/developers/applications)
+to create an application.
+When you create your application, click the "Bot" tab and click "Add Bot".
+You will have to copy your bot token from here.
+
+In `config.json`, paste your token under `discord_token`.
+The other Discord fields are currently unused, but may become relevant in the future.
+
+## Twitch setup
+
+Skip this step if you don't plan to run sailor-fox as a Twitch bot.
+
+Refer to the [Twitch IRC bot documentation](https://dev.twitch.tv/docs/irc) for details.
+
+In `config.json`, fill out the fields that start with `twitch_`.
+
+# Running sailor-fox
+
+You may have to change the following commands slightly, depending on your operating system and the
+location of your Python installation.
 
 In a terminal, run:
 
@@ -83,7 +106,9 @@ In a terminal, run:
 python3 http_backend.py
 ```
 
-In a separate terminal, run:
+This starts the backend service. The following commands should be run in a separate terminal:
+
+## Command line
 
 ```bash
 python3 cli_frontend.py
@@ -91,40 +116,11 @@ python3 cli_frontend.py
 
 ## Discord
 
-Visit the [Discord Developer Portal](https://discord.com/developers/applications)
-to create an application.
-When you create your application, click the "Bot" tab and click "Add Bot".
-
-In `config.json`, fill out the fields that start with `discord_`.
-
-Then in a terminal, run:
-
-```bash
-python3 http_backend.py
-```
-
-In a separate terminal, run:
-
 ```bash
 python3 discord_frontend.py
 ```
 
-You may have to change the above commands slightly, depending on your operating system and the
-location of your Python installation.
-
 ## Twitch
-
-Refer to the [Twitch bot documentation](https://dev.twitch.tv/docs/irc) for details.
-
-In `config.json`, fill out the fields that start with `twitch_`.
-
-Then in a terminal, run:
-
-```bash
-python3 http_backend.py
-```
-
-In a separate terminal, run:
 
 ```bash
 node twitch-frontend.js
