@@ -157,7 +157,8 @@ The JSON object should have the following properties:
 > ### `format_name` \[string, default `null`]
 > Optional format name, e.g. `"discord"`. Set this to use chat-specific text formatting, e.g. bold.
 
-The backend responds with a flat JSON array that contains zero or more strings.
+The backend responds with a flat JSON array that contains zero or more strings,
+each of which represents part of the command output.
 If the HTTP status code is 200, the command completed normally.
 Any other status code should be understood as an error.
 
