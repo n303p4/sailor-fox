@@ -62,7 +62,7 @@ def main():
         prefixes.append(client.user.mention)
         prefixes.append(client.user.mention.replace("@", "@!"))  # Mentions are cursed
 
-        prefix_space = " " if main_prefix and main_prefix[-1].isalpha() else ""
+        prefix_space = " " if main_prefix and main_prefix[-1].isalnum() else ""
         game = discord.Game(name=f"Type {main_prefix}{prefix_space}help for help!")
         await client.change_presence(activity=game)
 
