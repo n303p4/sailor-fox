@@ -159,9 +159,9 @@ Its job is to decide what messages in chat appear to be commands, and forward th
 Results are then returned back to the frontend for further processing.
 
 > ### Note
-> The backend uses HTTP for local IPC only, due to its convenience and widespread support.
+> The backend acts as an HTTP server for local IPC only, due to its convenience and wide support.
 > It also depends on the frontend(s) being honest in regards to things such as `is_owner`.
-> Therefore, although some commands do access internet services, the server itself should *not*
+> Therefore, although some commands do access internet services, the backend itself should *not*
 > be exposed over an open port to the internet, or over any untrusted network!
 > Running the backend in this way is technically possible but unsupported.
 
