@@ -4,8 +4,8 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const request = require("sync-request");
-const { discord_client_id, discord_guild_id, discord_token, http_port } = require("./config.json");
-const sailorServiceURL = `http://localhost:${http_port}`;
+const { discord_client_id, discord_guild_id, discord_token, backend_port_number } = require("./config.json");
+const sailorServiceURL = `http://localhost:${backend_port_number}`;
 
 const commands = [];
 const serverCommandListResponse = request("GET", sailorServiceURL);
