@@ -21,9 +21,9 @@ async def help_(event, *, command_name: str = None):
         if not cmd:
             await event.reply(f"{command_name} is not a valid command.")
         else:
-            help_text = cmd.name
+            help_text = [cmd.name]
             if cmd.aliases:
-                help_text += f" (aliases: {', '.join(cmd.aliases)})"
+                help_text.append(f"Aliases: {', '.join(cmd.aliases)})")
             arguments = []
             for parameter in list(cmd.signature.parameters.values())[1:]:
                 if parameter.default == inspect.Parameter.empty:
@@ -31,9 +31,9 @@ async def help_(event, *, command_name: str = None):
                 else:
                     arguments.append(f"[{parameter.name}={parameter.default}]")
             if arguments:
-                help_text += f"\nArguments: {', '.join(arguments)}"
-            help_text += f"\n\n{cmd.help}"
-            await event.reply(event.f.codeblock(help_text))
+                help_text.append(f"Arguments: {' '.join(arguments)}")
+            help_text.append(f"\n{cmd.help}")
+            await event.reply(event.f.codeblock("\n".join(help_text)))
     else:
         commands_list = []
 
