@@ -138,17 +138,24 @@ sailor-fox is primarily designed around the **backend** service `http_backend.py
 This provides a JSON API over a local HTTP server (_not_ intended to be run over the web).
 The backend contains an instance of `sailor.commands.Processor` that can interpret commands.
 Commands are sent to the backend by HTTP POSTing a JSON object to `localhost`, default port `9980`.
-The JSON object should follow this structure:
+The JSON object should have the following properties:
 
-```
-{
-    "id": <string, optional request id for logging convenience>,
-    "message": <string, message contents>,
-    "is_owner": <boolean, optional check for whether the person who sent the command is the bot owner>,
-    "character_limit": <int, per-post character limit of the chat service>,
-    "format_name": <string, optional format name>
-}
-```
+> ### `message` \[string]
+> Message contents to be parsed as a command.
+>
+> ### `id` \[string, default randomly generated]
+> Optional request id for logging convenience.
+>
+> ### `is_owner` \[boolean, default `false`]
+> Optional check for if the person who sent the > command is the bot owner, for certain commands.
+>
+> ### `character_limit` \[integer, default `0` for unlimited]
+> Optional per-post character limit of the chat service. If set, then any replies longer than
+> this number will be split up into multiple, smaller replies, each one at most `character_limit`
+> characters long.
+>
+> ### `format_name` \[string, default `null`]
+> Optional format name, e.g. `"discord"`. Set this to use chat-specific text formatting, e.g. bold.
 
 The backend responds with a flat JSON array that contains zero or more strings.
 If the HTTP status code is 200, the command completed normally.

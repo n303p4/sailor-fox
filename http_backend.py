@@ -62,7 +62,7 @@ def main():
         request_id = str(options.get("id", hashlib.md5(bytes(str(time.time()), encoding="utf-8")).hexdigest()))
         message = str(options.get("message", ""))
         is_owner = options.get("is_owner", False)
-        character_limit = options.get("character_limit", 2000)
+        character_limit = options.get("character_limit", 0)
         format_name = str(options.get("format_name"))
 
         logger.info(
