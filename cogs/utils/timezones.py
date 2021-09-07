@@ -19,10 +19,11 @@ async def time(event, *, location: str):
 
     Tries to do some guesswork to accommodate simplified inputs.
 
-    Example usage:
-    * time Europe/Berlin
-    * time UTC
-    * time buenos aires
+    **Example usage**
+
+    * `time Europe/Berlin`
+    * `time UTC`
+    * `time buenos aires`
     """
     try:
         timezone = location.replace(" ", "_")

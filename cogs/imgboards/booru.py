@@ -102,6 +102,7 @@ async def safebooru(event, *tags):
     * tags - A list of tags to be used in the search criteria.
 
     **Usage notes**
+
     * Valid tags can be found using the `sbt` command.
     * Underscores do not have to be used. But multi-word tags should be surrounded with quotes, e.g. \"fox ears\".
 

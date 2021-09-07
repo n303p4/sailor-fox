@@ -7,8 +7,9 @@ from sailor import commands
 async def load(event, *, name):
     """Load a sailor module by name. Owner only.
 
-    Example usage:
-    load modules.core.ping
+    **Example usage**
+
+    * `load cogs.core.ping`
     """
     event.processor.config.setdefault("module_blocklist", [])
     if name in event.processor.config["module_blocklist"]:
@@ -22,8 +23,9 @@ async def load(event, *, name):
 async def reload(event, *, name):
     """Reload a sailor module by name. Owner only.
 
-    Example usage:
-    reload modules.core.ping
+    **Example usage**
+
+    * reload cogs.core.ping
     """
     event.processor.remove_module(name)
     event.processor.add_module(name)
@@ -52,8 +54,9 @@ async def reloadall(event):
 async def unload(event, *, name):
     """Unload a sailor module by name. Owner only.
 
-    Example usage:
-    unload modules.core.ping
+    **Example usage**
+
+    * `unload modules.core.ping`
     """
     event.processor.config.setdefault("module_blocklist", [])
     if name not in event.processor.config["module_blocklist"]:

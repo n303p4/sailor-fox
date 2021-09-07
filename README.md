@@ -63,16 +63,19 @@ sailor-fox includes a number of modules ("cogs"), each of which contains one or 
 It is likely that some of these commands are **not** suitable for your
 Discord server/Twitch chat/IRC channel/etc.
 You should review them, and disable what you don't need or want.
+Visit [docs/command-reference.html](docs/command-reference.html) for a full list of commands.
 
 Disabled modules are listed in `config.json` under the array `module_blocklist`.
-For example, if you want to disable `cogs/owner/exec.py`, add `"cogs.owner.exec"` to the array.
+For example, if you want to disable [cogs/owner/exec.py](cogs/owner/exec.py), add
+`"cogs.owner.exec"` to the array.
 To enable a module, simply delete it from the array.
 It is currently not possible to disable or enable individual commands in a module.
 
 You can also enable and disable modules while the bot is running.
 To disable a module from the bot itself, run the command `unload <module.name>`
 (remember to start it with the prefix).
-For example, if you want to disable `cogs/owner/exec.py`, run `unload cogs.owner.exec`.
+For example, if you want to disable [cogs/owner/exec.py](cogs/owner/exec.py), run
+`unload cogs.owner.exec`.
 To enable a module, run `load <module name>`.
 
 ## Discord setup

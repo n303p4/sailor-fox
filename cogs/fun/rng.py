@@ -108,9 +108,10 @@ async def coin(event):
 async def _roll(event, *expressions):
     """Roll some dice, using D&D syntax.
 
-    Examples:
-    roll 5d6+2 - Roll five six sided dice with a modifier of 2.
-    roll 1d20 2d8 - Roll one twenty sided die, and two eight sided dice.
+    **Example usage**
+
+    * `roll 5d6+2` - Roll five six sided dice with a modifier of 2.
+    * `roll 1d20 2d8` - Roll one twenty sided die, and two eight sided dice.
 
     Roll outcomes are always sorted in descending order.
     """

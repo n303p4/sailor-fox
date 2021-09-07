@@ -13,10 +13,10 @@ from sailor import commands
 async def sue(event, *, target=""):
     """Sue somebody!
 
-    Example usage:
+    **Example usage**
 
-    * sue
-    * sue a person
+    * `sue`
+    * `sue a person`
     """
     conjunctions = " because | for | over "
     parts = [part.strip() for part in re.split(conjunctions, target, 1, re.I)]

@@ -10,10 +10,11 @@ from sailor import commands
 async def help_(event, *, command_name: str = None):
     """Help command. Run help <command name> for more information on a specific command.
 
-    Example usage:
-    help
-    help ping
-    help info
+    **Example usage**
+
+    * `help`
+    * `help ping`
+    * `help info`
     """
     if command_name:
         cmd = event.processor.all_commands.get(command_name)

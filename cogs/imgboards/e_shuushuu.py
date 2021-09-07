@@ -104,6 +104,7 @@ async def eshuushuu(event, *tags):
     * tags - A list of tags to be used in the search criteria.
 
     **Usage notes**
+
     * Valid tags can be found using the `est` command.
     * This command does **not** currently accept character names.
     * Multi-word tags should be surrounded with quotes, e.g. \"kitsune mimi\".

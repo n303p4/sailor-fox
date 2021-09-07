@@ -80,10 +80,11 @@ def generate_parsed_results(response_content, formatter):
 async def define(event, word: str):
     """Define a word.
 
-    Example usage:
-    * define cat
-    * define dog
-    * define fox
+    **Example usage**
+
+    * `define cat`
+    * `define dog`
+    * `define fox`
     """
     url = generate_search_url(word)
     response_content = await search(event.processor.session, url)
