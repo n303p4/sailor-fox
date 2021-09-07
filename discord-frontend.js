@@ -1,4 +1,4 @@
-// discord.js client for http_backend.py
+// Discord slash command frontend for http_backend.py
 
 const axios = require("axios");
 const { Client, Intents } = require("discord.js");
@@ -9,10 +9,7 @@ const sailorServiceURL = `http://localhost:${backend_port_number}`;
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
-client.once("ready", () => {
-	console.log(":3");
-});
-
+client.once("ready", onceReady);
 client.on("interactionCreate", onInteractionCreate);
 
 client.login(discord_token);
@@ -29,6 +26,12 @@ function toOneLiner(data, maxLength=75) {
     return oneLiner;
 }
 
+// Standard ready message
+function onceReady() {
+    console.log(":3");
+}
+
+// Command handler (and potential other stuff)
 async function onInteractionCreate(interaction) {
 	if (!interaction.isCommand()) return;
 
