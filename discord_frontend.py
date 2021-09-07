@@ -106,7 +106,10 @@ async def on_message(message: discord.Message):
                         await send_and_log(reply_contents, error=(response.status != 200))
         except Exception as error:
             logger.error("id=%s | %s", message.id, to_one_liner(str(error)))
-            await message.channel.send(str(error))
+            if isinstance(error, aiohttp.client_exceptions.ClientConnectorError):
+                await message.channel.send("My brain stopped working. Please contact my owner. :<")
+            else:
+                await message.channel.send(str(error))
 
 
 if __name__ == "__main__":
