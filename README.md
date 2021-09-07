@@ -73,6 +73,20 @@ To disable a module from the bot itself, run the command `unload <module.name>`
 For example, if you want to disable `cogs/owner/exec.py`, run `unload cogs.owner.exec`.
 To enable a module, run `load <module name>`.
 
+## Command line
+
+In a terminal, run:
+
+```bash
+python3 http_backend.py
+```
+
+In a separate terminal, run:
+
+```bash
+python3 cli_frontend.py
+```
+
 ## Discord
 
 Visit the [Discord Developer Portal](https://discord.com/developers/applications)
@@ -90,7 +104,7 @@ python3 http_backend.py
 In a separate terminal, run:
 
 ```bash
-python3 discord_bot.py
+python3 discord_frontend.py
 ```
 
 You may have to change the above commands slightly, depending on your operating system and the
@@ -111,7 +125,7 @@ python3 http_backend.py
 In a separate terminal, run:
 
 ```bash
-node twitch-bot.js
+node twitch-frontend.js
 ```
 
 # More technical stuff
