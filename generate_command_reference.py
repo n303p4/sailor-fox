@@ -32,7 +32,7 @@ def main():
         "</head>",
         "<body>",
         "<h1>List of sailor-fox commands by module</h1>",
-        "<p>Arguments enclosed in [] are optional.</p>"
+        "<p>Arguments enclosed in <code>[]</code> are optional.</p>"
     ]
     previous_module = None
     for command in sorted(processor.commands.values(), key=lambda c: c.coro.__module__):
