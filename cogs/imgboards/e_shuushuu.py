@@ -30,11 +30,7 @@ async def _eshuushuu_tag_search(session, base_url: str, search_text: str):
 
 async def _eshuushuu(session, base_url: str, search_headers: dict,
                      tags: list = None, characters: list = None):
-    """Generic helper command that can handle e-shuushuu
-
-    * site - The site to check.
-    * tags - A list of tags to be used in the search criteria.
-    """
+    """Generic helper command that can handle e-shuushuu"""
     if not tags:
         tags = []
     tags = [f'"{tag}"' for tag in tags]
@@ -101,7 +97,7 @@ async def senko(event, *tags):
 async def eshuushuu(event, *tags):
     """Fetch a random image from e-shuushuu. You must provide at least one tag.
 
-    * tags - A list of tags to be used in the search criteria.
+    * `tags` - A list of tags to be used in the search criteria.
 
     **Usage notes**
 

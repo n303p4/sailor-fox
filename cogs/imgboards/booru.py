@@ -86,7 +86,7 @@ def _process_post(post, formatter, base_url_post: str, max_length_tags: int = MA
 async def safeboorutag(event, *, search_text):
     """Search Safebooru for valid tags.
 
-    * search_text - Text to search for.
+    * `search_text` - Text to search for.
     """
     result = await _booru_tag_search(event.processor.session, BASE_URLS["safebooru"]["tag_search"], search_text)
     formatted_results = "\n".join([r.replace("_", "\\_") for r in result])
@@ -99,7 +99,7 @@ async def safeboorutag(event, *, search_text):
 async def safebooru(event, *tags):
     """Fetch a random image from Safebooru. Tags accepted.
 
-    * tags - A list of tags to be used in the search criteria.
+    * `tags` - A list of tags to be used in the search criteria.
 
     **Usage notes**
 

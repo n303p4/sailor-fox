@@ -25,7 +25,7 @@ async def reload(event, *, name):
 
     **Example usage**
 
-    * reload cogs.core.ping
+    * `reload cogs.core.ping`
     """
     event.processor.remove_module(name)
     event.processor.add_module(name)

@@ -57,7 +57,7 @@ def generate_parsed_results(response_content):
 async def wiki(event, *, query):
     """Search Wikipedia.
 
-    * query - A string to be used in the search criteria.
+    * `query` - A string to be used in the search criteria.
     """
     url = generate_search_url(query)
     response_content = await search(event.processor.session, url)

@@ -68,7 +68,7 @@ async def _google_isch_handle_one(session, url, search_headers: dict=None):
 async def image(event, *, query: str):
     """Get a random image off the Internet using Google Images.
 
-    * query - A string to be used in the search criteria.
+    * `query` - A string to be used in the search criteria.
     """
     search_result_url = await _google_isch_get_one(event.processor.session, query, SEARCH_HEADERS)
     image_url, website_url = await _google_isch_handle_one(event.processor.session, search_result_url, SEARCH_HEADERS)
