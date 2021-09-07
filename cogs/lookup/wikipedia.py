@@ -2,7 +2,6 @@
 
 import urllib.parse
 
-import async_timeout
 from sailor import commands
 from sailor.web_exceptions import WebAPIInvalidResponse, WebAPINoResultsFound, WebAPIUnreachable
 
@@ -18,15 +17,13 @@ def generate_search_url(query):
 
 async def search(session, url):
     """Given a ClientSession and URL, query the URL and return its response content as a JSON."""
-    async with async_timeout.timeout(10):
-        async with session.get(url) as response:
-            if response.status == 200:
-                try:
-                    response_content = await response.json()
-                except Exception as error:
-                    raise WebAPIInvalidResponse(service="Wikipedia") from error
-            else:
-                raise WebAPIUnreachable(service="Wikipedia")
+    async with session.get(url, timeout=10) as response:
+        if response.status != 200:
+            raise WebAPIUnreachable(service="Wikipedia")
+        try:
+            response_content = await response.json()
+        except Exception as error:
+            raise WebAPIInvalidResponse(service="Wikipedia") from error
 
     return response_content
 

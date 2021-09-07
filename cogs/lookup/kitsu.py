@@ -3,7 +3,6 @@
 Ported from Oxylibrium's Nestbot.
 """
 
-import async_timeout
 from sailor import commands
 from sailor.web_exceptions import WebAPIInvalidResponse, WebAPIUnreachable
 
@@ -34,15 +33,13 @@ def generate_search_url(request_type):
 
 async def search(session, url, params):
     """Given a ClientSession and URL, query the URL and return its response content as a JSON."""
-    async with async_timeout.timeout(10):
-        async with session.get(url, params=params) as response:
-            if response.status == 200:
-                try:
-                    resp_content = await response.json(content_type="application/vnd.api+json")
-                except Exception as error:
-                    raise WebAPIInvalidResponse(service="kitsu.io") from error
-            else:
-                raise WebAPIUnreachable(service="kitsu.io")
+    async with session.get(url, params=params, timeout=10) as response:
+        if response.status != 200:
+            raise WebAPIUnreachable(service="kitsu.io")
+        try:
+            resp_content = await response.json(content_type="application/vnd.api+json")
+        except Exception as error:
+            raise WebAPIInvalidResponse(service="kitsu.io") from error
 
     return resp_content
 

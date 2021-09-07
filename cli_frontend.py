@@ -37,7 +37,10 @@ def main():
     print(f"For help, type {prefix}{prefix_space}help")
 
     while True:
-        prefix, message = get_prefix(input("> "), prefix)
+        message = input("> ")
+        if not message:
+            continue
+        prefix, message = get_prefix(message, prefix)
         if not prefix:
             continue
         try:

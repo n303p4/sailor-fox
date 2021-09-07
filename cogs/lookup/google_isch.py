@@ -24,17 +24,22 @@ async def _google_isch_get_one(session, query: str, search_headers: dict=None):
 
     params = urlencode({"tbm": "isch", "q": query})
     url = BASE_URL_GOOGLE_ISCH.format(params)
-    async with session.get(url, headers=search_headers) as response:
-        if response.status < 400:
+    async with session.get(url, headers=search_headers, timeout=10) as response:
+        if response.status >= 400:
+            raise WebAPIUnreachable(service="Google Images")
+        try:
             xml = await response.text()
             soup = BeautifulSoup(xml, features="lxml")
-            results = soup.find_all("a", href=lambda h: h.startswith("/imgres"))
-            if not results:
-                raise WebAPINoResultsFound(message="No images found.")
+        except Exception as error:
+            raise WebAPIInvalidResponse(service="Google Images") from error
+        results = soup.find_all("a", href=lambda h: h.startswith("/imgres"))
+        if not results:
+            raise WebAPINoResultsFound(message="No images found.")
+        try:
             result = secrets.choice(results)["href"]
-            return urljoin(BASE_URL_GOOGLE, result)
-        else:
-            raise WebAPIUnreachable(service="Google Images")
+        except Exception as error:
+            raise WebAPIInvalidResponse(service="Google Images") from error
+        return urljoin(BASE_URL_GOOGLE, result)
 
 
 async def _google_isch_handle_one(session, url, search_headers: dict=None):
@@ -43,24 +48,19 @@ async def _google_isch_handle_one(session, url, search_headers: dict=None):
     if not search_headers:
         search_headers = SEARCH_HEADERS
 
-    async with session.get(url, headers=search_headers) as response:
-        if response.status < 400:
+    async with session.get(url, headers=search_headers, timeout=10) as response:
+        if response.status >= 400:
+            raise WebAPIUnreachable(service="Google Images")
+        try:
             xml = await response.text()
             soup = BeautifulSoup(xml, features="lxml")
             thumbnail = soup.find("a", id="thumbnail", href=True)
-            if not thumbnail:
-                raise WebAPIInvalidResponse(service="Google Images")
             website_link = soup.find("a", href=True, text=WEBSITE_TEXT)
-            if not website_link:
-                raise WebAPIInvalidResponse(service="Google Images")
             image_url = thumbnail["href"]
-            try:
-                website_url = parse_qs(urlparse(website_link["href"]).query)["q"][0]
-            except Exception as error:
-                raise WebAPIInvalidResponse(service="Google Images") from error
+            website_url = parse_qs(urlparse(website_link["href"]).query)["q"][0]
             return image_url, website_url
-        else:
-            raise WebAPIUnreachable(service="Google Images")
+        except Exception as error:
+            raise WebAPIInvalidResponse(service="Google Images") from error
 
 
 @commands.cooldown(6, 12)

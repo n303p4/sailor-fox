@@ -4,7 +4,6 @@
 
 import secrets
 
-import async_timeout
 from sailor import commands
 from sailor.web_exceptions import WebAPIUnreachable
 
@@ -20,12 +19,11 @@ def generate_query_url(number, kind):
 
 async def query(session, url):
     """Given a ClientSession and url, query the numbers API and get a fact."""
-    async with async_timeout.timeout(10):
-        async with session.get(url) as response:
-            if response.status == 200:
-                response_content = await response.text()
-                return response_content
+    async with session.get(url, timeout=10) as response:
+        if response.status != 200:
             raise WebAPIUnreachable(service="numbersapi.com")
+        response_content = await response.text()
+        return response_content
 
 
 @commands.cooldown(12, 12)

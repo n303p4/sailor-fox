@@ -5,8 +5,6 @@
 import json
 import secrets
 
-import async_timeout
-
 from sailor import commands
 from sailor.web_exceptions import WebAPIUnreachable, WebAPIInvalidResponse
 
@@ -27,16 +25,11 @@ URL_RACCOON_SUBREDDIT_NEW_API = "https://www.reddit.com/r/Raccoons/new/.json"
 
 async def query(session, url, service_name):
     """Given a ClientSession, URL, and service name, query an API."""
-    try:
-        async with async_timeout.timeout(10):
-            async with session.get(url) as response:
-                if response.status == 200:
-                    response_content = await response.text()
-                    return response_content
-                else:
-                    raise WebAPIInvalidResponse(service=service_name)
-    except Exception as error:
-        raise WebAPIUnreachable(service=service_name) from error
+    async with session.get(url, timeout=10) as response:
+        if response.status == 200:
+            raise WebAPIUnreachable(service=service_name)
+        response_content = await response.text()
+        return response_content
 
 
 async def get_reddit_image(event, *urls):

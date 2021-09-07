@@ -6,6 +6,8 @@ from urllib.parse import urlencode, urljoin
 from bs4 import BeautifulSoup
 
 from sailor import commands
+from sailor.exceptions import UserInputError
+from sailor.web_exceptions import WebAPIInvalidResponse, WebAPINoResultsFound, WebAPIUnreachable
 
 
 BASE_URLS = {"e-shuushuu": {"image_search": "https://e-shuushuu.net/search/process/",
@@ -21,12 +23,10 @@ async def _eshuushuu_tag_search(session, base_url: str, search_text: str):
         "type": 1
     })
     url = base_url.format(query_params)
-    async with session.post(url) as response:
-        if response.status < 400:
-            return await response.text()
-        else:
-            raise Exception("Bad response from e-shuushuu")
-
+    async with session.post(url, timeout=10) as response:
+        if response.status >= 400:
+            raise WebAPIUnreachable(service="e-shuushuu")
+        return await response.text()
 
 async def _eshuushuu(session, base_url: str, search_headers: dict,
                      tags: list = None, characters: list = None):
@@ -40,23 +40,25 @@ async def _eshuushuu(session, base_url: str, search_headers: dict,
     characters = [f'"{character}"' for character in characters]
 
     if not tags and not characters:
-        raise Exception("You must provide at least one tag.")
+        raise UserInputError("You must provide at least one tag.")
 
     formdata = urlencode({
         "tags": "+".join(tags),
         "char": "+".join(characters)
     })
-    async with session.post(base_url, data=formdata, headers=search_headers) as response:
-        if response.status < 400:
+    async with session.post(base_url, data=formdata, headers=search_headers, timeout=10) as response:
+        if response.status >= 400:
+            raise WebAPIUnreachable(service="e-shuushuu")
+        try:
             xml = await response.text()
             soup = BeautifulSoup(xml, features="lxml")
-            posts = soup.find_all("a", href=True, class_="thumb_image")
-            if not posts:
-                raise Exception("No tags found.")
-            post = secrets.choice(posts)["href"]
-            return post
-        else:
-            raise Exception("Bad response from e-shuushuu")
+        except Exception as error:
+            raise WebAPIInvalidResponse(service="e-shuushuu") from error
+        posts = soup.find_all("a", href=True, class_="thumb_image")
+        if not posts:
+            raise WebAPINoResultsFound(message="No tags found.")
+        post = secrets.choice(posts)["href"]
+        return post
 
 
 @commands.cooldown(6, 12)

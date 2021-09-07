@@ -24,16 +24,16 @@ async def _booru_tag_search(session, base_url: str, search_text: str = "", black
         blacklist = TAGS_BLACKLIST
     query_params = urllib.parse.urlencode({"q": search_text.replace(" ", "_")})
     url = base_url.format(query_params)
-    async with session.get(url) as response:
-        if response.status == 200:
-            try:
-                results = json.loads(await response.text())
-            except Exception as error:
-                raise WebAPIInvalidResponse(service="Safebooru") from error
-            if not results:
-                raise WebAPINoResultsFound(message="No tags found.")
-            return [result["label"] for result in results if result["value"] not in blacklist]
-    raise WebAPIUnreachable(service="Safebooru")
+    async with session.get(url, timeout=10) as response:
+        if response.status != 200:
+            raise WebAPIUnreachable(service="Safebooru")
+        try:
+            results = json.loads(await response.text())
+        except Exception as error:
+            raise WebAPIInvalidResponse(service="Safebooru") from error
+        if not results:
+            raise WebAPINoResultsFound(message="No tags found.")
+        return [result["label"] for result in results if result["value"] not in blacklist]
 
 
 async def _booru(session, base_url_api: str, tags: list = None, blacklist: list = None):
@@ -52,22 +52,22 @@ async def _booru(session, base_url_api: str, tags: list = None, blacklist: list 
         "tags": " ".join(tags)
     })
     url = base_url_api.format(query_params)
-    async with session.get(url) as response:
-        if response.status == 200:
-            try:
-                xml = await response.text()
-                soup = BeautifulSoup(xml, features="lxml")
-                posts = soup.find_all("post")
-                if not posts:
-                    raise WebAPINoResultsFound(message=(
-                        "No results found. Make sure you're using standard booru-type tags, such as "
-                        "fox_ears or red_hair. You can use the command `sbt` to find valid tags."
-                    ))
-                post = secrets.choice(posts)
-                return post
-            except Exception as error:
-                raise WebAPIInvalidResponse(service="Safebooru") from error
-    raise WebAPIUnreachable(service="Safebooru")
+    async with session.get(url, timeout=10) as response:
+        if response.status != 200:
+            raise WebAPIUnreachable(service="Safebooru")
+        try:
+            xml = await response.text()
+            soup = BeautifulSoup(xml, features="lxml")
+        except Exception as error:
+            raise WebAPIInvalidResponse(service="Safebooru") from error
+        posts = soup.find_all("post")
+        if not posts:
+            raise WebAPINoResultsFound(message=(
+                "No results found. Make sure you're using standard booru-type tags, such as "
+                "fox_ears or red_hair. You can use the command `sbt` to find valid tags."
+            ))
+        post = secrets.choice(posts)
+        return post
 
 
 def _process_post(post, formatter, base_url_post: str, max_length_tags: int = MAX_LENGTH_TAGS):

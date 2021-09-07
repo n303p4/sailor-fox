@@ -11,7 +11,6 @@ import logging
 from typing import List
 
 import aiohttp
-import async_timeout
 import discord
 
 logging.basicConfig(format="%(asctime)-12s %(levelname)s %(message)s")
@@ -106,13 +105,14 @@ def main():
         }
 
         try:
-            async with async_timeout.timeout(10):
-                async with client_session.post(
-                    f"http://localhost:{backend_port_number}", json=request_body
-                ) as response:
-                    reply_stack = await response.json()
-                    for reply_contents in reply_stack:
-                        await send_and_log(reply_contents, error=(response.status != 200))
+            async with client_session.post(
+                f"http://localhost:{backend_port_number}",
+                json=request_body,
+                timeout=10
+            ) as response:
+                reply_stack = await response.json()
+                for reply_contents in reply_stack:
+                    await send_and_log(reply_contents, error=(response.status != 200))
         except Exception as error:
             logger.error("id=%s | %s", message.id, to_one_liner(str(error)))
             if isinstance(error, aiohttp.client_exceptions.ClientConnectorError):
