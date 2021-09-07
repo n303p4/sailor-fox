@@ -1,122 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>List of sailor-fox commands</title>
+<title>List of sailor-fox commands by module</title>
 <style type="text/css">
 body { font-family: Liberation Sans, Arial, sans-serif; }
-h1 { width: 100%; border-bottom: 1px solid gray; }
+details { padding: 4px 0; }
+details:nth-of-type(2n) { background: #EEE; }
+summary > h2 { display: inline; }
+details > h2:first-of-type { margin-top: 0.3em; }
+details > h2 { width: 100%; border-bottom: 1px solid gray; }
 </style>
 </head>
 <body>
-<h1>List of sailor-fox commands</h1>
+<h1>List of sailor-fox commands by module</h1>
 <p>Arguments enclosed in [] are optional.</p>
-<h1><code>8ball</code></h1>
-<p><strong>Aliases:</strong> <code>eightball</code></p>
-<p>Ask the Magic 8-Ball a question.</p>
-<h1><code>:&lt;</code></h1>
-<p><strong>Arguments:</strong> <code>tags</code></p>
-<p>:&lt;</p>
-<h1><code>a</code></h1>
-<p><strong>Aliases:</strong> <code>aa, aaa</code></p>
-<p>Aaaaaaa!</p>
-<h1><code>anime</code></h1>
-<p><strong>Aliases:</strong> <code>kitsu</code></p>
-<p><strong>Arguments:</strong> <code>query</code></p>
-<p>Query kitsu.io for anime.</p>
-<h1><code>animeme</code></h1>
-<p><strong>Aliases:</strong> <code>animememe</code></p>
-<p><strong>Arguments:</strong> <code>tags</code></p>
-<p>Find a random anime meme. Optional tags.</p>
-<h1><code>beaver</code></h1>
-<p>Fetch a random beaver.</p>
-<h1><code>birb</code></h1>
-<p>Fetch a random birb.</p>
-<h1><code>cat</code></h1>
-<p><strong>Aliases:</strong> <code>feline</code></p>
-<p>Fetch a random cat.</p>
-<h1><code>coin</code></h1>
-<p><strong>Aliases:</strong> <code>cflip, coinflip</code></p>
-<p>Flip a coin.</p>
-<h1><code>define</code></h1>
-<p><strong>Arguments:</strong> <code>word</code></p>
-<p>Define a word.</p>
-<p><strong>Example usage</strong></p>
-<ul>
-<li><code>define cat</code></li>
-<li><code>define dog</code></li>
-<li><code>define fox</code></li>
-</ul>
-<h1><code>dog</code></h1>
-<p><strong>Aliases:</strong> <code>doge</code></p>
-<p>Fetch a random dog.</p>
-<h1><code>eshuushuu</code></h1>
-<p><strong>Aliases:</strong> <code>es, shuushuu</code></p>
-<p><strong>Arguments:</strong> <code>tags</code></p>
-<p>Fetch a random image from e-shuushuu. You must provide at least one tag.</p>
-<ul>
-<li>tags - A list of tags to be used in the search criteria.</li>
-</ul>
-<p><strong>Usage notes</strong></p>
-<ul>
-<li>Valid tags can be found using the <code>est</code> command.</li>
-<li>This command does <strong>not</strong> currently accept character names.</li>
-<li>Multi-word tags should be surrounded with quotes, e.g. "kitsune mimi".</li>
-</ul>
-<h1><code>eshuushuutag</code></h1>
-<p><strong>Aliases:</strong> <code>est</code></p>
-<p><strong>Arguments:</strong> <code>search_text</code></p>
-<p>Search e-shuushuu for valid tags.</p>
-<p>This command does <strong>not</strong> currently accept character names.</p>
-<h1><code>exec</code></h1>
-<p><strong>Arguments:</strong> <code>code</code></p>
-<p>Execute arbitrary Python code. Bot owner only.</p>
-<h1><code>fluffsaw</code></h1>
-<p><strong>Aliases:</strong> <code>foxsaw, fsaw</code></p>
-<p><strong>Arguments:</strong> <code>[length=12]</code></p>
-<p>Generate a fluffsaw, an elegant weapon for a more fluffy age.</p>
-<p>You may specify a length - max 20, min 0.</p>
-<h1><code>fox</code></h1>
-<p>Fetch a random fox.</p>
-<h1><code>foxascii</code></h1>
-<p><strong>Aliases:</strong> <code>fa</code></p>
-<p>An ASCII fox.</p>
-<h1><code>foxfish</code></h1>
-<p><strong>Aliases:</strong> <code>ff</code></p>
-<p><strong>Arguments:</strong> <code>[length=1]</code></p>
-<p>Generate a foxfish.</p>
-<p>You may specify a length - max 20, min 0.</p>
-<h1><code>foxinvaders</code></h1>
-<p><strong>Aliases:</strong> <code>foxinvader, fi</code></p>
-<p><strong>Arguments:</strong> <code>[rows=3] [columns=5]</code></p>
-<p>Fox invaders from space have arrived!</p>
-<p>You may specify a number of rows - max 5, min 1.
-You may specify a number of columns - max 6, min 1.</p>
-<h1><code>foxjellyfish</code></h1>
-<p><strong>Aliases:</strong> <code>fj</code></p>
-<p><strong>Arguments:</strong> <code>[rows=1] [columns=1]</code></p>
-<p>The foxjellyfish, squishy fluffy animals that live in the sea.</p>
-<p>You may specify a number of rows - max 5, min 1.
-You may specify a number of columns - max 6, min 1.</p>
-<h1><code>foxsquid</code></h1>
-<p><strong>Aliases:</strong> <code>fs</code></p>
-<p><strong>Arguments:</strong> <code>[height=1]</code></p>
-<p>The foxsquid, archenemy of the foxwhale.</p>
-<p>You may specify a height - max 10, min 0.</p>
-<h1><code>foxtotempole</code></h1>
-<p><strong>Aliases:</strong> <code>ftp</code></p>
-<p>:&lt;:::3&lt;:::&gt;:3&gt;&lt;:&gt;&lt;&gt;&lt;&lt;:3:&gt;&lt;&gt;:3:&lt;</p>
-<h1><code>foxwhale</code></h1>
-<p><strong>Aliases:</strong> <code>fw</code></p>
-<p><strong>Arguments:</strong> <code>[length=10]</code></p>
-<p>The foxwhale, a creature of the ocean.</p>
-<p>You may specify a length - max 20, min 0.</p>
-<h1><code>foxwhaleeat</code></h1>
-<p><strong>Aliases:</strong> <code>fwe</code></p>
-<p>The foxwhale, eating a foxfish.</p>
-<h1><code>halt</code></h1>
-<p><strong>Aliases:</strong> <code>exit, shutdown, kys</code></p>
-<p>Halt the bot. Owner only.</p>
-<h1><code>help</code></h1>
+<details open>
+<summary>
+<h2>cogs.core.help</h2>
+</summary>
+<h2><code>help</code></h2>
 <p><strong>Aliases:</strong> <code>commands</code></p>
 <p><strong>Arguments:</strong> <code>[command_name=None]</code></p>
 <p>Help command. Run help <command name> for more information on a specific command.</p>
@@ -126,59 +28,61 @@ You may specify a number of columns - max 6, min 1.</p>
 <li><code>help ping</code></li>
 <li><code>help info</code></li>
 </ul>
-<h1><code>image</code></h1>
-<p><strong>Aliases:</strong> <code>img, gimage, gimg</code></p>
-<p><strong>Arguments:</strong> <code>query</code></p>
-<p>Get a random image off the Internet using Google Images.</p>
-<ul>
-<li>query - A string to be used in the search criteria.</li>
-</ul>
-<h1><code>info</code></h1>
+</details>
+<details open>
+<summary>
+<h2>cogs.core.info</h2>
+</summary>
+<h2><code>info</code></h2>
 <p><strong>Aliases:</strong> <code>about, stats</code></p>
 <p>Display some basic information about the bot, such as memory usage.</p>
-<h1><code>kball</code></h1>
+</details>
+<details open>
+<summary>
+<h2>cogs.core.ping</h2>
+</summary>
+<h2><code>ping</code></h2>
+<p>Ping the bot.</p>
+</details>
+<details open>
+<summary>
+<h2>cogs.fun.eightball</h2>
+</summary>
+<h2><code>8ball</code></h2>
+<p><strong>Aliases:</strong> <code>eightball</code></p>
+<p>Ask the Magic 8-Ball a question.</p>
+<h2><code>kball</code></h2>
 <p><strong>Aliases:</strong> <code>kitsuball</code></p>
 <p>Ask the Magic 8-Ball a question, with added Kitsuchan replies.</p>
-<h1><code>kemono</code></h1>
-<p><strong>Aliases:</strong> <code>kemonomimi, kmimi</code></p>
-<p>Fetch a random animal-eared person.</p>
-<h1><code>load</code></h1>
-<p><strong>Arguments:</strong> <code>name</code></p>
-<p>Load a sailor module by name. Owner only.</p>
-<p><strong>Example usage</strong></p>
-<ul>
-<li><code>load cogs.core.ping</code></li>
-</ul>
-<h1><code>maid</code></h1>
-<p><strong>Aliases:</strong> <code>meido</code></p>
-<p><strong>Arguments:</strong> <code>tags</code></p>
-<p>Find a random maid. Optional tags.</p>
-<h1><code>manga</code></h1>
-<p><strong>Arguments:</strong> <code>query</code></p>
-<p>Query kitsu.io for manga.</p>
-<h1><code>np</code></h1>
-<p><strong>Aliases:</strong> <code>noproblem</code></p>
-<p>No problem!</p>
-<h1><code>numfact</code></h1>
+</details>
+<details open>
+<summary>
+<h2>cogs.fun.numberfacts</h2>
+</summary>
+<h2><code>numfact</code></h2>
 <p><strong>Aliases:</strong> <code>numberfact, number</code></p>
 <p><strong>Arguments:</strong> <code>[number=None]</code></p>
 <p>Display a random fact about a number.</p>
-<h1><code>pause</code></h1>
+</details>
+<details open>
+<summary>
+<h2>cogs.fun.rhino</h2>
+</summary>
+<h2><code>np</code></h2>
+<p><strong>Aliases:</strong> <code>noproblem</code></p>
+<p>No problem!</p>
+<h2><code>pause</code></h2>
 <p>Pause for a bit.</p>
-<h1><code>ping</code></h1>
-<p>Ping the bot.</p>
-<h1><code>play</code></h1>
+<h2><code>play</code></h2>
 <p>Play a game!</p>
-<h1><code>raccoon</code></h1>
-<p>Fetch a random raccoon.</p>
-<h1><code>reload</code></h1>
-<p><strong>Arguments:</strong> <code>name</code></p>
-<p>Reload a sailor module by name. Owner only.</p>
-<p><strong>Example usage</strong></p>
-<ul>
-<li>reload cogs.core.ping</li>
-</ul>
-<h1><code>roll</code></h1>
+<h2><code>summon</code></h2>
+<p>Summon a monster!</p>
+</details>
+<details open>
+<summary>
+<h2>cogs.fun.rng</h2>
+</summary>
+<h2><code>roll</code></h2>
 <p><strong>Arguments:</strong> <code>expressions</code></p>
 <p>Roll some dice, using D&amp;D syntax.</p>
 <p><strong>Example usage</strong></p>
@@ -187,7 +91,59 @@ You may specify a number of columns - max 6, min 1.</p>
 <li><code>roll 1d20 2d8</code> - Roll one twenty sided die, and two eight sided dice.</li>
 </ul>
 <p>Roll outcomes are always sorted in descending order.</p>
-<h1><code>safebooru</code></h1>
+<h2><code>coin</code></h2>
+<p><strong>Aliases:</strong> <code>cflip, coinflip</code></p>
+<p>Flip a coin.</p>
+</details>
+<details open>
+<summary>
+<h2>cogs.fun.ship</h2>
+</summary>
+<h2><code>ship</code></h2>
+<p><strong>Arguments:</strong> <code>first_item second_item</code></p>
+<p>Ship two things together.</p>
+</details>
+<details open>
+<summary>
+<h2>cogs.fun.sue</h2>
+</summary>
+<h2><code>sue</code></h2>
+<p><strong>Arguments:</strong> <code>[target=]</code></p>
+<p>Sue somebody!</p>
+<p><strong>Example usage</strong></p>
+<ul>
+<li><code>sue</code></li>
+<li><code>sue a person</code></li>
+</ul>
+</details>
+<details open>
+<summary>
+<h2>cogs.fun.thirtyfive</h2>
+</summary>
+<h2><code>a</code></h2>
+<p><strong>Aliases:</strong> <code>aa, aaa</code></p>
+<p>Aaaaaaa!</p>
+<h2><code>throw</code></h2>
+<p><strong>Aliases:</strong> <code>snipe</code></p>
+<p><strong>Arguments:</strong> <code>someone</code></p>
+<p>Throw something at someone!</p>
+</details>
+<details open>
+<summary>
+<h2>cogs.imgboards.booru</h2>
+</summary>
+<h2><code>animeme</code></h2>
+<p><strong>Aliases:</strong> <code>animememe</code></p>
+<p><strong>Arguments:</strong> <code>tags</code></p>
+<p>Find a random anime meme. Optional tags.</p>
+<h2><code>:&lt;</code></h2>
+<p><strong>Arguments:</strong> <code>tags</code></p>
+<p>:&lt;</p>
+<h2><code>maid</code></h2>
+<p><strong>Aliases:</strong> <code>meido</code></p>
+<p><strong>Arguments:</strong> <code>tags</code></p>
+<p>Find a random maid. Optional tags.</p>
+<h2><code>safebooru</code></h2>
 <p><strong>Aliases:</strong> <code>sbooru, sb</code></p>
 <p><strong>Arguments:</strong> <code>tags</code></p>
 <p>Fetch a random image from Safebooru. Tags accepted.</p>
@@ -200,38 +156,211 @@ You may specify a number of columns - max 6, min 1.</p>
 <li>Underscores do not have to be used. But multi-word tags should be surrounded with quotes, e.g. "fox ears".</li>
 </ul>
 <p>See http://safebooru.org/index.php?page=help&amp;topic=cheatsheet for more details.</p>
-<h1><code>safeboorutag</code></h1>
+<h2><code>safeboorutag</code></h2>
 <p><strong>Aliases:</strong> <code>sbt</code></p>
 <p><strong>Arguments:</strong> <code>search_text</code></p>
 <p>Search Safebooru for valid tags.</p>
 <ul>
 <li>search_text - Text to search for.</li>
 </ul>
-<h1><code>senko</code></h1>
+</details>
+<details open>
+<summary>
+<h2>cogs.imgboards.e_shuushuu</h2>
+</summary>
+<h2><code>eshuushuu</code></h2>
+<p><strong>Aliases:</strong> <code>es, shuushuu</code></p>
+<p><strong>Arguments:</strong> <code>tags</code></p>
+<p>Fetch a random image from e-shuushuu. You must provide at least one tag.</p>
+<ul>
+<li>tags - A list of tags to be used in the search criteria.</li>
+</ul>
+<p><strong>Usage notes</strong></p>
+<ul>
+<li>Valid tags can be found using the <code>est</code> command.</li>
+<li>This command does <strong>not</strong> currently accept character names.</li>
+<li>Multi-word tags should be surrounded with quotes, e.g. "kitsune mimi".</li>
+</ul>
+<h2><code>eshuushuutag</code></h2>
+<p><strong>Aliases:</strong> <code>est</code></p>
+<p><strong>Arguments:</strong> <code>search_text</code></p>
+<p>Search e-shuushuu for valid tags.</p>
+<p>This command does <strong>not</strong> currently accept character names.</p>
+<h2><code>senko</code></h2>
 <p><strong>Aliases:</strong> <code>senko-san</code></p>
 <p><strong>Arguments:</strong> <code>tags</code></p>
 <p>Fetch a random Senko. Optional tags accepted.</p>
-<h1><code>sh</code></h1>
-<p><strong>Arguments:</strong> <code>args</code></p>
-<p>Execute a system command. Bot owner only.</p>
-<h1><code>ship</code></h1>
-<p><strong>Arguments:</strong> <code>first_item second_item</code></p>
-<p>Ship two things together.</p>
-<h1><code>sue</code></h1>
-<p><strong>Arguments:</strong> <code>[target=]</code></p>
-<p>Sue somebody!</p>
+</details>
+<details open>
+<summary>
+<h2>cogs.lookup.dictionary</h2>
+</summary>
+<h2><code>define</code></h2>
+<p><strong>Arguments:</strong> <code>word</code></p>
+<p>Define a word.</p>
 <p><strong>Example usage</strong></p>
 <ul>
-<li><code>sue</code></li>
-<li><code>sue a person</code></li>
+<li><code>define cat</code></li>
+<li><code>define dog</code></li>
+<li><code>define fox</code></li>
 </ul>
-<h1><code>summon</code></h1>
-<p>Summon a monster!</p>
-<h1><code>throw</code></h1>
-<p><strong>Aliases:</strong> <code>snipe</code></p>
-<p><strong>Arguments:</strong> <code>someone</code></p>
-<p>Throw something at someone!</p>
-<h1><code>time</code></h1>
+</details>
+<details open>
+<summary>
+<h2>cogs.lookup.google_isch</h2>
+</summary>
+<h2><code>image</code></h2>
+<p><strong>Aliases:</strong> <code>img, gimage, gimg</code></p>
+<p><strong>Arguments:</strong> <code>query</code></p>
+<p>Get a random image off the Internet using Google Images.</p>
+<ul>
+<li>query - A string to be used in the search criteria.</li>
+</ul>
+</details>
+<details open>
+<summary>
+<h2>cogs.lookup.kitsu</h2>
+</summary>
+<h2><code>anime</code></h2>
+<p><strong>Aliases:</strong> <code>kitsu</code></p>
+<p><strong>Arguments:</strong> <code>query</code></p>
+<p>Query kitsu.io for anime.</p>
+<h2><code>manga</code></h2>
+<p><strong>Arguments:</strong> <code>query</code></p>
+<p>Query kitsu.io for manga.</p>
+</details>
+<details open>
+<summary>
+<h2>cogs.lookup.wikipedia</h2>
+</summary>
+<h2><code>wiki</code></h2>
+<p><strong>Aliases:</strong> <code>wikipedia</code></p>
+<p><strong>Arguments:</strong> <code>query</code></p>
+<p>Search Wikipedia.</p>
+<ul>
+<li>query - A string to be used in the search criteria.</li>
+</ul>
+</details>
+<details open>
+<summary>
+<h2>cogs.owner.exec</h2>
+</summary>
+<h2><code>exec</code></h2>
+<p><strong>Arguments:</strong> <code>code</code></p>
+<p>Execute arbitrary Python code. Bot owner only.</p>
+<h2><code>sh</code></h2>
+<p><strong>Arguments:</strong> <code>args</code></p>
+<p>Execute a system command. Bot owner only.</p>
+</details>
+<details open>
+<summary>
+<h2>cogs.owner.modules</h2>
+</summary>
+<h2><code>load</code></h2>
+<p><strong>Arguments:</strong> <code>name</code></p>
+<p>Load a sailor module by name. Owner only.</p>
+<p><strong>Example usage</strong></p>
+<ul>
+<li><code>load cogs.core.ping</code></li>
+</ul>
+<h2><code>reload</code></h2>
+<p><strong>Arguments:</strong> <code>name</code></p>
+<p>Reload a sailor module by name. Owner only.</p>
+<p><strong>Example usage</strong></p>
+<ul>
+<li>reload cogs.core.ping</li>
+</ul>
+<h2><code>unload</code></h2>
+<p><strong>Arguments:</strong> <code>name</code></p>
+<p>Unload a sailor module by name. Owner only.</p>
+<p><strong>Example usage</strong></p>
+<ul>
+<li><code>unload modules.core.ping</code></li>
+</ul>
+</details>
+<details open>
+<summary>
+<h2>cogs.owner.process</h2>
+</summary>
+<h2><code>halt</code></h2>
+<p><strong>Aliases:</strong> <code>exit, shutdown, kys</code></p>
+<p>Halt the bot. Owner only.</p>
+</details>
+<details open>
+<summary>
+<h2>cogs.reactions.foxcreatures</h2>
+</summary>
+<h2><code>fluffsaw</code></h2>
+<p><strong>Aliases:</strong> <code>foxsaw, fsaw</code></p>
+<p><strong>Arguments:</strong> <code>[length=12]</code></p>
+<p>Generate a fluffsaw, an elegant weapon for a more fluffy age.</p>
+<p>You may specify a length - max 20, min 0.</p>
+<h2><code>foxascii</code></h2>
+<p><strong>Aliases:</strong> <code>fa</code></p>
+<p>An ASCII fox.</p>
+<h2><code>foxfish</code></h2>
+<p><strong>Aliases:</strong> <code>ff</code></p>
+<p><strong>Arguments:</strong> <code>[length=1]</code></p>
+<p>Generate a foxfish.</p>
+<p>You may specify a length - max 20, min 0.</p>
+<h2><code>foxinvaders</code></h2>
+<p><strong>Aliases:</strong> <code>foxinvader, fi</code></p>
+<p><strong>Arguments:</strong> <code>[rows=3] [columns=5]</code></p>
+<p>Fox invaders from space have arrived!</p>
+<p>You may specify a number of rows - max 5, min 1.
+You may specify a number of columns - max 6, min 1.</p>
+<h2><code>foxjellyfish</code></h2>
+<p><strong>Aliases:</strong> <code>fj</code></p>
+<p><strong>Arguments:</strong> <code>[rows=1] [columns=1]</code></p>
+<p>The foxjellyfish, squishy fluffy animals that live in the sea.</p>
+<p>You may specify a number of rows - max 5, min 1.
+You may specify a number of columns - max 6, min 1.</p>
+<h2><code>foxsquid</code></h2>
+<p><strong>Aliases:</strong> <code>fs</code></p>
+<p><strong>Arguments:</strong> <code>[height=1]</code></p>
+<p>The foxsquid, archenemy of the foxwhale.</p>
+<p>You may specify a height - max 10, min 0.</p>
+<h2><code>foxtotempole</code></h2>
+<p><strong>Aliases:</strong> <code>ftp</code></p>
+<p>:&lt;:::3&lt;:::&gt;:3&gt;&lt;:&gt;&lt;&gt;&lt;&lt;:3:&gt;&lt;&gt;:3:&lt;</p>
+<h2><code>foxwhale</code></h2>
+<p><strong>Aliases:</strong> <code>fw</code></p>
+<p><strong>Arguments:</strong> <code>[length=10]</code></p>
+<p>The foxwhale, a creature of the ocean.</p>
+<p>You may specify a length - max 20, min 0.</p>
+<h2><code>foxwhaleeat</code></h2>
+<p><strong>Aliases:</strong> <code>fwe</code></p>
+<p>The foxwhale, eating a foxfish.</p>
+</details>
+<details open>
+<summary>
+<h2>cogs.reactions.misc</h2>
+</summary>
+<h2><code>beaver</code></h2>
+<p>Fetch a random beaver.</p>
+<h2><code>birb</code></h2>
+<p>Fetch a random birb.</p>
+<h2><code>cat</code></h2>
+<p><strong>Aliases:</strong> <code>feline</code></p>
+<p>Fetch a random cat.</p>
+<h2><code>dog</code></h2>
+<p><strong>Aliases:</strong> <code>doge</code></p>
+<p>Fetch a random dog.</p>
+<h2><code>fox</code></h2>
+<p>Fetch a random fox.</p>
+<h2><code>kemono</code></h2>
+<p><strong>Aliases:</strong> <code>kemonomimi, kmimi</code></p>
+<p>Fetch a random animal-eared person.</p>
+<h2><code>raccoon</code></h2>
+<p>Fetch a random raccoon.</p>
+<h2><code>wolf</code></h2>
+<p>Fetch a random wolf.</p>
+</details>
+<details open>
+<summary>
+<h2>cogs.utils.timezones</h2>
+</summary>
+<h2><code>time</code></h2>
 <p><strong>Aliases:</strong> <code>timein, tz, timezone</code></p>
 <p><strong>Arguments:</strong> <code>location</code></p>
 <p>A command that fetches the time in a given area using TZ database names.</p>
@@ -242,21 +371,6 @@ You may specify a number of columns - max 6, min 1.</p>
 <li><code>time UTC</code></li>
 <li><code>time buenos aires</code></li>
 </ul>
-<h1><code>unload</code></h1>
-<p><strong>Arguments:</strong> <code>name</code></p>
-<p>Unload a sailor module by name. Owner only.</p>
-<p><strong>Example usage</strong></p>
-<ul>
-<li><code>unload modules.core.ping</code></li>
-</ul>
-<h1><code>wiki</code></h1>
-<p><strong>Aliases:</strong> <code>wikipedia</code></p>
-<p><strong>Arguments:</strong> <code>query</code></p>
-<p>Search Wikipedia.</p>
-<ul>
-<li>query - A string to be used in the search criteria.</li>
-</ul>
-<h1><code>wolf</code></h1>
-<p>Fetch a random wolf.</p>
+</details>
 </body>
 </html>
