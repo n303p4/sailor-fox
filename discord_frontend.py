@@ -66,7 +66,6 @@ def main():
         game = discord.Game(name=f"Type {main_prefix}{prefix_space}help for help!")
         await client.change_presence(activity=game)
 
-
     @client.event
     async def on_message(message: discord.Message):
         """Handle on_message events from Discord and forward them to the processor."""
