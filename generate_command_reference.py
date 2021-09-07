@@ -33,7 +33,7 @@ def main():
     for command in sorted(processor.commands.values(), key=lambda x: x.name):
         command_info = [f"# `{command.name}`"]
         if command.aliases:
-            command_info.append(f"<strong>Aliases:</strong> {', '.join('`'+a+'`' for a in command.aliases)}")
+            command_info.append(f"**Aliases:** `{', '.join(command.aliases)}`")
         arguments = []
         for parameter in list(command.signature.parameters.values())[1:]:
             if parameter.default == inspect.Parameter.empty:
@@ -41,7 +41,7 @@ def main():
             else:
                 arguments.append(f"[{parameter.name}={parameter.default}]")
         if arguments:
-            command_info.append(f"<strong>Arguments:</strong> {', '.join('`'+a+'`' for a in arguments)}")
+            command_info.append(f"**Arguments:** `{' '.join(arguments)}`")
         command_info.append(command.help)
         html.append(markdown.markdown("\n\n".join(command_info)))
 
