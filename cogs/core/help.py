@@ -8,7 +8,7 @@ from sailor import commands
 @commands.cooldown(6, 12)
 @commands.command(name="help", aliases=["commands"])
 async def help_(event, *, command_name: str = None):
-    """Help command. Run help <command name> for more information on a specific command.
+    """Help command. Run `help (command name)` for more information on a specific command.
 
     **Example usage**
 
