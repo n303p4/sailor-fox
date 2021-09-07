@@ -130,7 +130,7 @@ def main():
 
     app = web.Application()
     app.add_routes(routes)
-    web.run_app(app, port=processor.config.get("http_port", 9980))
+    web.run_app(app, port=processor.config.get("backend_port_number", 9980))
 
 
 if __name__ == "__main__":

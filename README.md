@@ -10,6 +10,8 @@ with a focus on readable, portable, and easy to maintain code.
 to the [sailor command framework](https://gitlab.com/n303p4/sailor), with some various bots
 provided as examples.
 In particular, it provides Discord and Twitch bots that may be of actual use.
+sailor-fox is based on a client-server model that allows multiple chat frontends to share a common
+command handler backend, and/or a single frontend to use multiple backends.
 
 # How to run sailor-fox
 
@@ -160,6 +162,8 @@ Results are then returned back to the frontend for further processing.
 > While the backend is written in Python, frontends can be written in any language.
 Multiple unrelated frontends can also share the same backend instance, allowing a common backend
 to serve more than one chat service (i.e. less system resources required).
+A single frontend can also access multiple backends (e.g. to have different command sets for
+different Discord servers).
 
 Taking this all together, the basic flow is as follows:
 
