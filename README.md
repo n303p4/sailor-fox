@@ -114,12 +114,6 @@ In a separate terminal, run:
 node twitch-bot.js
 ```
 
-# Autostarting the bot
-
-## systemd
-
-TBD
-
 # More technical stuff
 
 ## Architecture
@@ -165,6 +159,23 @@ Taking this all together, the basic flow is as follows:
 5. The backend receives and processes the request, then sends back a response containing
    a JSON array of messages.
 6. The frontend receives the response and sends the message(s) in chat.
+
+
+## Autostarting with systemd
+
+For convenience, you may want your bot to autostart on a Linux server, even after reboots.
+Some service templates are contained in the `systemd` folder.
+Edit them as needed, and copy them to `/etc/systemd/system/`.
+
+Then in a terminal, run:
+
+```bash
+sudo systemctl enable --now sailor-fox-backend  # Backend
+
+sudo systemctl enable --now sailor-fox-discord  # Discord
+
+sudo systemctl enable --now sailor-fox-twitch  # Twitch
+```
 
 # Q&A
 

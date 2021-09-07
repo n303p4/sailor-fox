@@ -1,0 +1,14 @@
+[Unit]
+Description=Sailor Fox (Discord frontend)
+After=network.target
+
+[Service]
+Type=simple
+User=<username>
+Group=<username>
+WorkingDirectory=/home/<username>/sailor-fox
+ExecStart=/usr/bin/python3 discord_frontend.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
