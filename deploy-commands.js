@@ -1,4 +1,4 @@
-// Before running this, ensure that http_service.py is running
+// Before running this, ensure that http_backend.py is running
 
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { REST } = require("@discordjs/rest");

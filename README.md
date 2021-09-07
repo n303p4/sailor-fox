@@ -84,7 +84,7 @@ In `config.json`, fill out the fields that start with `discord_`.
 Then in a terminal, run:
 
 ```bash
-python3 http_service.py
+python3 http_backend.py
 ```
 
 In a separate terminal, run:
@@ -105,7 +105,7 @@ In `config.json`, fill out the fields that start with `twitch_`.
 Then in a terminal, run:
 
 ```bash
-python3 http_service.py
+python3 http_backend.py
 ```
 
 In a separate terminal, run:
@@ -124,7 +124,7 @@ TBD
 
 ## Architecture
 
-sailor-fox is primarily designed around the **backend** service `http_service.py`.
+sailor-fox is primarily designed around the **backend** service `http_backend.py`.
 This provides a JSON API over a local HTTP server (_not_ intended to be run over the web).
 The backend contains an instance of `sailor.commands.Processor` that can interpret commands.
 Commands are sent to the backend by HTTP POSTing a JSON object to `localhost`, default port `9980`.

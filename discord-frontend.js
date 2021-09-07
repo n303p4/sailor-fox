@@ -1,4 +1,4 @@
-// discord.js client for http_service.py
+// discord.js client for http_backend.py
 
 const https = require("https");
 const { Client, Intents } = require("discord.js");

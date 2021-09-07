@@ -1,4 +1,4 @@
-// A Twitch frontend for http_service.py
+// A Twitch frontend for http_backend.py
 
 const crypto = require('crypto');
 const url = require("url");
