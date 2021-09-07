@@ -28,6 +28,7 @@ async def _eshuushuu_tag_search(session, base_url: str, search_text: str):
             raise WebAPIUnreachable(service="e-shuushuu")
         return await response.text()
 
+
 async def _eshuushuu(session, base_url: str, search_headers: dict,
                      tags: list = None, characters: list = None):
     """Generic helper command that can handle e-shuushuu"""
