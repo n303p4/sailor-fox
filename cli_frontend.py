@@ -25,9 +25,13 @@ def main():
     backend_port_number = config.get("backend_port_number", 9980)
     backend_url = f"http://localhost:{backend_port_number}"
 
-    print(f"Enter commands here. Commands must start with {prefix}")
+    print("Enter commands here.", end="")
+    if prefix:
+        print(f" Commands must start with {prefix}")
+    else:
+        print()
     prefix_space = " " if len(prefix) > 1 else ""
-    print(f"For help, use {prefix}{prefix_space}help.")
+    print(f"For help, type {prefix}{prefix_space}help.")
 
     while True:
         prefix, message = get_prefix(input("> "), prefix)
