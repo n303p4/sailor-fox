@@ -26,7 +26,7 @@ URL_RACCOON_SUBREDDIT_NEW_API = "https://www.reddit.com/r/Raccoons/new/.json"
 async def query(session, url, service_name):
     """Given a ClientSession, URL, and service name, query an API."""
     async with session.get(url, timeout=10) as response:
-        if response.status == 200:
+        if response.status != 200:
             raise WebAPIUnreachable(service=service_name)
         response_content = await response.text()
         return response_content
@@ -36,20 +36,26 @@ async def get_reddit_image(event, *urls):
     """Get a random image from a list of subreddits."""
     base_url = secrets.choice(urls)
     response_content = await query(event.processor.session, base_url, "Reddit")
-    response_content = json.loads(response_content)
-    children = response_content["data"]["children"]
-    child = secrets.choice(children)
-    url = child["data"]["url"]
-    await event.reply(url)
+    try:
+        response_content = json.loads(response_content)
+        children = response_content["data"]["children"]
+        child = secrets.choice(children)
+        url = child["data"]["url"]
+        await event.reply(url)
+    except Exception as error:
+        raise WebAPIInvalidResponse(service="Reddit") from error
 
 
 @commands.cooldown(6, 12)
 @commands.command(aliases=["doge"])
 async def dog(event):
     """Fetch a random dog."""
-    response_content = await query(event.processor.session, URL_RANDOM_DOG_API, "random.dog")
-    response_content = json.loads(response_content)
-    url = response_content["url"]
+    try:
+        response_content = await query(event.processor.session, URL_RANDOM_DOG_API, "random.dog")
+        response_content = json.loads(response_content)
+        url = response_content["url"]
+    except Exception as error:
+        raise WebAPIInvalidResponse(service="random.dog") from error
     await event.reply(url)
 
 
@@ -58,8 +64,11 @@ async def dog(event):
 async def cat(event):
     """Fetch a random cat."""
     response_content = await query(event.processor.session, URL_RANDOM_CAT_API, "nekos.life")
-    response_content = json.loads(response_content)
-    url = response_content["url"]
+    try:
+        response_content = json.loads(response_content)
+        url = response_content["url"]
+    except Exception as error:
+        raise WebAPIInvalidResponse(service="nekos.life") from error
     await event.reply(url)
 
 
@@ -68,8 +77,11 @@ async def cat(event):
 async def kemono(event):
     """Fetch a random animal-eared person."""
     response_content = await query(event.processor.session, URL_RANDOM_NEKO_API, "nekos.life")
-    response_content = json.loads(response_content)
-    url = response_content["neko"]
+    try:
+        response_content = json.loads(response_content)
+        url = response_content["neko"]
+    except Exception as error:
+        raise WebAPIInvalidResponse(service="nekos.life") from error
     await event.reply(url)
 
 
