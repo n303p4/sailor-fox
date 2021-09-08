@@ -7,14 +7,7 @@ import time
 
 import requests
 
-
-def get_prefix(text, prefix):
-    """If a text string starts with a substring, return the substring and the text minus the first instance of the
-    substring; otherwise return None and the text.
-    """
-    if text.startswith(prefix):
-        return prefix, text[len(prefix):].lstrip()
-    return None, text
+from sailor_fox.helpers import get_prefix
 
 
 def main():
@@ -40,12 +33,12 @@ def main():
         message = input("> ")
         if not message:
             continue
-        prefix, message = get_prefix(message, prefix)
-        if not prefix:
+        prefix_or_none, message = get_prefix(message, prefix)
+        if prefix_or_none is None or not message:
             continue
         try:
             response = requests.post(backend_url, json={
-                "id": f"cli:{time.time()}",
+                "id": f"clipy:{time.time()}",
                 "message": message,
                 "is_owner": True,
                 "character_limit": 0

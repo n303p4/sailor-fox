@@ -89,7 +89,7 @@ function onMessage(channel, tags, message, self) {
 
     axios
     .post(sailorServiceURL, {
-        "id": `twitch:${tags.id}`,
+        "id": `twitchjs:${tags.id}`,
         "message": message.replace(prefix, "").trim(),
         "is_owner": tags["user-id"] === twitch_owner_id,
         "character_limit": characterLimit

@@ -4,32 +4,20 @@ An HTTP service made using sailor's command handler.
 Requires Python 3.6+ and aiohttp.
 """
 
-# pylint: disable=invalid-name
+# pylint: disable=invalid-name,broad-except
 
 import hashlib
 import json
-import logging
 import sys
 import time
 
 from aiohttp import web
 import sailor
 
-from sailor_fox import ProcessorWithConfig
+from sailor_fox.processor import ProcessorWithConfig
+from sailor_fox.helpers import create_logger, to_one_liner
 
-logging.basicConfig(format="%(asctime)-12s %(levelname)s %(message)s")
-logger = logging.getLogger("discord")
-logger.setLevel(logging.INFO)
-
-
-def to_one_liner(text: str, max_length: int = 75):
-    """Truncates a string to a single line for logging"""
-    one_liner = " ".join(text.split("\n"))
-    if len(one_liner) > max_length:
-        one_liner = f"{one_liner[:max_length-1]}…"
-    if not one_liner:
-        one_liner = "<empty>"
-    return one_liner
+logger = create_logger(__name__)
 
 
 def main():
@@ -94,9 +82,9 @@ def main():
 
         reply_stack = []
 
-        async def append_to_message_stack(reply_contents: str):
-            logger.info("id=%s | %s", request_id, to_one_liner(reply_contents))
-            reply_stack.append(reply_contents.strip())
+        async def append_to_reply_stack(reply: str):
+            logger.info("id=%s | %s", request_id, to_one_liner(reply))
+            reply_stack.append(reply.strip())
 
         try:
             await processor.process(
@@ -104,9 +92,9 @@ def main():
                 character_limit=character_limit,
                 format_name=format_name,
                 is_owner=is_owner,
-                reply_with=append_to_message_stack
+                reply_with=append_to_reply_stack
             )
-        except (sailor.exceptions.CommandError, sailor.exceptions.CommandProcessorError) as error:
+        except Exception as error:
             logger.error("id=%s | %s", request_id, to_one_liner(str(error)))
             return web.Response(
                 text=json.dumps([str(error)]),

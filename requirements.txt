@@ -1,4 +1,5 @@
 discord.py
+twitchio
 -e git+https://gitlab.com/n303p4/sailor#egg=sailor
 requests
 pytz

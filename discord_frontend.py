@@ -7,25 +7,14 @@ Requires Python 3.6+ and discord.py 1.0 or higher.
 # pylint: disable=invalid-name,broad-except
 
 import json
-import logging
 from typing import List
 
 import aiohttp
 import discord
 
-logging.basicConfig(format="%(asctime)-12s %(levelname)s %(message)s")
-logger = logging.getLogger("discord")
-logger.setLevel(logging.INFO)
+from sailor_fox.helpers import create_logger, to_one_liner
 
-
-def to_one_liner(text: str, max_length: int = 75):
-    """Truncates a string to a single line for logging"""
-    one_liner = " ".join(text.split("\n"))
-    if len(one_liner) > max_length:
-        one_liner = f"{one_liner[:max_length-1]}…"
-    if not one_liner:
-        one_liner = "<empty>"
-    return one_liner
+logger = create_logger("discord")
 
 
 def get_prefix(text: str, prefixes_: List[str]):
@@ -72,8 +61,8 @@ def main():
         if message.author.bot:
             return
 
-        prefix, message_text = get_prefix(message.content, prefixes)
-        if not prefix or not message_text:
+        prefix_or_none, message_text = get_prefix(message.content, prefixes)
+        if prefix_or_none is None or not message_text:
             return
 
         application_info = await client.application_info()
@@ -89,15 +78,8 @@ def main():
             to_one_liner(message.content)
         )
 
-        async def send_and_log(reply_contents: str, error: bool = False):
-            if error:
-                logger.error("id=%s | %s", message.id, to_one_liner(reply_contents))
-            else:
-                logger.info("id=%s | %s", message.id, to_one_liner(reply_contents))
-            await message.channel.send(reply_contents)
-
         request_body = {
-            "id": f"discord:{message.id}",
+            "id": f"discordpy:{message.id}",
             "message": message_text,
             "is_owner": is_owner,
             "character_limit": 2000,
@@ -111,8 +93,14 @@ def main():
                 timeout=10
             ) as response:
                 reply_stack = await response.json()
-                for reply_contents in reply_stack:
-                    await send_and_log(reply_contents, error=(response.status != 200))
+            error = response.status != 200
+            for reply in reply_stack:
+                if error:
+                    logger.error("id=%s | %s", message.id, to_one_liner(reply))
+                else:
+                    logger.info("id=%s | %s", message.id, to_one_liner(reply))
+                await message.channel.send(reply)
+
         except Exception as error:
             logger.error("id=%s | %s", message.id, to_one_liner(str(error)))
             if isinstance(error, aiohttp.client_exceptions.ClientConnectorError):
