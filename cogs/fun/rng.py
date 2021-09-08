@@ -43,16 +43,10 @@ def do_roll(dice: int, sides: int, _: int):
     return values
 
 
-def do_rolls(*expressions, **kwargs):
+def do_rolls(*expressions, max_rolls: int, max_dice: int, max_sides: int, max_modifier: int):
     """Given a list of D&D roll expressions, generate a series of rolls."""
 
-    max_rolls = kwargs["max_rolls"]
-    max_dice = kwargs["max_dice"]
-    max_sides = kwargs["max_sides"]
-    max_modifier = kwargs["max_modifier"]
-
     rolls = []
-
     expressions = trim_expressions(*expressions)
 
     for expression in expressions[:max_rolls]:
