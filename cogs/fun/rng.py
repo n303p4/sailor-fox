@@ -104,6 +104,33 @@ async def coin(event):
 
 
 @commands.cooldown(6, 12)
+@commands.command(aliases=["randint"])
+async def rng(event, start: int, end: int):
+    """Random number generator.
+
+    * `start` - The lowest number that can be generated.
+    * `end` - The highest number that can be generated.
+    """
+    if start > end:
+        start, end = end, start
+    number = secrets.randbelow(end - start + 1) + start
+    await event.reply(event.f.codeblock(number))
+
+
+@commands.cooldown(6, 12)
+@commands.command(name="choice", aliases=["choose", "c"])
+async def choice_(event, *choices):
+    """Choose from various choices. Choices are separated with spaces.
+
+    Multi-word choices should be enclosed in "quotes like this".
+    """
+    if len(choices) < 2:
+        raise UserInputError("You must supply more than one choice.")
+    choice = secrets.choice(choices)
+    await event.reply(event.f.codeblock(choice))
+
+
+@commands.cooldown(6, 12)
 @commands.command(name="roll")
 async def roll_(event, *expressions):
     """Roll some dice, using D&D syntax.
@@ -115,7 +142,6 @@ async def roll_(event, *expressions):
 
     Roll outcomes are always sorted in descending order.
     """
-
 
     outcomes = do_rolls(*expressions,
                         max_rolls=MAX_ROLLS,
