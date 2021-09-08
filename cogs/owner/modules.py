@@ -44,7 +44,6 @@ async def reloadall(event):
         except Exception as error:  # pylint: disable=broad-except
             errors.append((f"Could not reload module {module_name}: "
                            f"{error}"))
-
     if errors:
         await event.reply("\n".join(errors))
     await event.reply("Reloaded all modules.")
@@ -56,7 +55,7 @@ async def unload(event, *, name):
 
     **Example usage**
 
-    * `unload modules.core.ping`
+    * `unload cogs.core.ping`
     """
     event.processor.config.setdefault("module_blocklist", [])
     if name not in event.processor.config["module_blocklist"]:
