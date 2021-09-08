@@ -198,7 +198,6 @@ Taking this all together, the basic flow is as follows:
    a JSON array of messages.
 6. The frontend receives the response and sends the message(s) in chat.
 
-
 ## Autostarting with systemd
 
 For convenience, you may want your bot to autostart on a Linux server, even after reboots.
