@@ -6,6 +6,7 @@ Requires Python 3.6 or higher.
 
 # pylint: disable=invalid-name,broad-except
 
+import asyncio
 import json
 import secrets
 
@@ -15,28 +16,6 @@ import twitchio
 from sailor_fox.helpers import create_logger, get_prefix, to_one_liner
 
 logger = create_logger(__name__)
-
-
-async def ext_send(session, channel, message_id, reply_stack, *,
-                   use_ghostbin: bool = False, url_ghostbin_api: str = "https://ghostbin.com/paste/new"):
-    """
-    Sends a message normally if it's short enough.
-    If use_ghostbin is true and the message is too long, post the message to Ghostbin and sends the link in chat.
-    """
-    if not reply_stack:
-        return
-    if len(reply_stack) == 1 or not use_ghostbin:
-        await channel.send(reply_stack[0])
-        return
-    request_body = aiohttp.FormData({
-        "text": "\n".join(reply_stack),
-        "title": "Multiline post",
-        "password": secrets.token_hex(32)
-    })
-    async with session.post(url_ghostbin_api, data=request_body, timeout=10) as response:
-        reply = f"Multiline post: {response.url}"
-    logger.info("id=%s | %s", message_id, reply)
-    await channel.send(reply)
 
 
 def main():
@@ -50,7 +29,6 @@ def main():
 
     backend_port_number = config.get("backend_port_number", 9980)
     prefix = str(config.get("prefix", ""))
-    use_ghostbin = config.get("twitch_post_long_messages_to_ghostbin", False)
 
     client = twitchio.Client(token, initial_channels=config.get("twitch_channels", []))
     client_session = aiohttp.ClientSession(loop=client.loop)
@@ -98,17 +76,14 @@ def main():
                 timeout=10
             ) as response:
                 reply_stack = await response.json()
-                if response.status != 200:
-                    logger.error("id=%s | %s", message_id, to_one_liner(reply_stack[0]))
+            error = response.status != 200
+            for reply in reply_stack:
+                if error:
+                    logger.error("id=%s | %s", message_id, to_one_liner(reply))
                 else:
-                    logger.info("id=%s | %s", message_id, to_one_liner(reply_stack[0]))
-            await ext_send(
-                client_session,
-                message.channel,
-                message_id,
-                reply_stack,
-                use_ghostbin=use_ghostbin
-            )
+                    logger.info("id=%s | %s", message_id, to_one_liner(reply))
+                await message.channel.send(reply)
+                await asyncio.sleep(1)
 
         except Exception as error:
             logger.error("id=%s | %s", message_id, to_one_liner(str(error)))
