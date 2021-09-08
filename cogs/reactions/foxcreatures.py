@@ -69,7 +69,6 @@ async def _foxgrid(event, rows, columns, creature_segments):
             invaders.append(segment*columns)
         if index != rows-1:
             invaders.append("")
-    invaders.append()
     await event.reply(event.f.codeblock("\n".join(invaders)))
 
 
