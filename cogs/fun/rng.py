@@ -105,7 +105,7 @@ async def coin(event):
 
 @commands.cooldown(6, 12)
 @commands.command(name="roll")
-async def _roll(event, *expressions):
+async def roll_(event, *expressions):
     """Roll some dice, using D&D syntax.
 
     **Example usage**

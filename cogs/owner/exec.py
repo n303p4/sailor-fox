@@ -29,7 +29,7 @@ async def shell(event, *args):
 
 
 @commands.command(name="exec", owner_only=True)
-async def _exec(event, *, code):
+async def exec_(event, *, code):
     """Execute arbitrary Python code. Bot owner only."""
     variables = {
         "event": event,
