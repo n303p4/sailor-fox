@@ -142,18 +142,14 @@ async def roll_(event, *expressions):
 
     Roll outcomes are always sorted in descending order.
     """
-
-    outcomes = do_rolls(*expressions,
-                        max_rolls=MAX_ROLLS,
-                        max_dice=MAX_DICE,
-                        max_sides=MAX_SIDES,
-                        max_modifier=MAX_MODIFIER)
-
-    if outcomes:
-        for outcome in outcomes:
-            await event.reply(event.f.codeblock(outcome, syntax="asciidoc"))
-
-    else:
+    outcomes = do_rolls(
+        *expressions,
+        max_rolls=MAX_ROLLS,
+        max_dice=MAX_DICE,
+        max_sides=MAX_SIDES,
+        max_modifier=MAX_MODIFIER
+    )
+    if not outcomes:
         raise UserInputError((
             "No valid rolls supplied. Please use D&D format, e.g. 5d6+2.\n"
             "Individual rolls cannot have more than "
@@ -161,3 +157,5 @@ async def roll_(event, *expressions):
             f"between 1 and {MAX_SIDES} sides inclusive. The "
             f"modifier must not exceed ±{MAX_MODIFIER}"
         ))
+    for outcome in outcomes:
+        await event.reply(event.f.codeblock(outcome, syntax="asciidoc"))
