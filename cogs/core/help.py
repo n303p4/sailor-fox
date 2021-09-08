@@ -42,7 +42,9 @@ async def help_(event, *, command_name: str = None):
             if len(command.aliases) >= 10:
                 commands_list += command.aliases
 
-        help_text = event.f.codeblock(", ".join(sorted(commands_list)) + "\n")
-        help_text = event.f.bold("List of commands:\n") + help_text
-        help_text += f"\nRun {event.f.bold('help command')} for more details on a command."
-        await event.reply(help_text)
+        help_text = [
+            event.f.bold("List of commands:"),
+            event.f.codeblock(", ".join(sorted(commands_list)) + "\n"),
+            f"Run {event.f.bold('help command')} for more details on a command."
+        ]
+        await event.reply("\n".join(help_text))
