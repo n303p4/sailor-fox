@@ -52,6 +52,7 @@ def main():
         is_owner = options.get("is_owner", False)
         character_limit = options.get("character_limit", 0)
         format_name = str(options.get("format_name"))
+        replace_newlines = options.get("replace_newlines", False)
 
         logger.info(
             "id=%s isOwner=%s characterLimit=%s formatName=%s | %s",
@@ -92,6 +93,7 @@ def main():
                 character_limit=character_limit,
                 format_name=format_name,
                 is_owner=is_owner,
+                replace_newlines=replace_newlines,
                 reply_with=append_to_reply_stack
             )
         except Exception as error:

@@ -92,7 +92,8 @@ function onMessage(channel, tags, message, self) {
         "id": `twitchjs:${tags.id}`,
         "message": message.replace(prefix, "").trim(),
         "is_owner": tags["user-id"] === twitch_owner_id,
-        "character_limit": characterLimit
+        "character_limit": characterLimit,
+        "replace_newlines": true
     })
     .then((response) => {
         let replyOneLiner = toOneLiner(response.data);

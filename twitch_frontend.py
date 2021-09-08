@@ -58,7 +58,7 @@ def main():
             message_id,
             tags.get("display-name", "unknown"),
             author_id,
-            message.channel,
+            message.channel.name,
             to_one_liner(message.content)
         )
 
@@ -66,7 +66,8 @@ def main():
             "id": f"twitchpy:{message_id}",
             "message": message_text,
             "is_owner": is_owner,
-            "character_limit": 500
+            "character_limit": 500,
+            "replace_newlines": True
         }
 
         try:
@@ -83,7 +84,8 @@ def main():
                 else:
                     logger.info("id=%s | %s", message_id, to_one_liner(reply))
                 await message.channel.send(reply)
-                await asyncio.sleep(2)
+                if len(reply_stack) > 1:
+                    await asyncio.sleep(2)
 
         except Exception as error:
             logger.error("id=%s | %s", message_id, to_one_liner(str(error)))

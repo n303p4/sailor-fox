@@ -159,6 +159,10 @@ The JSON object should have the following properties:
 > this number will be split up into multiple, smaller replies, each one at most `character_limit`
 > characters long.
 >
+> ### `replace_newlines` \[boolean, default `false`]
+> Optional flag that replaces newlines with ` | ` and strips repeating newlines, for services that
+> don't support newlines (e.g. Twitch).
+>
 > ### `format_name` \[string, default `null`]
 > Optional format name, e.g. `"discord"`. Set this to use chat-specific text formatting, e.g. bold.
 
