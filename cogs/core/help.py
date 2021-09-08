@@ -23,7 +23,7 @@ async def help_(event, *, command_name: str = None):
         else:
             help_text = [cmd.name]
             if cmd.aliases:
-                help_text.append(f"Aliases: {', '.join(cmd.aliases)})")
+                help_text.append(f"Aliases: {', '.join(cmd.aliases)}")
             arguments = []
             for parameter in list(cmd.signature.parameters.values())[1:]:
                 if parameter.default == inspect.Parameter.empty:
