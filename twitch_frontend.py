@@ -73,7 +73,7 @@ def main():
         message_id = tags.get("id", secrets.token_hex(16))
         author_id = tags.get("user-id", "unknown")
 
-        is_owner = (author_id == config.get("twitch_owner_id", -2))
+        is_owner = (author_id == config.get("twitch_owner_id"))
 
         logger.info(
             "id=%s user=%s userId=%s channel=%s | %s",
