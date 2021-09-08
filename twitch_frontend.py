@@ -58,7 +58,7 @@ def main():
     @client.event()
     async def event_ready():
         """Bot has logged in."""
-        logger.info("%s is now online", client.nick)
+        logger.info("Logged in as %s", client.nick)
 
     @client.event()
     async def event_message(message: twitchio.Message):
