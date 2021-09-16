@@ -33,7 +33,7 @@ async def help_(event, *, command_name: str = None):
             if arguments:
                 help_text.append(f"Arguments: {' '.join(arguments)}")
             help_text.append(f"\n{cmd.help}")
-            await event.reply(event.f.codeblock("\n".join(help_text), syntax="md"))
+            await event.reply(event.f.codeblock("\n".join(help_text)))
     else:
         commands_list = []
 
