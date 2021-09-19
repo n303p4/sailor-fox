@@ -23,19 +23,10 @@ If you run Windows or macOS, you should download and install Python from the
 If you run Linux, you should probably install Python from your package manager.
 Most Linux distributions currently ship Python 3.7 or higher (as of September 2021).
 
-There is an alternative Twitch bot that depends on Node.js 16.0.0 or higher, as a proof of concept.
-If you run Windows or macOS, you should download and install Node.js from the
-[official website](https://nodejs.org/).
-If you run Linux, note that many distros do not ship Node.js 16.x (as of September 2021).
-You may need to use
-[the upstream Node.js repository](https://nodejs.org/en/download/package-manager/) for your distro.
-
-After installing Python (and optionally Node), install additional dependencies:
+After installing Python, install additional dependencies:
 
 ```bash
 python3 -m pip install --user -r requirements.txt
-
-npm install axios tmi.js  # For alternative Twitch bot
 ```
 
 > ### Note
@@ -129,12 +120,6 @@ python3 discord_frontend.py
 python3 twitch_frontend.py
 ```
 
-## Twitch (alternative)
-
-```bash
-node twitch-frontend.js
-```
-
 # More technical stuff
 
 ## Architecture
@@ -216,8 +201,6 @@ sudo systemctl enable --now sailor-fox-backend  # Backend
 sudo systemctl enable --now sailor-fox-discord  # Discord
 
 sudo systemctl enable --now sailor-fox-twitch  # Twitch
-
-sudo systemctl enable --now sailor-fox-twitch-alt  # Twitch (alternative)
 ```
 
 # Q&A

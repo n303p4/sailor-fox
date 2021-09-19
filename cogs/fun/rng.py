@@ -125,7 +125,7 @@ async def choice_(event, *choices):
 
 
 @commands.cooldown(6, 12)
-@commands.command(name="roll")
+@commands.command(name="roll", aliases=["r"])
 async def roll_(event, *expressions):
     """Roll some dice, using D&D syntax.
 
