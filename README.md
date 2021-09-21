@@ -156,6 +156,13 @@ each of which represents part of the command output.
 If the HTTP status code is 200, the command completed normally.
 Any other status code should be understood as an error.
 
+> ### `curl` example
+> ```
+> $ curl -L http://localhost:9980 -d '{"message": "ping"}'
+> 
+> [":3"]
+> ```
+
 To create a complete and useful bot, there must also be a **frontend** to a chat service.
 Its job is to decide what messages in chat appear to be commands, and forward them to the backend.
 Results are then returned back to the frontend for further processing.

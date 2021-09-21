@@ -45,10 +45,28 @@ def main():
     async def on_message(request):
         """Accept incoming messages and forward them to the processor."""
 
-        options = await request.json()
+        try:
+            options = await request.json()
+        except json.JSONDecodeError:
+            error_message = "Request does not contain valid JSON data."
+            logger.error(error_message)
+            return web.Response(
+                text=json.dumps([error_message]),
+                content_type="application/json",
+                status=400
+            )
 
         request_id = str(options.get("id", hashlib.md5(bytes(str(time.time()), encoding="utf-8")).hexdigest()))
-        message = str(options.get("message", ""))
+        message = options.get("message")
+        if message is None:
+            error_message = "message is a required property that is missing."
+            logger.error("id=%s | %s", request_id, error_message)
+            return web.Response(
+                text=json.dumps([error_message]),
+                content_type="application/json",
+                status=400
+            )
+        message = str(message)
         is_owner = options.get("is_owner", False)
         character_limit = options.get("character_limit", 0)
         format_name = str(options.get("format_name"))
@@ -66,7 +84,7 @@ def main():
         error_messages = []
 
         if not message.strip():
-            error_messages.append("Message cannot be only whitespace.")
+            error_messages.append("message cannot be only whitespace.")
         if not isinstance(is_owner, bool):
             error_messages.append("is_owner must be boolean.")
         if not isinstance(character_limit, int):
