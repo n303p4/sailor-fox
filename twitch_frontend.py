@@ -84,6 +84,7 @@ def main():
                 else:
                     logger.info("id=%s | %s", message_id, to_one_liner(reply))
                 await message.channel.send(reply)
+                # Hardcode ratelimit for now
                 if len(reply_stack) > 1:
                     await asyncio.sleep(2)
 
