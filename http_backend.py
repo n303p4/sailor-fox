@@ -73,11 +73,12 @@ def main():
         replace_newlines = options.get("replace_newlines", False)
 
         logger.info(
-            "id=%s isOwner=%s characterLimit=%s formatName=%s | %s",
+            "id=%s isOwner=%s characterLimit=%s formatName=%s replaceNewlines=%s | %s",
             request_id,
             is_owner,
             character_limit,
             format_name,
+            replace_newlines,
             to_one_liner(message)
         )
 
@@ -89,6 +90,8 @@ def main():
             error_messages.append("is_owner must be boolean.")
         if not isinstance(character_limit, int):
             error_messages.append("character_limit must be integer.")
+        if not isinstance(replace_newlines, bool):
+            error_messages.append("replace_newlines must be boolean.")
 
         if error_messages:
             for error_message in error_messages:
