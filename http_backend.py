@@ -37,8 +37,6 @@ def main():
         command_list = {}
         for command in processor.commands.values():
             command_list[command.name] = command.help
-            for alias in command.aliases:
-                command_list[alias] = command.help
         return web.json_response(command_list)
 
     @routes.post("/")

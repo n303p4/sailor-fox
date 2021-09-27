@@ -28,10 +28,21 @@ After installing Python, install additional dependencies:
 ```bash
 python3 -m pip install --user -r requirements.txt
 ```
-
 > ### Note
 > If the above Python command does not work, note that `pip` is provided by a separate package
 on many Linux distros (e.g. `python3-pip` on Ubuntu).
+
+### Discord
+
+The Discord frontend additionally depends on Node.js 16 or higher.
+Most distributions don't ship this version, so you may have to follow
+[these instructions](https://nodejs.org/en/download/package-manager/).
+
+After installing Node, install additional dependencies:
+
+```bash
+npm install axios discord.js
+```
 
 ## Configuration
 
@@ -47,6 +58,9 @@ If the bot will share a chat with other bots, the prefix should be unique to avo
 > ### Note
 > You can set the prefix to an empty string, which will make the bot respond to every message.
 However, this is discouraged.
+
+> ### Node
+> The Discord frontend uses `discord_slash_prefix` instead.
 
 ## Disabling commands
 
@@ -78,8 +92,15 @@ to create an application.
 When you create your application, click the "Bot" tab and click "Add Bot".
 You will have to copy your bot token from here.
 
-In `config.json`, paste your token under `discord_token`.
-The other Discord fields are currently unused, but may become relevant in the future.
+In `config.json`, fill out the fields that start with `discord_`.
+
+Afterwards, run the following command in a terminal:
+
+```bash
+python3 deploy_discord_commands.py
+```
+
+This will register a command on Discord's servers for interacting with the bot.
 
 ## Twitch setup
 
@@ -111,7 +132,13 @@ python3 cli_frontend.py
 ## Discord
 
 ```bash
-python3 discord_frontend.py
+node discord-frontend.js
+```
+
+## Discord classic (deprecated)
+
+```bash
+python3 discord_classic_frontend.py
 ```
 
 ## Twitch
@@ -206,6 +233,8 @@ Then in a terminal, run:
 sudo systemctl enable --now sailor-fox-backend  # Backend
 
 sudo systemctl enable --now sailor-fox-discord  # Discord
+
+sudo systemctl enable --now sailor-fox-discord-classic  # Discord (classic)
 
 sudo systemctl enable --now sailor-fox-twitch  # Twitch
 ```

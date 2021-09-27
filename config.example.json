@@ -10,9 +10,8 @@
     "backend_port_number": 9980,
 
     "discord_token": "Discord token",
-    "discord_client_id": 1234567890,
-    "discord_guild_id": 1234567890,
-    "discord_public_key": "abcdefghijklmnopqrstuvwxyz",
+    "discord_guild_id": "this is optional but recommended",
+    "discord_slash_prefix": "onlylettersandnumbersallowed",
 
     "twitch_owner_id": "User ID of bot owner",
     "twitch_username": "Twitch username",
