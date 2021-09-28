@@ -1,7 +1,7 @@
 // Discord slash command frontend for http_backend.py
 
 const axios = require("axios");
-const { Client, Intents, Permissions } = require("discord.js");
+const { Client, Intents } = require("discord.js");
 
 const { discord_slash_prefix, discord_token, backend_port_number } = require("./config.json");
 const sailorServiceURL = `http://localhost:${backend_port_number}`;
@@ -45,7 +45,12 @@ async function onInteractionCreate(interaction) {
         else fullCommand = commandName;
     }
 
-    console.info(`id=${interaction.id} user=${interaction.user.tag} userId=${interaction.user.id} | ${fullCommand}`);
+    console.info(
+        `id=${interaction.id} ` +
+        `user=${interaction.user.tag} ` +
+        `userId=${interaction.user.id} ` +
+        `| ${fullCommand}`
+    );
 
     let requestBody = {
         id: `discord.js:${interaction.id}`,
@@ -54,29 +59,29 @@ async function onInteractionCreate(interaction) {
         character_limit: 2000,
         format_name: "discord"
     }
-    if (channel && channel.hasOwnProperty("name")) {
+    if (channel && typeof channel.name === "string") {
         requestBody.channel_name = channel.name;
     }
 
     axios
-    .post(sailorServiceURL, requestBody)
-    .then(async response => await doActions(response, interaction, channel, false))
-    .catch(async error => {
-        try { await doActions(error.response, interaction, channel, true); }
-        catch {
-            let errorMessage;
-            if (error.code) errorMessage = `An error occurred: ${error.code}`
-            else errorMessage = "An unknown error occurred.";
+        .post(sailorServiceURL, requestBody)
+        .then(async response => await doActions(response, interaction, channel, false))
+        .catch(async error => {
+            try { await doActions(error.response, interaction, channel, true); }
+            catch {
+                let errorMessage;
+                if (error.code) errorMessage = `An error occurred: ${error.code}`
+                else errorMessage = "An unknown error occurred.";
 
-            console.error(`id=${interaction.id} | ${errorMessage}`);
-            if (error.code === "ECONNREFUSED") {
-                await interaction.editReply("My brain stopped working. Please contact my owner. :<");
+                console.error(`id=${interaction.id} | ${errorMessage}`);
+                if (error.code === "ECONNREFUSED") {
+                    await interaction.editReply("My brain stopped working. Please contact my owner. :<");
+                }
+                else if (error.code !== "ECONNRESET") {
+                    await interaction.editReply(errorMessage);
+                }
             }
-            else if (error.code !== "ECONNRESET") {
-                await interaction.editReply(errorMessage);
-            }
-        }
-    });
+        });
 }
 
 // Delete original reply to interaction (assumes reply or deferReply is called already)
@@ -97,7 +102,9 @@ function toOneLiner(string, maxLength=75) {
 
 // Execute a single action requested by the backend
 function doAction(action, interaction, channel, isError=false) {
-    if (typeof action.type !== "string" || typeof action.value !== "string") return;
+    if (typeof action.type !== "string" || typeof action.value !== "string") {
+        return;
+    }
     let logMessage = `id=${interaction.id} actionType=${action.type}`;
     switch (action.type) {
         case "rename_channel":

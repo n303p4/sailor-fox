@@ -38,7 +38,6 @@ def main():
     @routes.get("/")
     async def command_list(_):
         """Return JSON dict of all commands, minus their aliases. Mainly for Discord slash command registration."""
-
         command_list = {}
         for command in processor.commands.values():
             command_list[command.name] = command.help
