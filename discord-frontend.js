@@ -28,13 +28,17 @@ function onceReady() {
 async function onInteractionCreate(interaction) {
 	if (!interaction.isCommand()) return;
 
+    await interaction.deferReply();
+
+    let commandArguments = await interaction.options.getString("input", false);
+    if (commandArguments === undefined) return await deleteOriginalReply(interaction);
+
     let channel = interaction.channel;
 	let commandName = interaction.commandName;
-	let commandArguments = await interaction.options.getString("input");
     let fullCommand;
     if (commandName === discord_slash_prefix) {
         if (commandArguments) fullCommand = commandArguments;
-        else return;
+        else return await deleteOriginalReply(interaction);
     }
     else {
         if (commandArguments) fullCommand = `${commandName} ${commandArguments}`;
@@ -53,8 +57,6 @@ async function onInteractionCreate(interaction) {
     if (channel && channel.hasOwnProperty("name")) {
         requestBody.channel_name = channel.name;
     }
-
-    await interaction.deferReply();
 
     axios
     .post(sailorServiceURL, requestBody)
@@ -79,6 +81,12 @@ async function onInteractionCreate(interaction) {
     });
 }
 
+// Delete original reply to interaction (assumes reply or deferReply is called already)
+async function deleteOriginalReply(interaction) {
+    await interaction.editReply("…");
+    await interaction.deleteReply();
+}
+
 // Truncates an array of actions to a single line for logging
 function toOneLiner(data, maxLength=75) {
     let oneLiner = data.map(item => item.value).join(" ").split("\n").join(" ");
@@ -99,21 +107,13 @@ function doAction(action, interaction, channel) {
                 console.warn(`id=${interaction.id} | Channel rename can't be done!`);
                 return;
             }
-            else if (
-                channel.type !== "GUILD_TEXT" ||
-                !channel
-                .permissionsFor(client.user)
-                .has(Permissions.FLAGS.MANAGE_CHANNELS)
-            ) {
-                console.warn(
-                    `id=${interaction.id} | Channel rename for ${channel.name} (${channel.id}) can't be done!`
-                );
-                return;
-            }
-            console.log(
-                `id=${interaction.id} | Renaming channel ${channel.name} (${channel.id}) to ${action.value}`
-            );
-            channel.edit({ name: action.value });
+            channel.edit({ name: action.value })
+                .then(() => console.log(
+                    `id=${interaction.id} | Renamed channel ${channel.name} (${channel.id}) to ${action.value}`
+                ))
+                .catch(error => console.warn(
+                    `id=${interaction.id} | Channel rename for ${channel.name} (${channel.id}) failed! ${error}`
+                ));
             break;
         case "reply":
             interaction.followUp(action.value);
@@ -132,13 +132,11 @@ async function doActions(response, interaction, channel) {
             if (action.type === "reply") numReplies++;
         });
         if (numReplies === 0) {
-            await interaction.editReply("…");
-            await interaction.deleteReply();
+            await deleteOriginalReply(interaction);
         }
     }
     else {
-        await interaction.editReply("…");
-        await interaction.deleteReply();
+        await deleteOriginalReply(interaction);
         await interaction.followUp({
             content: `Not a valid command. Type /${discord_slash_prefix} help for a list of commands.`,
             ephemeral: true
