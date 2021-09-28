@@ -85,9 +85,7 @@ def main():
                     continue
                 log_message_base = f"id={message_id} actionType={action['type']}"
                 if action["type"] == "reply":  # only support reply for now
-                    log_message = (
-                        f"{log_message_base} | {to_one_liner(action['value'])}"
-                    )
+                    log_message = f"{log_message_base} | {to_one_liner(action['value'])}"
                     if is_error:
                         logger.warning(log_message)
                     else:
