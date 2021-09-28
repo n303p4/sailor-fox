@@ -17,9 +17,9 @@ client.login(discord_token);
 function onceReady() {
     console.log(":3");
     client.user.setPresence({
-        "status": "online",
-        "activities": [{
-            "name": `Type /${discord_slash_prefix} help for help!`
+        status: "online",
+        activities: [{
+            name: `Type /${discord_slash_prefix} help for help!`
         }]
     });
 }
@@ -44,14 +44,14 @@ async function onInteractionCreate(interaction) {
     console.log(`id=${interaction.id} user=${interaction.user.tag} userId=${interaction.user.id} | ${fullCommand}`);
 
     let requestBody = {
-        "id": `discordjs:${interaction.id}`,
-        "message": fullCommand,
-        "is_owner": false,
-        "character_limit": 2000,
-        "format_name": "discord"
+        id: `discordjs:${interaction.id}`,
+        message: fullCommand,
+        is_owner: false,
+        character_limit: 2000,
+        format_name: "discord"
     }
     if (channel && channel.hasOwnProperty("name")) {
-        requestBody["channel_name"] = channel.name;
+        requestBody.channel_name = channel.name;
     }
 
     await interaction.deferReply();
@@ -113,7 +113,7 @@ function doAction(action, interaction, channel) {
             console.log(
                 `id=${interaction.id} | Renaming channel ${channel.name} (${channel.id}) to ${action.value}`
             );
-            channel.edit({"name": action.value});
+            channel.edit({ name: action.value });
             break;
         case "reply":
             interaction.followUp(action.value);
@@ -140,8 +140,8 @@ async function doActions(response, interaction, channel) {
         await interaction.editReply("…");
         await interaction.deleteReply();
         await interaction.followUp({
-            "content": `Not a valid command. Type /${discord_slash_prefix} help for a list of commands.`,
-            "ephemeral": true
+            content: `Not a valid command. Type /${discord_slash_prefix} help for a list of commands.`,
+            ephemeral: true
         });
     }
 }
