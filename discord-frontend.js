@@ -74,6 +74,7 @@ async function onInteractionCreate(interaction) {
     if (channel && channel.hasOwnProperty("name")) {
         requestBody["channel_name"] = channel.name;
     }
+    await interaction.deferReply();
     axios
     .post(sailorServiceURL, requestBody)
     .then(async (response) => {
@@ -106,10 +107,10 @@ async function onInteractionCreate(interaction) {
                 }
             });
             if (replyStack.length) {
-                await interaction.reply(replyStack.join("\n").substring(0, 2001));
+                await interaction.editReply(replyStack.join("\n").substring(0, 2001));
             }
             else {
-                await interaction.reply("I did the thing! :3");
+                await interaction.editReply("I did the thing! :3");
             }
         }
     })
@@ -118,7 +119,7 @@ async function onInteractionCreate(interaction) {
             let replyOneLiner = toOneLiner(error.response.data);
             console.error(`id=${interaction.id} status=${error.response.status} | ${replyOneLiner}`);
             if (error.response.data.length) {
-                await interaction.reply(error.response.data.map(item => item.value).join("\n"));
+                await interaction.editReply(error.response.data.map(item => item.value).join("\n"));
             }
         }
         catch {
@@ -131,10 +132,10 @@ async function onInteractionCreate(interaction) {
             }
             console.error(`id=${interaction.id} | ${errorMessage}`);
             if (error.code === "ECONNREFUSED") {
-                await interaction.reply("My brain stopped working. Please contact my owner. :<");
+                await interaction.editReply("My brain stopped working. Please contact my owner. :<");
             }
             else if (error.code !== "ECONNRESET") {
-                await interaction.reply(errorMessage);
+                await interaction.editReply(errorMessage);
             }
         }
     });
