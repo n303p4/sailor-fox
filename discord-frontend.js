@@ -125,7 +125,7 @@ function doAction(action, interaction, channel, ephemeral=false) {
 
 // Read over a response with a list of actions and perform the actions in sequence
 async function doActions(response, interaction, channel, ephemeral=false) {
-    if (error) await deleteOriginalReply(interaction);
+    if (ephemeral) await deleteOriginalReply(interaction);
     let replyOneLiner = toOneLiner(response.data);
     console.log(`id=${interaction.id} status=${response.status} | ${replyOneLiner}`);
     if (response.data.length) {
