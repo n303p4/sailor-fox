@@ -3,6 +3,25 @@
 import logging
 
 
+class FancyMessage:
+    """A simple class for prettifying a multiline reply."""
+
+    def __init__(self, formatter):
+        self.lines = []
+        self.formatter = formatter
+
+    def add_field(self, *, name: str, value: str):
+        """Add **name:** value to reply."""
+        self.lines.append(f"{self.formatter.bold(name+':')} {value}")
+
+    def add_line(self, line: str):
+        """Add line to reply."""
+        self.lines.append(str(line))
+
+    def __str__(self):
+        return "\n".join(self.lines)
+
+
 def create_logger(name: str):
     """Create a logger object."""
     logging.basicConfig(format="%(asctime)-12s %(levelname)s %(message)s")
