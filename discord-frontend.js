@@ -80,8 +80,10 @@ async function onInteractionCreate(interaction) {
             let replyStack = [];
             response.data.forEach(item => {
                 if (item.type === "rename_channel") {
-                    let permissions = channel.permissionsFor(client.user);
-                    if (channel.type !== "GUILD_TEXT" || !permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) {
+                    if (
+                        channel.type !== "GUILD_TEXT" ||
+                        !channel.permissionsFor(client.user).has(Permissions.FLAGS.MANAGE_CHANNELS)
+                    ) {
                         console.warn(
                             `id=${interaction.id} | Channel rename for ${channel.name} (${channel.id}) can't be done!`
                         );
