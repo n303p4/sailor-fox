@@ -88,11 +88,11 @@ def main():
                     continue  # rename_channel doesn't do anything in Twitch for now
                 elif action.get("type") == "reply":
                     reply_stack.append(action.get("message"))
-            for reply in reply_stack:
-                await message.channel.send(reply)
+            for reply_count, reply in enumerate(reply_stack):
                 # Hardcode ratelimit for now
-                if len(reply_stack) > 1:
+                if reply_count > 0:
                     await asyncio.sleep(2)
+                await message.channel.send(reply)
 
         except Exception as error:
             logger.error("id=%s | %s", message_id, to_one_liner(str(error)))
