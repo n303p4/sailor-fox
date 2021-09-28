@@ -64,15 +64,18 @@ async function onInteractionCreate(interaction) {
 
     console.log(`id=${interaction.id} user=${interaction.user.tag} userId=${interaction.user.id} | ${fullCommand}`);
 
-    axios
-    .post(sailorServiceURL, {
+    let requestBody = {
         "id": `discordjs:${interaction.id}`,
         "message": fullCommand,
         "is_owner": false,
         "character_limit": 2000,
-        "format_name": "discord",
-        "channel_name": channel.name
-    })
+        "format_name": "discord"
+    }
+    if (channel && channel.hasOwnProperty("name")) {
+        requestBody["channel_name"] = channel.name;
+    }
+    axios
+    .post(sailorServiceURL, requestBody)
     .then(async (response) => {
         let replyOneLiner = toOneLiner(response.data);
         console.log(`id=${interaction.id} status=${response.status} | ${replyOneLiner}`);
@@ -80,7 +83,11 @@ async function onInteractionCreate(interaction) {
             let replyStack = [];
             response.data.forEach(item => {
                 if (item.type === "rename_channel") {
-                    if (
+                    if (!channel) {
+                        console.warn(`id=${interaction.id} | Channel rename can't be done!`);
+                        return;
+                    }
+                    else if (
                         channel.type !== "GUILD_TEXT" ||
                         !channel.permissionsFor(client.user).has(Permissions.FLAGS.MANAGE_CHANNELS)
                     ) {
