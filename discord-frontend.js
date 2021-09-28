@@ -60,11 +60,9 @@ async function onInteractionCreate(interaction) {
 
     axios
     .post(sailorServiceURL, requestBody)
-    .then(async response => await doActions(response, interaction, channel))
+    .then(async response => await doActions(response, interaction, channel, false))
     .catch(async error => {
-        try {
-            await doActions(error.response, interaction, channel);
-        }
+        try { await doActions(error.response, interaction, channel, true); }
         catch {
             let errorMessage;
             if (error.code) errorMessage = `An error occurred: ${error.code}`
@@ -89,18 +87,18 @@ async function deleteOriginalReply(interaction) {
 
 // Truncates an array of actions to a single line for logging
 function toOneLiner(data, maxLength=75) {
-    let oneLiner = data.map(item => item.value).join(" ").split("\n").join(" ");
+    let oneLiner = data
+        .map(item => item.value)
+        .join(" ").split("\n").join(" ");
     if (oneLiner.length > maxLength) {
         oneLiner = oneLiner.substring(0, maxLength-1) + "…";
     }
-    if (oneLiner.length === 0) {
-        oneLiner = "<empty>";
-    }
+    if (oneLiner.length === 0) oneLiner = "<empty>";
     return oneLiner;
 }
 
 // Execute a single action requested by the backend
-function doAction(action, interaction, channel) {
+function doAction(action, interaction, channel, ephemeral=false) {
     switch (action.type) {
         case "rename_channel":
             if (!channel) {
@@ -116,24 +114,27 @@ function doAction(action, interaction, channel) {
                 ));
             break;
         case "reply":
-            interaction.followUp(action.value);
+            if (ephemeral) interaction.followUp({
+                content: action.value,
+                ephemeral: true
+            });
+            else interaction.followUp(action.value);
             break;
     }
 }
 
 // Read over a response with a list of actions and perform the actions in sequence
-async function doActions(response, interaction, channel) {
+async function doActions(response, interaction, channel, ephemeral=false) {
+    if (error) await deleteOriginalReply(interaction);
     let replyOneLiner = toOneLiner(response.data);
     console.log(`id=${interaction.id} status=${response.status} | ${replyOneLiner}`);
     if (response.data.length) {
         let numReplies = 0;
         response.data.forEach(action => {
-            doAction(action, interaction, channel);
+            doAction(action, interaction, channel, ephemeral);
             if (action.type === "reply") numReplies++;
         });
-        if (numReplies === 0) {
-            await deleteOriginalReply(interaction);
-        }
+        if (numReplies === 0) await deleteOriginalReply(interaction);
     }
     else {
         await deleteOriginalReply(interaction);
