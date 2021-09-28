@@ -101,6 +101,7 @@ python3 deploy_discord_commands.py
 ```
 
 This will register a command on Discord's servers for interacting with the bot.
+Command registration will take up to one hour, so hang tight!
 
 ## Twitch setup
 
