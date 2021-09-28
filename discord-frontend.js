@@ -85,7 +85,7 @@ async function deleteOriginalReply(interaction) {
     await interaction.deleteReply();
 }
 
-// Truncates an array of actions to a single line for logging
+// Truncates a string to a single line for logging
 function toOneLiner(string, maxLength=75) {
     let oneLiner = string.split("\n").join(" ");
     if (oneLiner.length > maxLength) {
@@ -97,7 +97,7 @@ function toOneLiner(string, maxLength=75) {
 
 // Execute a single action requested by the backend
 function doAction(action, interaction, channel, isError=false) {
-    if (!action.hasOwnProperty("type") || !action.hasOwnProperty("value")) return;
+    if (typeof action.type !== "string" || typeof action.value !== "string") return;
     let logMessage = `id=${interaction.id} actionType=${action.type}`;
     switch (action.type) {
         case "rename_channel":
@@ -108,7 +108,7 @@ function doAction(action, interaction, channel, isError=false) {
             logMessage += (
                 ` channelId=${channel.id}` +
                 ` channelOldName=${channel.name}` +
-                ` channelNewName=${action.value}`
+                ` channelNewName=${toOneLiner(action.value)}`
             );
             channel.edit({ name: action.value })
                 .then(() => console.info(`${logMessage} | Rename succeeded`))
