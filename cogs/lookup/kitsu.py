@@ -6,6 +6,8 @@ Ported from Oxylibrium's Nestbot.
 from sailor import commands
 from sailor.web_exceptions import WebAPIInvalidResponse, WebAPIUnreachable
 
+from sailor_fox.helpers import FancyMessage
+
 BASE_URL_KITSUIO = "https://kitsu.io/api/edge/{0}"
 REQUEST_TYPES = [
     "anime",
@@ -83,10 +85,11 @@ async def _kitsu(request_type, event, query):
     response_content = await search(event.processor.session, url, params)
     result = generate_parsed_result(response_content, request_type)
 
-    url = result["url"]
-    field_data = "\n".join(f"{event.f.bold(n)}: {i}" for n, i in result["fields"].items())
+    message = FancyMessage(event.f)
 
-    message = "\n".join([field_data, url])
+    for name, value in result["fields"].items():
+        message.add_field(name=name, value=value)
+    message.add_line(result["url"])
 
     await event.reply(message)
 

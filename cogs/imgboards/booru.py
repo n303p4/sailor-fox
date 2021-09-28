@@ -11,6 +11,8 @@ from bs4 import BeautifulSoup
 from sailor import commands
 from sailor.web_exceptions import WebAPIInvalidResponse, WebAPINoResultsFound, WebAPIUnreachable
 
+from sailor_fox.helpers import FancyMessage
+
 BASE_URLS = {"safebooru": {"image_search": "https://safebooru.org/index.php?{0}",
                            "tag_search": "https://safebooru.org/autocomplete.php?{0}",
                            "image_post": "https://safebooru.org/index.php?page=post&s=view&id={0}"}}
@@ -73,12 +75,11 @@ async def _booru(session, base_url_api: str, tags: list = None, blacklist: list 
 def _process_post(post, formatter, base_url_post: str, max_length_tags: int = MAX_LENGTH_TAGS):
     """Make an embed that renders a 'booru post."""
     post_url = base_url_post.format(post["id"])
-    lines = [
-        formatter.bold("Original post: ") + formatter.no_embed_link(post_url),
-        formatter.bold("Image URL: ") + post['file_url'],
-        formatter.bold("Tags: ") + formatter.monospace(post["tags"][:max_length_tags].strip())
-    ]
-    return "\n".join(lines)
+    message = FancyMessage(formatter)
+    message.add_field(name="Original post", value=formatter.no_embed_link(post_url))
+    message.add_field(name="Image URL", value=post['file_url'])
+    message.add_field(name="Tags", value=formatter.monospace(post["tags"][:max_length_tags].strip()))
+    return message
 
 
 @commands.cooldown(6, 12)

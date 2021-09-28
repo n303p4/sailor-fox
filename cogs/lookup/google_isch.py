@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup
 from sailor import commands
 from sailor.web_exceptions import WebAPIUnreachable, WebAPINoResultsFound, WebAPIInvalidResponse
 
+from sailor_fox.helpers import FancyMessage
+
 BASE_URL_GOOGLE = "https://www.google.com"
 BASE_URL_GOOGLE_ISCH = "https://www.google.com/search?{0}"
 WEBSITE_TEXT = "Website for this image"
@@ -72,9 +74,10 @@ async def image(event, *, query: str):
     """
     search_result_url = await _google_isch_get_one(event.processor.session, query, SEARCH_HEADERS)
     image_url, website_url = await _google_isch_handle_one(event.processor.session, search_result_url, SEARCH_HEADERS)
-    message = [
-        event.f.bold("Website: ") + event.f.no_embed_link(website_url),
-        event.f.bold("Full-size image: ") + image_url,
-        "Powered (but not endorsed) by Google Images"
-    ]
+
+    message = FancyMessage(event.f)
+    message.add_field(name="Website", value=event.f.no_embed_link(website_url))
+    message.add_field(name="Full-size image", value=image_url)
+    message.add_line("Powered (but not endorsed) by Google Images")
+
     await event.reply("\n".join(message))
