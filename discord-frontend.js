@@ -81,7 +81,7 @@ async function onInteractionCreate(interaction) {
         let replyOneLiner = toOneLiner(response.data);
         console.log(`id=${interaction.id} status=${response.status} | ${replyOneLiner}`);
         if (response.data.length) {
-            let replyStack = [];
+            let replyCounter = 0;
             response.data.forEach(item => {
                 if (item.type === "rename_channel") {
                     if (!channel) {
@@ -103,15 +103,22 @@ async function onInteractionCreate(interaction) {
                     channel.edit({"name": item.value});
                 }
                 else if (item.type === "reply") {
-                    replyStack.push(item.value);
+                    interaction.followUp(item.value);
+                    replyCounter++;
                 }
             });
-            if (replyStack.length) {
-                await interaction.editReply(replyStack.join("\n").substring(0, 2001));
+            if (replyCounter === 0) {
+                await interaction.editReply("…");
+                await interaction.deleteReply();
             }
-            else {
-                await interaction.editReply("I did the thing! :3");
-            }
+        }
+        else {
+            await interaction.editReply("…");
+            await interaction.deleteReply();
+            await interaction.followUp({
+                "content": `Not a valid command. Type /${discord_slash_prefix} help for a list of commands.`,
+                "ephemeral": true
+            });
         }
     })
     .catch(async (error) => {
