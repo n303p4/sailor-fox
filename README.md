@@ -179,8 +179,20 @@ The JSON object should have the following properties:
 > ### `format_name` \[string, default `null`]
 > Optional format name, e.g. `"discord"`. Set this to use chat-specific text formatting, e.g. bold.
 
-The backend responds with a flat JSON array that contains zero or more strings,
-each of which represents part of the command output.
+> ### `channel_name` \[string, default `untitled`]
+> Optional channel name for commands to use, mainly for channel renaming.
+
+The backend responds with a flat JSON array that contains zero or more objects.
+Each object represents an action to take, and has the following properties:
+
+> ### `type` \[string]
+> The type of action. Currently, only `"rename_channel"` and `"reply"` are valid.
+>
+> ### `value` \[string]
+> The value of the action.
+> * If `type` is `"rename_channel"`, then this is the new channel name to use.
+> * If `type` is `"reply"`, then this value should be sent in chat verbatim.
+
 If the HTTP status code is 200, the command completed normally.
 Any other status code should be understood as an error.
 
@@ -219,8 +231,8 @@ Taking this all together, the basic flow is as follows:
    It also cleans the message for forwarding to the backend (e.g. removing the prefix)
 4. The frontend sends an HTTP POST request to the backend containing the aforementioned JSON object.
 5. The backend receives and processes the request, then sends back a response containing
-   a JSON array of messages.
-6. The frontend receives the response and sends the message(s) in chat.
+   a JSON array of actions.
+6. The frontend receives the response and handles each action.
 
 ## Autostarting with systemd
 

@@ -79,11 +79,12 @@ def main():
         )
 
         request_body = {
-            "id": f"discordpy:{message.id}",
+            "id": f"discordpy-classic:{message.id}",
             "message": message_text,
             "is_owner": is_owner,
             "character_limit": 2000,
-            "format_name": "discord"
+            "format_name": "discord",
+            "channel_name": message.channel.name
         }
 
         try:
@@ -92,14 +93,20 @@ def main():
                 json=request_body,
                 timeout=10
             ) as response:
-                reply_stack = await response.json()
+                action_stack = await response.json()
             error = response.status != 200
-            for reply in reply_stack:
+            for action in action_stack:
                 if error:
-                    logger.error("id=%s | %s", message.id, to_one_liner(reply))
+                    logger.error("id=%s | %s", message.id, to_one_liner(action.get("value")))
                 else:
-                    logger.info("id=%s | %s", message.id, to_one_liner(reply))
-                await message.channel.send(reply)
+                    logger.info("id=%s | %s", message.id, to_one_liner(action.get("value")))
+                if action.get("type") == "rename_channel":
+                    try:
+                        await message.channel.edit(name=action.get("value"))
+                    except discord.HTTPException:
+                        pass
+                elif action.type == "reply":
+                    await message.channel.send(action.get("value"))
 
         except Exception as error:
             logger.error("id=%s | %s", message.id, to_one_liner(str(error)))

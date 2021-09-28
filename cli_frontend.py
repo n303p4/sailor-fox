@@ -45,7 +45,7 @@ def main():
             })
             replies = response.json()
             for reply in replies:
-                print(reply)
+                print(reply.get("value"))
         except Exception:
             print("Error: http_backend.py is not running!")
 

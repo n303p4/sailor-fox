@@ -20,6 +20,11 @@ from sailor_fox.helpers import create_logger, to_one_liner
 logger = create_logger(__name__)
 
 
+def create_action(type_: str, value: str):
+    """Create an action for clients to use."""
+    return {"type": type_, "value": value}
+
+
 def main():
     """Factory to create and run everything."""
 
@@ -49,7 +54,7 @@ def main():
             error_message = "Request does not contain valid JSON data."
             logger.error(error_message)
             return web.Response(
-                text=json.dumps([error_message]),
+                text=json.dumps([create_action("reply", error_message)]),
                 content_type="application/json",
                 status=400
             )
@@ -60,7 +65,7 @@ def main():
             error_message = "message is a required property that is missing."
             logger.error("id=%s | %s", request_id, error_message)
             return web.Response(
-                text=json.dumps([error_message]),
+                text=json.dumps([create_action("reply", error_message)]),
                 content_type="application/json",
                 status=400
             )
@@ -69,6 +74,7 @@ def main():
         character_limit = options.get("character_limit", 0)
         format_name = str(options.get("format_name"))
         replace_newlines = options.get("replace_newlines", False)
+        channel_name = str(options.get("channel_name", "untitled"))
 
         logger.info(
             "id=%s isOwner=%s characterLimit=%s formatName=%s replaceNewlines=%s | %s",
@@ -95,16 +101,20 @@ def main():
             for error_message in error_messages:
                 logger.error("id=%s | %s", request_id, error_message)
             return web.Response(
-                text=json.dumps(error_messages),
+                text=json.dumps([create_action("reply", e) for e in error_messages]),
                 content_type="application/json",
                 status=400
             )
 
         reply_stack = []
 
-        async def append_to_reply_stack(reply: str):
+        async def append_to_action_stack(reply: str):
             logger.info("id=%s | %s", request_id, to_one_liner(reply))
-            reply_stack.append(reply.strip())
+            reply_stack.append(create_action("reply", reply.strip()))
+
+        async def rename_channel(name: str):
+            logger.info("id=%s | Requesting channel rename to %s", request_id, name)
+            reply_stack.append(create_action("rename_channel", name.strip()))
 
         try:
             await processor.process(
@@ -113,12 +123,14 @@ def main():
                 format_name=format_name,
                 is_owner=is_owner,
                 replace_newlines=replace_newlines,
-                reply_with=append_to_reply_stack
+                reply_with=append_to_action_stack,
+                channel_name=channel_name,
+                rename_channel_with=rename_channel
             )
         except Exception as error:
             logger.error("id=%s | %s", request_id, to_one_liner(str(error)))
             return web.Response(
-                text=json.dumps([str(error)]),
+                text=json.dumps([create_action("reply", str(error))]),
                 content_type="application/json",
                 status=500
             )

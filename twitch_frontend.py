@@ -76,13 +76,19 @@ def main():
                 json=request_body,
                 timeout=10
             ) as response:
-                reply_stack = await response.json()
+                action_stack = await response.json()
             error = response.status != 200
-            for reply in reply_stack:
+            reply_stack = []
+            for action in action_stack:
                 if error:
-                    logger.error("id=%s | %s", message_id, to_one_liner(reply))
+                    logger.error("id=%s | %s", message_id, to_one_liner(action.get("value")))
                 else:
-                    logger.info("id=%s | %s", message_id, to_one_liner(reply))
+                    logger.info("id=%s | %s", message_id, to_one_liner(action.get("value")))
+                if action.get("type") == "rename_channel":
+                    continue  # rename_channel doesn't do anything in Twitch for now
+                elif action.get("type") == "reply":
+                    reply_stack.append(action.get("message"))
+            for reply in reply_stack:
                 await message.channel.send(reply)
                 # Hardcode ratelimit for now
                 if len(reply_stack) > 1:

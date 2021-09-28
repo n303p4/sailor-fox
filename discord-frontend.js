@@ -1,7 +1,7 @@
 // Discord slash command frontend for http_backend.py
 
 const axios = require("axios");
-const { Client, Intents } = require("discord.js");
+const { Client, Intents, Permissions } = require("discord.js");
 
 const { discord_slash_prefix, discord_token, backend_port_number } = require("./config.json");
 const sailorServiceURL = `http://localhost:${backend_port_number}`;
@@ -15,7 +15,7 @@ client.login(discord_token);
 
 // Truncates an array of strings to a single line for logging
 function toOneLiner(data, maxLength=75) {
-    let oneLiner = data.join(" ").split("\n").join(" ");
+    let oneLiner = data.map(item => item.value).join(" ").split("\n").join(" ");
     if (oneLiner.length > maxLength) {
         oneLiner = oneLiner.substring(0, maxLength-1) + "…";
     }
@@ -41,6 +41,7 @@ function onceReady() {
 async function onInteractionCreate(interaction) {
 	if (!interaction.isCommand()) return;
 
+    let channel = interaction.channel;
 	let commandName = interaction.commandName;
 	let commandArguments = await interaction.options.getString("input");
     let fullCommand;
@@ -65,17 +66,42 @@ async function onInteractionCreate(interaction) {
 
     axios
     .post(sailorServiceURL, {
-        "id": `discordslash:${interaction.id}`,
+        "id": `discordjs:${interaction.id}`,
         "message": fullCommand,
         "is_owner": false,
         "character_limit": 2000,
-        "format_name": "discord"
+        "format_name": "discord",
+        "channel_name": channel.name
     })
     .then(async (response) => {
         let replyOneLiner = toOneLiner(response.data);
         console.log(`id=${interaction.id} status=${response.status} | ${replyOneLiner}`);
         if (response.data.length) {
-            await interaction.reply(response.data.join("\n"));
+            let replyStack = [];
+            response.data.forEach(item => {
+                if (item.type === "rename_channel") {
+                    let permissions = channel.permissionsFor(client.user);
+                    if (channel.type !== "GUILD_TEXT" || !permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) {
+                        console.warn(
+                            `id=${interaction.id} | Channel rename for ${channel.name} (${channel.id}) can't be done!`
+                        );
+                        return;
+                    }
+                    console.log(
+                        `id=${interaction.id} | Renaming channel ${channel.name} (${channel.id}) to ${item.value}`
+                    );
+                    channel.edit({"name": item.value});
+                }
+                else if (item.type === "reply") {
+                    replyStack.push(item.value);
+                }
+            });
+            if (replyStack.length) {
+                await interaction.reply(replyStack.join("\n").substring(0, 2001));
+            }
+            else {
+                await interaction.reply("I did the thing! :3");
+            }
         }
     })
     .catch(async (error) => {
@@ -83,7 +109,7 @@ async function onInteractionCreate(interaction) {
             let replyOneLiner = toOneLiner(error.response.data);
             console.error(`id=${interaction.id} status=${error.response.status} | ${replyOneLiner}`);
             if (error.response.data.length) {
-                await interaction.reply(error.response.data.join("\n"));
+                await interaction.reply(error.response.data.map(item => item.value).join("\n"));
             }
         }
         catch {
