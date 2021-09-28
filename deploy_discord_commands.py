@@ -20,6 +20,10 @@ def main():
     processor = ProcessorWithConfig(loop=client.loop)
     processor.load_config()
 
+    if "discord_slash_prefix" not in processor.config:
+        logger.error("discord_slash_prefix must be filled in config.json!")
+        return
+
     @client.event
     async def on_ready():
         """When ready, deploy command."""
@@ -59,6 +63,8 @@ def main():
                 logger.info("Command registered (HTTP %s)", response.status)
 
         await processor.session.close()
+
+        await client.logout()
 
         sys.exit(0)
 
