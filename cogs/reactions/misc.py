@@ -8,10 +8,6 @@ import secrets
 from sailor import commands
 from sailor.web_exceptions import WebAPIUnreachable, WebAPIInvalidResponse
 
-USER_AGENT = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 "
-              "Safari/537.36")
-QUERY_HEADERS = {"User-Agent": USER_AGENT}
-
 URL_RANDOM_DOG_API = "https://random.dog/woof.json"
 URL_RANDOM_CAT_API = "https://nekos.life/api/v2/img/meow"
 URL_RANDOM_NEKO_API = "https://nekos.life/api/neko"
@@ -27,11 +23,9 @@ URL_RACCOON_SUBREDDIT_TOP_API = "https://www.reddit.com/r/Raccoons/top/.json"
 URL_RACCOON_SUBREDDIT_NEW_API = "https://www.reddit.com/r/Raccoons/new/.json"
 
 
-async def query(session, url, service_name, headers=None):
+async def query(session, url, service_name):
     """Given a ClientSession, URL, and service name, query an API."""
-    if not headers:
-        headers = QUERY_HEADERS
-    async with session.get(url, headers=headers, timeout=10) as response:
+    async with session.get(url, timeout=10) as response:
         if response.status != 200:
             raise WebAPIUnreachable(service=service_name)
         response_content = await response.text()
