@@ -15,7 +15,7 @@ client.login(discord_token);
 
 // Standard ready message. Also sets playing status
 function onceReady() {
-    console.log(":3");
+    console.info(":3");
     client.user.setPresence({
         status: "online",
         activities: [{
@@ -45,7 +45,7 @@ async function onInteractionCreate(interaction) {
         else fullCommand = commandName;
     }
 
-    console.log(`id=${interaction.id} user=${interaction.user.tag} userId=${interaction.user.id} | ${fullCommand}`);
+    console.info(`id=${interaction.id} user=${interaction.user.tag} userId=${interaction.user.id} | ${fullCommand}`);
 
     let requestBody = {
         id: `discord.js:${interaction.id}`,
@@ -86,10 +86,8 @@ async function deleteOriginalReply(interaction) {
 }
 
 // Truncates an array of actions to a single line for logging
-function toOneLiner(data, maxLength=75) {
-    let oneLiner = data
-        .map(item => item.value)
-        .join(" ").split("\n").join(" ");
+function toOneLiner(string, maxLength=75) {
+    let oneLiner = string.split("\n").join(" ");
     if (oneLiner.length > maxLength) {
         oneLiner = oneLiner.substring(0, maxLength-1) + "…";
     }
@@ -98,40 +96,45 @@ function toOneLiner(data, maxLength=75) {
 }
 
 // Execute a single action requested by the backend
-function doAction(action, interaction, channel, ephemeral=false) {
+function doAction(action, interaction, channel, isError=false) {
+    if (!action.hasOwnProperty("type") || !action.hasOwnProperty("value")) return;
+    let baseLogMessage = `id=${interaction.id} actionType=${action.type}`;
+    let logMessage;
     switch (action.type) {
         case "rename_channel":
             if (!channel) {
-                console.warn(`id=${interaction.id} | Channel rename can't be done!`);
+                console.warn(`${baseLogMessage} | Channel rename can't be done!`);
                 return;
             }
+            logMessage = `${baseLogMessage} channelId=${channel.id} ` +
+                         `channelOldName=${channel.name} channelNewName=${action.value}`;
             channel.edit({ name: action.value })
-                .then(() => console.log(
-                    `id=${interaction.id} | Renamed channel ${channel.name} (${channel.id}) to ${action.value}`
-                ))
-                .catch(error => console.warn(
-                    `id=${interaction.id} | Channel rename for ${channel.name} (${channel.id}) failed! ${error}`
-                ));
+                .then(() => console.info(`${logMessage} | Rename succeeded`))
+                .catch(error => console.warn(`${logMessage} | Rename failed: ${error}`));
             break;
         case "reply":
-            if (ephemeral) interaction.followUp({
-                content: action.value,
-                ephemeral: true
-            });
-            else interaction.followUp(action.value);
+            logMessage = `${baseLogMessage} | ${toOneLiner(action.value)}`;
+            if (isError) {
+                console.error(logMessage);
+                interaction.followUp({ content: action.value, ephemeral: true });
+            }
+            else {
+                console.info(logMessage);
+                interaction.followUp(action.value);
+            }
             break;
+        default:
+            console.warn(`${baseLogMessage} | Unsupported action`);
     }
 }
 
 // Read over a response with a list of actions and perform the actions in sequence
-async function doActions(response, interaction, channel, ephemeral=false) {
-    if (ephemeral) await deleteOriginalReply(interaction);
-    let replyOneLiner = toOneLiner(response.data);
-    console.log(`id=${interaction.id} status=${response.status} | ${replyOneLiner}`);
+async function doActions(response, interaction, channel, isError=false) {
+    if (isError) await deleteOriginalReply(interaction);
     if (response.data.length) {
         let numReplies = 0;
         response.data.forEach(action => {
-            doAction(action, interaction, channel, ephemeral);
+            doAction(action, interaction, channel, isError);
             if (action.type === "reply") numReplies++;
         });
         if (numReplies === 0) await deleteOriginalReply(interaction);

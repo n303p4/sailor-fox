@@ -77,17 +77,24 @@ def main():
                 timeout=10
             ) as response:
                 action_stack = await response.json()
-            error = response.status != 200
+            is_error = response.status != 200
             reply_stack = []
             for action in action_stack:
-                if error:
-                    logger.error("id=%s | %s", message_id, to_one_liner(action.get("value")))
+                if not isinstance(action.get("type"), str) \
+                or not isinstance(action.get("value"), str):
+                    continue
+                log_message_base = f"id={message_id} actionType={action['type']}"
+                if action["type"] == "reply":  # only support reply for now
+                    log_message = (
+                        f"{log_message_base} | {to_one_liner(action['value'])}"
+                    )
+                    if is_error:
+                        logger.warning(log_message)
+                    else:
+                        logger.info(log_message)
+                    reply_stack.append(action["value"])
                 else:
-                    logger.info("id=%s | %s", message_id, to_one_liner(action.get("value")))
-                if action.get("type") == "rename_channel":
-                    continue  # rename_channel doesn't do anything in Twitch for now
-                elif action.get("type") == "reply":
-                    reply_stack.append(action.get("message"))
+                    logger.warning("%s | Unsupported action", log_message_base)
             for reply_count, reply in enumerate(reply_stack):
                 # Hardcode ratelimit for now
                 if reply_count > 0:

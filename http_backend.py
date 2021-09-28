@@ -77,12 +77,13 @@ def main():
         channel_name = str(options.get("channel_name", "untitled"))
 
         logger.info(
-            "id=%s isOwner=%s characterLimit=%s formatName=%s replaceNewlines=%s | %s",
+            "id=%s isOwner=%s characterLimit=%s formatName=%s replaceNewlines=%s channelName=%s | %s",
             request_id,
             is_owner,
             character_limit,
             format_name,
             replace_newlines,
+            channel_name,
             to_one_liner(message)
         )
 
@@ -108,13 +109,18 @@ def main():
 
         reply_stack = []
 
-        async def append_to_action_stack(reply: str):
-            logger.info("id=%s | %s", request_id, to_one_liner(reply))
-            reply_stack.append(create_action("reply", reply.strip()))
+        async def append_to_action_stack(reply: str, *, action_type: str = "reply"):
+            logger.info("id=%s actionType=%s | %s", request_id, action_type, to_one_liner(reply))
+            reply_stack.append(create_action(action_type, reply.strip()))
 
-        async def rename_channel(name: str):
-            logger.info("id=%s | Requesting channel rename to %s", request_id, name)
-            reply_stack.append(create_action("rename_channel", name.strip()))
+        async def rename_channel(name: str, *, action_type: str = "rename_channel"):
+            logger.info(
+                "id=%s actionType=%s channelNewName=%s | Rename requested",
+                request_id,
+                action_type,
+                name
+            )
+            reply_stack.append(create_action(action_type, name.strip()))
 
         try:
             await processor.process(
