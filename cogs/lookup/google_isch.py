@@ -80,4 +80,4 @@ async def image(event, *, query: str):
     message.add_field(name="Full-size image", value=image_url)
     message.add_line("Powered (but not endorsed) by Google Images")
 
-    await event.reply("\n".join(message))
+    await event.reply(message)

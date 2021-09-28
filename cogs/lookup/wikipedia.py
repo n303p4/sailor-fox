@@ -5,6 +5,8 @@ import urllib.parse
 from sailor import commands
 from sailor.web_exceptions import WebAPIInvalidResponse, WebAPINoResultsFound, WebAPIUnreachable
 
+from sailor_fox.helpers import FancyMessage
+
 BASE_URL_WIKIPEDIA_API = "https://en.wikipedia.org/w/api.php?{0}"
 
 
@@ -60,8 +62,8 @@ async def wiki(event, *, query):
     response_content = await search(event.processor.session, url)
     results = generate_parsed_results(response_content)
 
-    combined_results = []
+    message = FancyMessage(event.f, sep="\n\n")
     for result in results:
-        combined_results.append(f"{event.f.bold(result['title'])}\n{event.f.no_embed_link(result['url'])}")
+        message.add_field(name=result["title"], value=event.f.no_embed_link(result["url"]), sep="\n")
 
-    await event.reply("\n\n".join(combined_results))
+    await event.reply(message)

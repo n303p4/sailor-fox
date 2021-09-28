@@ -5,6 +5,8 @@ import urllib.parse
 from sailor import commands
 from sailor.web_exceptions import WebAPIInvalidResponse, WebAPINoResultsFound, WebAPIUnreachable
 
+from sailor_fox.helpers import FancyMessage
+
 BASE_URL_DICTIONARY_API = "https://api.dictionaryapi.dev/api/v2/entries/en/"
 MAX_NUM_RESULTS = 10
 
@@ -83,10 +85,9 @@ async def define(event, word: str):
     response_content = await search(event.processor.session, url)
     results = generate_parsed_results(response_content, event.f)
 
-    combined_results = []
+    message = FancyMessage(event.f, sep="\n\n")
 
     for result in results:
-        combined_result = f"{event.f.bold(result['type'])}\n{result['description']}"
-        combined_results.append(combined_result)
+        message.add_field(name=result["type"], value=result["description"], sep="\n")
 
-    await event.reply("\n\n".join(combined_results))
+    await event.reply(message)

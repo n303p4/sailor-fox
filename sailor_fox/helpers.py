@@ -6,20 +6,24 @@ import logging
 class FancyMessage:
     """A simple class for prettifying a multiline reply."""
 
-    def __init__(self, formatter):
+    def __init__(self, formatter, *, sep: str = "\n"):
         self.lines = []
         self.formatter = formatter
+        self.sep = sep
 
-    def add_field(self, *, name: str, value: str):
+    def add_field(self, *, name: str, value: str, sep: str = " "):
         """Add **name:** value to reply."""
-        self.lines.append(f"{self.formatter.bold(name+':')} {value}")
+        if sep == "\n":
+            self.lines.append(f"{self.formatter.bold(name)}{sep}{value}")
+        else:
+            self.lines.append(f"{self.formatter.bold(name+':')}{sep}{value}")
 
     def add_line(self, line: str):
         """Add line to reply."""
         self.lines.append(str(line))
 
     def __str__(self):
-        return "\n".join(self.lines)
+        return self.sep.join(self.lines)
 
 
 def create_logger(name: str):
