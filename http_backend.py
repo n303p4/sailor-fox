@@ -134,10 +134,14 @@ def main():
             )
         except Exception as error:
             logger.error("id=%s | %s", request_id, to_one_liner(str(error)))
+            if isinstance(error, sailor.exceptions.CommandNotFound):
+                status = 404
+            else:
+                status = 500
             return web.Response(
                 text=json.dumps([create_action("reply", str(error))]),
                 content_type="application/json",
-                status=500
+                status=status
             )
 
         if not reply_stack:
