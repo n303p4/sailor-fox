@@ -98,22 +98,24 @@ function toOneLiner(string, maxLength=75) {
 // Execute a single action requested by the backend
 function doAction(action, interaction, channel, isError=false) {
     if (!action.hasOwnProperty("type") || !action.hasOwnProperty("value")) return;
-    let baseLogMessage = `id=${interaction.id} actionType=${action.type}`;
-    let logMessage;
+    let logMessage = `id=${interaction.id} actionType=${action.type}`;
     switch (action.type) {
         case "rename_channel":
             if (!channel) {
-                console.warn(`${baseLogMessage} | Channel rename can't be done!`);
+                console.warn(`${logMessage} | Channel rename can't be done!`);
                 return;
             }
-            logMessage = `${baseLogMessage} channelId=${channel.id} ` +
-                         `channelOldName=${channel.name} channelNewName=${action.value}`;
+            logMessage += (
+                ` channelId=${channel.id}` +
+                ` channelOldName=${channel.name}` +
+                ` channelNewName=${action.value}`
+            );
             channel.edit({ name: action.value })
                 .then(() => console.info(`${logMessage} | Rename succeeded`))
                 .catch(error => console.warn(`${logMessage} | Rename failed: ${error}`));
             break;
         case "reply":
-            logMessage = `${baseLogMessage} | ${toOneLiner(action.value)}`;
+            logMessage += ` | ${toOneLiner(action.value)}`;
             if (isError) {
                 console.error(logMessage);
                 interaction.followUp({ content: action.value, ephemeral: true });
@@ -124,7 +126,7 @@ function doAction(action, interaction, channel, isError=false) {
             }
             break;
         default:
-            console.warn(`${baseLogMessage} | Unsupported action`);
+            console.warn(`${logMessage} | Unsupported action`);
     }
 }
 

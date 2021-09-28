@@ -83,16 +83,16 @@ def main():
                 if not isinstance(action.get("type"), str) \
                 or not isinstance(action.get("value"), str):
                     continue
-                log_message_base = f"id={message_id} actionType={action['type']}"
+                log_message = f"id={message_id} actionType={action['type']}"
                 if action["type"] == "reply":  # only support reply for now
-                    log_message = f"{log_message_base} | {to_one_liner(action['value'])}"
+                    log_message += f" | {to_one_liner(action['value'])}"
                     if is_error:
                         logger.warning(log_message)
                     else:
                         logger.info(log_message)
                     reply_stack.append(action["value"])
                 else:
-                    logger.warning("%s | Unsupported action", log_message_base)
+                    logger.warning("%s | Unsupported action", log_message)
             for reply_count, reply in enumerate(reply_stack):
                 # Hardcode ratelimit for now
                 if reply_count > 0:

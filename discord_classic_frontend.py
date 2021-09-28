@@ -28,6 +28,35 @@ def get_prefix(text: str, prefixes_: List[str]):
     return None, text
 
 
+async def do_action(action: dict, message: discord.Message, *, is_error: bool = False):
+    """Perform a single action requested by the backend."""
+    if not isinstance(action.get("type"), str) \
+    or not isinstance(action.get("value"), str):
+        return
+    log_message = f"id={message.id} actionType={action['type']}"
+    if action["type"] == "rename_channel":
+        log_message += (
+            f" channelId={message.channel.id}"
+            f" channelOldName={message.channel.name}"
+            f" channelNewName={to_one_liner(action['value'])}"
+        )
+        try:
+            await message.channel.edit(name=action["value"])
+        except discord.HTTPException as error:
+            logger.warning("%s | Rename failed: %s", log_message, error)
+        else:
+            logger.warning("%s | Rename succeeded", log_message)
+    elif action["type"] == "reply":
+        log_message += f" | {to_one_liner(action['value'])}"
+        if is_error:
+            logger.warning(log_message)
+        else:
+            logger.info(log_message)
+        await message.channel.send(action["value"])
+    else:
+        logger.warning("%s | Unsupported action", log_message)
+
+
 def main():
     """Factory to create and start the bot."""
 
@@ -96,30 +125,7 @@ def main():
                 action_stack = await response.json()
             is_error = response.status != 200
             for action in action_stack:
-                if not isinstance(action.get("type"), str) \
-                or not isinstance(action.get("value"), str):
-                    continue
-                log_message_base = f"id={message.id} actionType={action['type']}"
-                if action["type"] == "rename_channel":
-                    log_message = (
-                        f"{log_message_base} channelId={message.channel.id} "
-                        f"channelOldName={message.channel.name} channelNewName={to_one_liner(action['value'])}"
-                    )
-                    try:
-                        await message.channel.edit(name=action["value"])
-                    except discord.HTTPException as error:
-                        logger.warning("%s | Rename failed: %s", log_message, error)
-                    else:
-                        logger.warning("%s | Rename succeeded", log_message)
-                elif action["type"] == "reply":
-                    log_message = f"{log_message_base} | {to_one_liner(action['value'])}"
-                    if is_error:
-                        logger.warning(log_message)
-                    else:
-                        logger.info(log_message)
-                    await message.channel.send(action["value"])
-                else:
-                    logger.warning("%s | Unsupported action", log_message_base)
+                await do_action(action, message, is_error=is_error)
 
         except Exception as error:
             logger.error("id=%s | %s", message.id, to_one_liner(str(error)))
