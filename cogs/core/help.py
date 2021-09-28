@@ -3,6 +3,7 @@
 import inspect
 
 from sailor import commands
+from sailor.exceptions import CommandNotFound
 
 
 @commands.cooldown(6, 12)
@@ -19,7 +20,7 @@ async def help_(event, *, command_name: str = None):
     if command_name:
         cmd = event.processor.all_commands.get(command_name)
         if not cmd:
-            await event.reply(f"{command_name} is not a valid command.")
+            raise CommandNotFound(name=command_name)
         else:
             help_text = [f"# {cmd.name}"]
             if cmd.aliases:
