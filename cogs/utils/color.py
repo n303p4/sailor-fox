@@ -92,9 +92,8 @@ async def color_(event, *, color: str = None):
     message.add_line(event.f.bold("Information:"))
     message.add_line(information_links)
 
-    message.add_line(event.f.bold("Notes:"))
+    message.add_line(event.f.bold("Note:"))
     message.add_line("HSV and HLS may be slightly wrong due to floating point errors.")
-    message.add_line("Thumbnail provided by the COLOURlovers API")
 
     image_url = BASE_URL_COLOR_API.format(color_hex_value, 88, 88)
     message.add_line(image_url)
