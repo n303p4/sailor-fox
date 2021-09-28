@@ -6,7 +6,7 @@ const { Client, Intents } = require("discord.js");
 const { discord_slash_prefix, discord_token, backend_port_number } = require("./config.json");
 const sailorServiceURL = `http://localhost:${backend_port_number}`;
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({ intents: [ Intents.FLAGS.GUILDS ] });
 
 client.on("ready", onceReady);
 client.on("interactionCreate", onInteractionCreate);
