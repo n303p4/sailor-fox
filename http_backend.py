@@ -106,20 +106,20 @@ def main():
                 status=400
             )
 
-        reply_stack = []
+        action_stack = []
 
-        async def append_to_action_stack(reply: str, *, action_type: str = "reply"):
+        async def reply(reply: str, *, action_type: str = "reply"):
             logger.info("id=%s actionType=%s | %s", request_id, action_type, to_one_liner(reply))
-            reply_stack.append(create_action(action_type, reply.strip()))
+            action_stack.append(create_action(action_type, reply.strip()))
 
-        async def rename_channel(name: str, *, action_type: str = "rename_channel"):
+        async def rename_channel(new_channel_name: str, *, action_type: str = "rename_channel"):
             logger.info(
                 "id=%s actionType=%s channelNewName=%s | Rename requested",
                 request_id,
                 action_type,
-                name
+                to_one_liner(new_channel_name)
             )
-            reply_stack.append(create_action(action_type, name.strip()))
+            action_stack.append(create_action(action_type, new_channel_name.strip()))
 
         try:
             await processor.process(
@@ -128,7 +128,7 @@ def main():
                 format_name=format_name,
                 is_owner=is_owner,
                 replace_newlines=replace_newlines,
-                reply_with=append_to_action_stack,
+                reply_with=reply,
                 channel_name=channel_name,
                 rename_channel_with=rename_channel
             )
@@ -144,11 +144,11 @@ def main():
                 status=status
             )
 
-        if not reply_stack:
+        if not action_stack:
             logger.info("id=%s | <empty>", request_id)
 
         return web.Response(
-            text=json.dumps(reply_stack),
+            text=json.dumps(action_stack),
             content_type="application/json",
         )
 
