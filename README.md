@@ -101,7 +101,14 @@ python3 deploy_discord_commands.py
 ```
 
 This will register a command on Discord's servers for interacting with the bot.
-Command registration will take up to one hour, so hang tight!
+Command registration can take from a few minutes to one hour, so hang tight!
+
+Finally, to invite the bot to your server, use this link:
+
+```bash
+# replace APPLICATION_ID with the ID of your bot
+https://discord.com/oauth2/authorize?client_id=APPLICATION_ID&scope=bot%20applications.commands
+```
 
 ## Twitch setup
 
@@ -200,7 +207,7 @@ Any other status code should be understood as an error.
 > ```
 > $ curl -L http://localhost:9980 -d '{"message": "ping"}'
 > 
-> [":3"]
+> [{"type": "reply", "value": ":3"}]
 > ```
 
 To create a complete and useful bot, there must also be a **frontend** to a chat service.
