@@ -38,14 +38,14 @@ def main():
             continue
         try:
             response = requests.post(backend_url, json={
-                "id": f"clipy:{time.time()}",
+                "id": f"cli.py:{time.time()}",
                 "message": message,
                 "is_owner": True,
                 "character_limit": 0
             })
-            replies = response.json()
-            for reply in replies:
-                print(reply.get("value"))
+            action_stack = response.json()
+            for action in action_stack:
+                print(action.get("value"))
         except Exception:
             print("Error: http_backend.py is not running!")
 

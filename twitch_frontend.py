@@ -63,7 +63,7 @@ def main():
         )
 
         request_body = {
-            "id": f"twitchpy:{message_id}",
+            "id": f"twitch.py:{message_id}",
             "message": message_text,
             "is_owner": is_owner,
             "character_limit": 500,

@@ -79,7 +79,7 @@ def main():
         )
 
         request_body = {
-            "id": f"discordpy-classic:{message.id}",
+            "id": f"discord_classic.py:{message.id}",
             "message": message_text,
             "is_owner": is_owner,
             "character_limit": 2000,

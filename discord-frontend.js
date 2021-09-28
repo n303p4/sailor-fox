@@ -48,7 +48,7 @@ async function onInteractionCreate(interaction) {
     console.log(`id=${interaction.id} user=${interaction.user.tag} userId=${interaction.user.id} | ${fullCommand}`);
 
     let requestBody = {
-        id: `discordjs:${interaction.id}`,
+        id: `discord.js:${interaction.id}`,
         message: fullCommand,
         is_owner: false,
         character_limit: 2000,
