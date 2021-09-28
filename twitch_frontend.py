@@ -77,6 +77,8 @@ def main():
                 timeout=10
             ) as response:
                 action_stack = await response.json()
+            if response.status == 404:  # remain silent on 404 (CommandNotFound)
+                return
             is_error = response.status != 200
             reply_stack = []
             for action in action_stack:
