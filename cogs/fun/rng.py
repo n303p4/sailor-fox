@@ -149,7 +149,7 @@ async def roll_(event, *expressions):
             "Individual rolls cannot have more than "
             f"{MAX_DICE} dice, and individual dice must have "
             f"between 1 and {MAX_SIDES} sides inclusive. The "
-            f"modifier must not exceed ±{MAX_MODIFIER}"
+            f"modifier must not exceed ±{MAX_MODIFIER}."
         ))
     for outcome in outcomes:
         await event.reply(event.f.codeblock(outcome, syntax="asciidoc"))
