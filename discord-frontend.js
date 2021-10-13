@@ -140,7 +140,7 @@ function doAction(action, interaction, channel, isError=false) {
 // Read over a response with a list of actions and perform the actions in sequence
 async function doActions(response, interaction, channel, isError=false) {
     if (isError) await deleteOriginalReply(interaction);
-    if (response.data.length) {
+    if (response.data.length && response.status !== 404) {
         let numReplies = 0;
         response.data.forEach(action => {
             doAction(action, interaction, channel, isError);
@@ -149,7 +149,6 @@ async function doActions(response, interaction, channel, isError=false) {
         if (numReplies === 0) await deleteOriginalReply(interaction);
     }
     else {
-        await deleteOriginalReply(interaction);
         // NOTE: Technically not true, but usually true, and is more user-friendly
         await interaction.followUp({
             content: `Not a valid command. Type /${discord_slash_prefix} help for a list of commands.`,
