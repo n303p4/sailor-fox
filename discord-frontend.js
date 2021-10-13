@@ -149,7 +149,6 @@ async function doActions(response, interaction, channel, isError=false) {
         if (numReplies === 0) await deleteOriginalReply(interaction);
     }
     else {
-        // NOTE: Technically not true, but usually true, and is more user-friendly
         await interaction.followUp({
             content: `Not a valid command. Type /${discord_slash_prefix} help for a list of commands.`,
             ephemeral: true
