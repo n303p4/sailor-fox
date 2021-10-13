@@ -6,6 +6,7 @@ Requires Python 3.6+ and aiohttp.
 
 # pylint: disable=invalid-name,broad-except
 
+import asyncio
 import hashlib
 import json
 import sys
@@ -13,11 +14,29 @@ import time
 
 from aiohttp import web
 import sailor
+from sailor.channel import AbstractChannel
+from sailor.exceptions import NotCoroutine
 
 from sailor_fox.processor import ProcessorWithConfig
 from sailor_fox.helpers import create_logger, to_one_liner
 
 logger = create_logger(__name__)
+
+
+class HTTPResponseChannel(AbstractChannel):
+    """A simple class that implements AbstractChannel."""
+
+    def __init__(self, **kwargs):
+        super(HTTPResponseChannel, self).__init__(**kwargs)
+        rename_channel_with = kwargs.get("rename_channel_with")
+        if not asyncio.iscoroutinefunction(rename_channel_with):
+            raise NotCoroutine(f"{rename_channel_with} is not a coroutine function.")
+        self.__rename_channel = kwargs["rename_channel_with"]
+
+    async def edit(self, **kwargs):
+        """Reimplement edit command."""
+        if "name" in kwargs:
+            await self.__rename_channel(kwargs["name"])
 
 
 def create_action(type_: str, value: str):
@@ -121,6 +140,8 @@ def main():
             )
             action_stack.append(create_action(action_type, new_channel_name.strip()))
 
+        channel = HTTPResponseChannel(name=channel_name, rename_channel_with=rename_channel)
+
         try:
             await processor.process(
                 message,
@@ -129,8 +150,7 @@ def main():
                 is_owner=is_owner,
                 replace_newlines=replace_newlines,
                 reply_with=reply,
-                channel_name=channel_name,
-                rename_channel_with=rename_channel
+                channel=channel
             )
         except Exception as error:
             logger.error("id=%s | %s", request_id, to_one_liner(str(error)))
