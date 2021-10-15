@@ -12,6 +12,8 @@ def setup(processor):
     with open("reactions.json") as file_object:
         reactions = json.load(file_object)
 
+    last_image_for_command = {}
+
     async def coro(event):
         """Generic coroutine."""
         command_properties = reactions.get(event.command.name)
@@ -20,7 +22,11 @@ def setup(processor):
             await event.reply(message)
         images = command_properties.get("images")
         if images:
-            image = secrets.choice(images)
+            # Avoid repeats when possible
+            while (image := secrets.choice(images)) == last_image_for_command.get(event.command.name):
+                pass
+            if len(images) > 1:
+                last_image_for_command[event.command.name] = image
             await event.reply(image)
 
     for command_name, command_properties in reactions.items():
