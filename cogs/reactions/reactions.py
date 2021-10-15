@@ -23,8 +23,9 @@ def setup(processor):
         images = command_properties.get("images")
         if images:
             # Avoid repeats when possible
-            while (image := secrets.choice(images)) == last_image_for_command.get(event.command.name):
-                pass
+            image = secrets.choice(images)
+            while image == last_image_for_command.get(event.command.name):
+                image = secrets.choice(images)
             if len(images) > 1:
                 last_image_for_command[event.command.name] = image
             await event.reply(image)
