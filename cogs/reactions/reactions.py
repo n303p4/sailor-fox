@@ -49,7 +49,7 @@ def setup(processor):
             new_command = commands.Command(coro, name=command_name, aliases=aliases)
             new_command.help = (
                 f"Randomly posts any of {num_images} {command_name}-themed images.\n\n"
-                "A number can be provided to select a specific image."
+                f"A number from 1-{num_images} can be provided to select a specific image."
             )
         else:
             new_command = commands.Command(coro_noselect, name=command_name, aliases=aliases)
