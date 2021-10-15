@@ -16,12 +16,18 @@ client.login(discord_token);
 // Standard ready message. Also sets playing status
 function onceReady() {
     console.info(":3");
+    updatePlayingStatus();
+}
+
+// Update playing status every 30 minutes
+function updatePlayingStatus() {
     client.user.setPresence({
         status: "online",
         activities: [{
             name: `Type /${discord_slash_prefix} help for help!`
         }]
     });
+    setTimeout(updatePlayingStatus, 1000*60*30);
 }
 
 // Command handling

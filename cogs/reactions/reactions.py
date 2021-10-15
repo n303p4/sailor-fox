@@ -14,11 +14,11 @@ def setup(processor):
 
     async def coro(event):
         """Generic coroutine."""
-        properties = reactions.get(event.command.name)
-        message = properties.get("message")
+        command_properties = reactions.get(event.command.name)
+        message = command_properties.get("message")
         if message:
             await event.reply(message)
-        images = properties.get("images")
+        images = command_properties.get("images")
         if images:
             image = secrets.choice(images)
             await event.reply(image)
