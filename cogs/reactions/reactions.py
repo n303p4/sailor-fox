@@ -21,14 +21,15 @@ def setup(processor):
         if message:
             await event.reply(message)
         images = command_properties.get("images")
-        if images:
-            # Avoid repeats when possible
+        if not isinstance(images, list):
+            return
+        # Avoid repeats when possible
+        image = secrets.choice(images)
+        while image == last_image_for_command.get(event.command.name):
             image = secrets.choice(images)
-            while image == last_image_for_command.get(event.command.name):
-                image = secrets.choice(images)
-            if len(images) > 1:
-                last_image_for_command[event.command.name] = image
-            await event.reply(image)
+        if len(images) > 1:
+            last_image_for_command[event.command.name] = image
+        await event.reply(image)
 
     for command_name, command_properties in reactions.items():
         aliases = command_properties.get("aliases", [])
