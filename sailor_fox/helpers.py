@@ -18,8 +18,10 @@ class FancyMessage:
         else:
             self.lines.append(f"{self.formatter.bold(name+':')}{sep}{value}")
 
-    def add_line(self, line: str):
+    def add_line(self, line: str = None):
         """Add line to reply."""
+        if not line:
+            line = ""
         self.lines.append(str(line))
 
     def __str__(self):
