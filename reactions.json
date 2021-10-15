@@ -23,7 +23,7 @@
         "images": [
             "https://safebooru.org/images/1633/31737e7d580f9432964d93b35001dc15b555eb3f.gif",
             "https://safebooru.org/images/2132/33061af28d9841d37c0b4876195e51f9636a759b.jpg",
-            "https://safebooru.org/samples/2131/sample_01007b09d1302787d6869fc4ae30a46c24e119c2.png"
+            "https://safebooru.org/images/3513/4e6ce6d5be0234d649c12f602a0bdc9eec9e2847.jpg"
         ],
         "aliases": [
             "party"
@@ -40,10 +40,21 @@
             "chomp"
         ]
     },
+    "boat": {
+        "images": [
+            "https://safebooru.org/samples/2148/sample_33cb9390ba147f8c262c67c162b5c1f7d156cdaf.jpg",
+            "https://safebooru.org/samples/2150/sample_b5c9a13f6ffeac00ae371a6ca92a71257ed82039.jpg",
+            "https://safebooru.org/images/2163/877536e055317f98d5ea1bda8c30dc6676dd6da5.png",
+            "https://safebooru.org/images/2115/30603773825b3fa5735a4c6a300740f58e62849e.jpg",
+            "https://safebooru.org/images/2122/089ddfc6d8096dfbf9f01b5cdd4006204e268206.jpg",
+            "https://safebooru.org/images/123/cd4c18b4e5c53daa21566d701e84ca2500f3b8fe.jpg"
+        ],
+        "message": "The ship sets sail~"
+    },
     "boots": {
         "images": [
             "https://media-cache-ak0.pinimg.com/736x/db/b9/a3/dbb9a30cc312682ee2d2cc4cf84310ae.jpg",
-            "https://www.polyvore.com/cgi/img-thing?.out=jpg&size=l&tid=21163978",
+            "https://safebooru.org/images/3533/508b56a849fe1c6a4775c05956bdb18fbda5530c.jpg",
             "https://i.imgur.com/3Y4r38i.jpg",
             "https://i.imgur.com/Jj0eZTh.png",
             "https://i.imgur.com/EC4UXCI.jpg"
@@ -97,7 +108,7 @@
     },
     "honk": {
         "images": [
-            "https://safebooru.org/samples/1784/sample_bd21505d8c546807a0c7a91eb271f9095f1220d4.png",
+            "https://safebooru.org/images/2842/f25606e0ed2a537eb09256c917c8ec81f1d23f12.png",
             "https://safebooru.org/images/314/94c6604eb92121f450ea555d4ade1a618c5a62d6.png"
         ]
     },
@@ -120,7 +131,7 @@
             "https://safebooru.org/samples/1832/sample_25adf8a37226fa003a6a6d7b0f3171f5764bba7d.jpg",
             "https://safebooru.org/images/1270/a9c1744fb4676f743c4dbc7668a39e72decdde16.jpg",
             "https://safebooru.org/images/2077/12bddb7bd2274f0ba9abe2d72c994555d562e0df.jpg",
-            "https://safebooru.org/samples/2045/sample_c2a906de7bf13b48c7c971e909f1beef75766c34.png"
+            "https://safebooru.org/images/3480/c668b5731844cb95a35687d9a37580d065474358.jpg"
         ],
         "message": "Kon, kon~",
         "aliases": [
@@ -180,7 +191,7 @@
             "https://safebooru.org/images/1891/5922d9fe102f8b2e62b2761eb505ee75fdcde2df.gif",
             "https://safebooru.org/images/1853/10962bdb8ffeda856e15882593788cd09e58ee2e.gif",
             "http://68.media.tumblr.com/01e9cc48310fbe72b2ccf1b52925d0c4/tumblr_o3at2et2G31tydz8to1_540.gif",
-            "https://lh3.googleusercontent.com/-rrPLI80iYmw/VQbtiyQhFwI/AAAAAAAA9Pg/XUGGf7yT6CY/w500-h273/tumblr_mmeanbZFmO1qg78wpo1_500.gif",
+            "https://gifimage.net/wp-content/uploads/2018/10/anime-girl-wagging-tail-gif-6.gif",
             "http://24.media.tumblr.com/a1d0298a6c2e7821ed102ad2345fcc4a/tumblr_myauniO7nO1r0wlweo1_500.gif",
             "http://i.imgur.com/MSCtuve.gif",
             "https://38.media.tumblr.com/8203abcf4aef7f528eb61206710bfdce/tumblr_nnwn56DQuR1ty38iao1_400.gif",
@@ -233,33 +244,5 @@
         "aliases": [
             "wakarimasenlol"
         ]
-    },
-    "kat": {
-        "images": [
-            "https://4.bp.blogspot.com/-yFm9JlRhNsk/UQOAkMTB4_I/AAAAAAAALXo/vXZAaYSNB-s/s1600/Kit+Kat+Bar+1a.jpeg",
-            "https://static.independent.co.uk/s3fs-public/thumbnails/image/2016/01/20/12/KitKat-Four-finger.jpg",
-            "https://2.bp.blogspot.com/-p6XaYsYSs9s/TVn2YtryxsI/AAAAAAAAAQo/4xxduczVDSg/s1600/kit-kat.jpg",
-            "https://www.takaski.com/wp-content/uploads/2016/04/Japanese-Kit-Kat-Wasabi-Chocolate-Box.jpg",
-            "https://www.thegrocer.co.uk/pictures/420xAny/1/6/3/30163_KIT%20KAT.JPG",
-            "https://www.tubefilter.com/wp-content/uploads/2015/05/youtube-break-kit-kat.jpg"
-        ],
-        "aliases": [
-            "kit",
-            "kits",
-            "kats",
-            "kitkat",
-            "kitkats"
-        ]
-    },
-    "boat": {
-        "images": [
-            "https://safebooru.org/samples/2148/sample_33cb9390ba147f8c262c67c162b5c1f7d156cdaf.jpg",
-            "https://safebooru.org/samples/2150/sample_b5c9a13f6ffeac00ae371a6ca92a71257ed82039.jpg",
-            "https://safebooru.org/images/2163/877536e055317f98d5ea1bda8c30dc6676dd6da5.png",
-            "https://safebooru.org/images/2115/30603773825b3fa5735a4c6a300740f58e62849e.jpg",
-            "https://safebooru.org/images/2122/089ddfc6d8096dfbf9f01b5cdd4006204e268206.jpg",
-            "https://safebooru.org/images/123/cd4c18b4e5c53daa21566d701e84ca2500f3b8fe.jpg"
-        ],
-        "message": "The ship sets sail~"
     }
 }
