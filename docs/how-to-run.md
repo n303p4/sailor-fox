@@ -3,7 +3,17 @@
 This guide walks you through how to prepare your PC or server to run sailor-fox.
 It assumes that you have working knowledge of a terminal/command line.
 
-## Dependencies
+## Getting sailor-fox
+
+[Download](https://gitlab.com/n303p4/sailor-fox/-/archive/master/sailor-fox-master.zip) and
+extract sailor-fox to a folder. Afterwards, set your working directory to the folder you
+extracted to:
+
+```bash
+cd sailor-fox
+```
+
+## Installing dependencies
 
 sailor-fox requires Python 3.7 or higher.
 If you run Windows or macOS, you should download and install Python from the
