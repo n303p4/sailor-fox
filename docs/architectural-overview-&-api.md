@@ -38,17 +38,21 @@ The port number is set in `config.json`.
 The server processes the command request and responds with a flat JSON array that contains zero or more objects, where
 each object represents an action to take.
 
+## API
+
 ### Command POST request
 
-| Field             | Type                                | Description
-| ---               | ---                                 | ---
-| message           | string                              | Message to be parsed as a command. Should not contain any command prefixes.
-| id?               | string (default random UUID)        | Provide to keep logs across client and server consistent
-| is_owner?         | boolean (default `false`)           | Whether the person who sent the command is the bot owner
-| character_limit?  | integer (default `0` = unlimited)   | Posts that are longer than this number will be automatically broken up into multiple smaller posts.
-| replace_newlines? | boolean (default `false`)           | Reformats replies to avoid using newlines. Use for services like Twitch chat, which don't support newlines.
-| format_name?      | string:format name (default `null`) | Set to the appropriate format name to enable text formatting
-| channel_name?     | string (default `"untitled"`)       | The name of the chat channel, if applicable
+`POST http://localhost:<port number>/`
+
+| Field             | Type                                                | Description
+| ---               | ---                                                 | ---
+| message           | string                                              | Message to be parsed as a command. Should not contain any command prefixes.
+| id?               | string (default random UUID)                        | Provide to keep logs across client and server consistent
+| is_owner?         | boolean (default `false`)                           | Whether the person who sent the command is the bot owner
+| character_limit?  | integer (default `0` = unlimited)                   | Posts that are longer than this number will be automatically broken up into multiple smaller posts.
+| replace_newlines? | boolean (default `false`)                           | Reformats replies to avoid using newlines. Use for services like Twitch chat, which don't support newlines.
+| format_name?      | string:[format name](#format-name) (default `null`) | Set to the appropriate format name to enable text formatting
+| channel_name?     | string (default `"untitled"`)                       | The name of the chat channel, if applicable
 
 ### Format name
 
@@ -61,14 +65,14 @@ each object represents an action to take.
 
 | Name | Type
 | ---  | ---
-| .    |  array of command action
+| .    |  array of [command action](#command-action)
 
 ### Command action
 
-| Field | Type                       | Description
-| ---   | ---                        | ---
-| type  | string:command action type | The type of action
-| value | string                     | The value of the action
+| Field | Type                                               | Description
+| ---   | ---                                                | ---
+| type  | string:[command action type](#command-action-type) | The type of action
+| value | string                                             | The value of the action
 
 ### Command action type
 
@@ -88,6 +92,13 @@ each object represents an action to take.
 | 500     | Command execution failed
 | default | Unknown error
 
+### `curl` example
+```
+$ curl -L http://localhost:9980 -d '{"message": "ping"}'
+
+[{"type": "reply", "value": ":3"}]
+```
+
 ## Client services
 
 To create a complete and useful bot, there must be at least one client to a chat service.
@@ -99,10 +110,3 @@ Multiple unrelated clients can also share the same server instance, allowing a c
 to serve more than one chat service (i.e. less system resources required).
 A single client can also access multiple servers (e.g. to have different command sets for
 different Discord servers).
-
-## `curl` example
-```
-$ curl -L http://localhost:9980 -d '{"message": "ping"}'
-
-[{"type": "reply", "value": ":3"}]
-```

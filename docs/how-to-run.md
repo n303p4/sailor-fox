@@ -3,6 +3,44 @@
 This guide walks you through how to prepare your PC or server to run sailor-fox.
 It assumes that you have working knowledge of a terminal/command line.
 
+## Quickstart on Linux
+
+```bash
+wget https://gitlab.com/n303p4/sailor-fox/-/archive/master/sailor-fox-master.zip
+
+unzip sailor-fox-master
+
+cd sailor-fox-master
+
+python3 -m pip install --user -r requirements.txt
+
+cp config.example.json config.json
+
+# Required for Discord and Twitch
+nano config.json
+
+# Required for Discord only
+npm install axios discord.js
+python3 deploy_discord_commands.py
+
+python3 server.py
+```
+
+Separate terminal:
+
+```bash
+cd sailor-fox-master
+
+# Command line
+python3 cli_client.py
+
+# Discord
+node discord-client.js
+
+# Twitch
+python3 twitch_client.py
+```
+
 ## Getting sailor-fox
 
 [Download](https://gitlab.com/n303p4/sailor-fox/-/archive/master/sailor-fox-master.zip) and
@@ -60,7 +98,7 @@ However, this is discouraged.
 > ### Note
 > The Discord client uses `discord_slash_prefix` instead.
 
-## Disabling commands
+## Disable unwanted commands
 
 sailor-fox includes a number of modules ("cogs"), each of which contains one or more commands.
 It is likely that some of these commands are **not** suitable for your
@@ -116,7 +154,7 @@ Refer to the [Twitch IRC bot documentation](https://dev.twitch.tv/docs/irc) for 
 
 In `config.json`, fill out the fields that start with `twitch_`.
 
-# Running sailor-fox
+## Running sailor-fox
 
 You may have to change the following commands slightly, depending on your operating system and the
 location of your Python installation.
@@ -129,31 +167,31 @@ python3 server.py
 
 The following commands should be run in a separate terminal:
 
-## Command line
+### Command line
 
 ```bash
 python3 cli_client.py
 ```
 
-## Discord
+### Discord
 
 ```bash
 node discord-client.js
 ```
 
-## Discord classic (deprecated)
+### Discord classic (deprecated)
 
 ```bash
 python3 discord_classic_client.py
 ```
 
-## Twitch
+### Twitch
 
 ```bash
 python3 twitch_client.py
 ```
 
-# Autostarting with systemd
+## Autostarting with systemd
 
 For convenience, you may want your bot to autostart on a Linux server, even after reboots.
 Some service templates are contained in the `systemd` folder.
