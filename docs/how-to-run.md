@@ -55,7 +55,7 @@ sailor-fox includes a number of modules ("cogs"), each of which contains one or 
 It is likely that some of these commands are **not** suitable for your
 Discord server/Twitch chat/IRC channel/etc.
 You should review them, and disable what you don't need or want.
-Visit [docs/command-reference.html](docs/command-reference.html) for a full list of commands.
+Visit [docs/commands](docs/commands) for a full list of commands.
 
 Disabled modules are listed in `config.json` under the array `module_blocklist`.
 For example, if you want to disable [cogs/owner/exec.py](cogs/owner/exec.py), add
