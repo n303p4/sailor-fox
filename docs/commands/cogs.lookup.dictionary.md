@@ -2,6 +2,8 @@
 
 Dictionary lookup command.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `define`
 
 **Arguments:** `word`

@@ -2,6 +2,8 @@
 
 Module loading and unloading commands.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `load`
 
 **Arguments:** `name`

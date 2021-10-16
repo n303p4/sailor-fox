@@ -2,6 +2,8 @@
 
 A time command.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `time`
 
 **Aliases:** `timein, tz, timezone`

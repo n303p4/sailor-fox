@@ -4,6 +4,8 @@ Extension that handles kitsu.io queries.
 
 Ported from Oxylibrium's Nestbot.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `anime`
 
 **Aliases:** `kitsu`

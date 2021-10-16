@@ -2,6 +2,8 @@
 
 Commands that produce fox creatures.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `fluffsaw`
 
 **Aliases:** `foxsaw, fsaw`

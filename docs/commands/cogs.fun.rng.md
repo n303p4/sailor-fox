@@ -2,6 +2,8 @@
 
 Commands used for random number generation.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `choice`
 
 **Aliases:** `choose, c`

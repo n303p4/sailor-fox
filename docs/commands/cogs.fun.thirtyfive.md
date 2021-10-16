@@ -2,6 +2,8 @@
 
 Commands inspired by Roadcrosser's bots.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `a`
 
 **Aliases:** `aa, aaa`

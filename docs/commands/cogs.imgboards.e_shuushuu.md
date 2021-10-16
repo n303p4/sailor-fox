@@ -2,6 +2,8 @@
 
 e-shuushuu module.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `eshuushuu`
 
 **Aliases:** `es, shuushuu`

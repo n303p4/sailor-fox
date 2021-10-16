@@ -21,16 +21,13 @@ def main():
 
     processor.add_modules_from_dir("cogs", blocklist=["cogs.myriad.all"])
 
-    markdown = [
-        "Arguments enclosed in <code>[]</code> are optional."
-    ]
-
     commands_for_modules = {}
 
     for command in sorted(processor.commands.values(), key=lambda c: c.coro.__module__):
         if command.coro.__module__ not in commands_for_modules:
             commands_for_modules[command.coro.__module__] = [
-                sys.modules[command.coro.__module__].__doc__.strip()
+                sys.modules[command.coro.__module__].__doc__.strip(),
+                "Note: Arguments enclosed in `[]` are optional."
             ]
         command_info = [f"## `{command.name}`"]
         if command.aliases:

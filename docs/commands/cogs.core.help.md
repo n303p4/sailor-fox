@@ -2,6 +2,8 @@
 
 Bot help command.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `help`
 
 **Aliases:** `commands`

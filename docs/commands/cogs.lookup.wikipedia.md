@@ -2,6 +2,8 @@
 
 This cog contains a Wikipedia query command.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `wiki`
 
 **Aliases:** `wikipedia`

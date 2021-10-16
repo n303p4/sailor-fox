@@ -2,6 +2,8 @@
 
 This cog contains an image query command.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `image`
 
 **Aliases:** `img, gimage, gimg`

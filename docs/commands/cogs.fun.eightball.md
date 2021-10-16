@@ -2,6 +2,8 @@
 
 A Magic 8-Ball command.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `8ball`
 
 **Aliases:** `eightball`

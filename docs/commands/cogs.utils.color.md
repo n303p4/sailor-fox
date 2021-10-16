@@ -2,6 +2,8 @@
 
 Contains a cog that fetches colors.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `color`
 
 **Aliases:** `colour`

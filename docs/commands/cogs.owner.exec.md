@@ -2,6 +2,8 @@
 
 Expression evaluation commands.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `exec`
 
 **Arguments:** `code`

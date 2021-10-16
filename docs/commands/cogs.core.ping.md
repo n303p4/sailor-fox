@@ -2,6 +2,8 @@
 
 Ping command for a sailor-based bot.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `ping`
 
 Ping the bot.

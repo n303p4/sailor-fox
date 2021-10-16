@@ -2,6 +2,8 @@
 
 Generic reaction image commands.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `baka`
 
 **Aliases:** `tsundere, idiot`

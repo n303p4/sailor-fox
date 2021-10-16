@@ -2,6 +2,8 @@
 
 Lookup commands that query various image APIs.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `beaver`
 
 Fetch a random beaver.

@@ -2,6 +2,8 @@
 
 Bot information command.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `info`
 
 **Aliases:** `about, stats`

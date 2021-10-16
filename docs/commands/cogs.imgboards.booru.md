@@ -2,6 +2,8 @@
 
 Imageboard lookup commands.
 
+Note: Arguments enclosed in `[]` are optional.
+
 ## `animeme`
 
 **Aliases:** `animememe`
