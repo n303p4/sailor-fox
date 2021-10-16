@@ -46,7 +46,7 @@ If the bot will share a chat with other bots, the prefix should be unique to avo
 > You can set the prefix to an empty string, which will make the bot respond to every message.
 However, this is discouraged.
 
-> ### Node
+> ### Note
 > The Discord client uses `discord_slash_prefix` instead.
 
 ## Disabling commands
