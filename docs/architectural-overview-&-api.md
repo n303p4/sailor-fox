@@ -1,4 +1,4 @@
-# Architectural overview and API
+# Architectural overview & API
 
 sailor-fox is designed around a client-server architecture.
 The server is the service `server.py`,
