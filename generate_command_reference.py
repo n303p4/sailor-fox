@@ -1,10 +1,7 @@
 """Generate command documentation."""
 
-# pylint: disable=invalid-name
-
 import inspect
-
-import markdown
+import os
 
 from sailor.commands import Processor
 
@@ -12,41 +9,30 @@ from sailor.commands import Processor
 def main():
     """Factory to create and run everything."""
 
+    dirpath_docs_commands = os.path.join(os.path.dirname(os.path.realpath(__file__)), "docs", "commands")
+
+    if os.path.isfile(dirpath_docs_commands):
+        os.remove(dirpath_docs_commands)
+    if not os.path.isdir(dirpath_docs_commands):
+        os.makedirs(dirpath_docs_commands)
+
     processor = Processor()
 
     processor.add_modules_from_dir("cogs", blocklist=["cogs.myriad.all"])
 
-    html = [
-        "<!DOCTYPE html>",
-        "<html>",
-        "<head>",
-        "<title>List of sailor-fox commands by module</title>",
-        '<style type="text/css">',
-        "body { font-family: Liberation Sans, Arial, sans-serif; }",
-        "details { padding: 4px 0; }",
-        "details:nth-of-type(2n) { background: #EEE; }",
-        "summary > h2 { display: inline; }",
-        "details > h2:first-of-type { margin-top: 0.3em; }",
-        "details > h2 { width: 100%; border-bottom: 1px solid gray; }",
-        '</style>',
-        "</head>",
-        "<body>",
-        "<h1>List of sailor-fox commands by module</h1>",
-        "<p>Arguments enclosed in <code>[]</code> are optional.</p>"
+    markdown = [
+        "Arguments enclosed in <code>[]</code> are optional."
     ]
-    previous_module = None
+
+    commands_for_modules = {}
+
     for command in sorted(processor.commands.values(), key=lambda c: c.coro.__module__):
-        if previous_module != command.coro.__module__:
-            if previous_module:
-                html.append("</details>")
-            html += [
-                "<details open>",
-                "<summary>",
-                f"<h2>{command.coro.__module__}</h2>",
-                "</summary>"
-            ]
-            previous_module = command.coro.__module__
-        command_info = [f"## `{command.name}`"]
+        if command.coro.__module__ not in commands_for_modules:
+            commands_for_modules[command.coro.__module__] = []
+        command_info = [
+            f"## `{command.name}`",
+            "-" * (len(command.name) + 5)
+        ]
         if command.aliases:
             command_info.append(f"**Aliases:** `{', '.join(command.aliases)}`")
         arguments = []
@@ -58,11 +44,12 @@ def main():
         if arguments:
             command_info.append(f"**Arguments:** `{' '.join(arguments)}`")
         command_info.append(command.help)
-        html.append(markdown.markdown("\n\n".join(command_info)))
+        commands_for_modules[command.coro.__module__].append("\n\n".join(command_info))
 
-    html += ["</details>", "</body>", "</html>"]
-
-    print("\n".join(html))
+    for module, commands in commands_for_modules.items():
+        commands_markdown = "\n\n".join(commands)
+        with open(os.path.join(dirpath_docs_commands, f"{module}.md"), "w") as file_object:
+            file_object.write(f"# {module}\n\n{commands_markdown}")
 
 
 if __name__ == "__main__":
