@@ -23,7 +23,7 @@ on many Linux distros (e.g. `python3-pip` on Ubuntu).
 
 The Discord client additionally depends on Node.js 16 or higher.
 Most distributions don't ship this version, so you may have to follow
-[these instructions](https://nodejs.org/en/download/package-manager/).
+[these instructions](https://github.com/nodesource/distributions/blob/master/README.md).
 
 After installing Node, install additional dependencies:
 
