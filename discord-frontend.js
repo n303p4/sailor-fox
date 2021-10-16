@@ -15,7 +15,11 @@ client.login(discord_token);
 
 // Standard ready message. Also sets playing status
 function onceReady() {
-    console.info(":3");
+    console.info(
+        `clientUser=${client.user.tag} ` +
+        `clientUserId=${client.user.id}` +
+        " | Bot is now online :3"
+    );
     updatePlayingStatus();
 }
 
