@@ -1,6 +1,7 @@
 # How to run sailor-fox
 
 This guide walks you through how to prepare your PC or server to run sailor-fox.
+It assumes that you have working knowledge of a terminal/command line.
 
 ## Dependencies
 
