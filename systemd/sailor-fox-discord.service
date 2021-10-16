@@ -1,5 +1,5 @@
 [Unit]
-Description=Sailor Fox (Discord frontend)
+Description=Sailor Fox (Discord client)
 After=network.target
 
 [Service]
@@ -7,7 +7,7 @@ Type=simple
 User=<username>
 Group=<username>
 WorkingDirectory=/home/<username>/sailor-fox
-ExecStart=/usr/bin/node discord-frontend.js
+ExecStart=/usr/bin/node discord-client.js
 Restart=always
 
 [Install]

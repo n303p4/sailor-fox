@@ -1,5 +1,5 @@
 [Unit]
-Description=Sailor Fox (HTTP backend)
+Description=Sailor Fox (HTTP server)
 After=network.target
 
 [Service]
@@ -7,7 +7,7 @@ Type=simple
 User=<username>
 Group=<username>
 WorkingDirectory=/home/<username>/sailor-fox
-ExecStart=/usr/bin/python3 http_backend.py
+ExecStart=/usr/bin/python3 server.py
 Restart=always
 
 [Install]

@@ -7,7 +7,7 @@
         "cogs.owner.process"
     ],
 
-    "backend_port_number": 9980,
+    "port_number": 9980,
 
     "discord_token": "Discord token",
     "discord_guild_id": "this is optional but recommended",

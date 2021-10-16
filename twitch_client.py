@@ -1,5 +1,5 @@
 """
-A Twitch frontend for http_backend.py
+A Twitch client for server.py
 
 Requires Python 3.6 or higher.
 """
@@ -24,10 +24,14 @@ def main():
     with open("config.json") as config_file:
         config = json.load(config_file)
 
-    token = config.get("twitch_token")
-    assert isinstance(token, str), "OAuth token not valid."
+    assert "twitch_token" in config, "twitch_token must be set."
+    token = config["twitch_token"]
+    assert isinstance(token, str), "twitch_token must be a string."
 
-    backend_port_number = config.get("backend_port_number", 9980)
+    assert "port_number" in config, "port_number must be set."
+    port_number = config["port_number"]
+    assert (isinstance(port_number, int)), "port_number must be an integer."
+
     prefix = str(config.get("prefix", ""))
 
     client = twitchio.Client(token, initial_channels=config.get("twitch_channels", []))
@@ -72,7 +76,7 @@ def main():
 
         try:
             async with client_session.post(
-                f"http://localhost:{backend_port_number}",
+                f"http://localhost:{port_number}",
                 json=request_body,
                 timeout=10
             ) as response:

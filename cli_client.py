@@ -1,8 +1,9 @@
-"""A command-line frontend for http_backend.py."""
+"""A command-line client for server.py."""
 
 # pylint: disable=broad-except
 
 import json
+import sys
 import time
 
 import requests
@@ -17,10 +18,14 @@ def main():
         config = json.load(config_file)
 
     prefix = config.get("prefix", "")
-    backend_port_number = config.get("backend_port_number", 9980)
-    backend_url = f"http://localhost:{backend_port_number}"
 
-    print(f"Running on port {backend_port_number}")
+    assert "port_number" in config, "port_number must be set."
+    port_number = config["port_number"]
+    assert isinstance(port_number, int), "port_number must be an integer."
+
+    server_url = f"http://localhost:{port_number}"
+
+    print(f"Running on port {port_number}")
     print("Enter commands here.", end="")
     if prefix:
         print(f" Commands must start with {prefix}")
@@ -37,7 +42,7 @@ def main():
         if prefix_or_none is None or not message:
             continue
         try:
-            response = requests.post(backend_url, json={
+            response = requests.post(server_url, json={
                 "id": f"cli.py:{time.time()}",
                 "message": message,
                 "is_owner": True,
@@ -47,7 +52,7 @@ def main():
             for action in action_stack:
                 print(action.get("value"))
         except Exception:
-            print("Error: http_backend.py is not running!")
+            print("Error: server.py is not running!")
 
 
 if __name__ == "__main__":

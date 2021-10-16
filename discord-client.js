@@ -1,10 +1,23 @@
-// Discord slash command frontend for http_backend.py
+// Discord slash command client for server.py
 
 const axios = require("axios");
 const { Client, Intents } = require("discord.js");
 
-const { discord_slash_prefix, discord_token, backend_port_number } = require("./config.json");
-const sailorServiceURL = `http://localhost:${backend_port_number}`;
+const { discord_slash_prefix, discord_token, port_number } = require("./config.json");
+if (typeof discord_slash_prefix !== "string") {
+    console.error("discord_slash_prefix must be a string.");
+    process.exit(1);
+}
+if (typeof discord_token !== "string") {
+    console.error("discord_token must be a string.");
+    process.exit(1);
+}
+if (!Number.isInteger(port_number)) {
+    console.error("port_number must be an integer.");
+    process.exit(1);
+}
+
+const sailorServerURL = `http://localhost:${port_number}`;
 
 const client = new Client({ intents: [ Intents.FLAGS.GUILDS ] });
 
@@ -74,7 +87,7 @@ async function onInteractionCreate(interaction) {
     }
 
     axios
-        .post(sailorServiceURL, requestBody)
+        .post(sailorServerURL, requestBody)
         .then(async response => await doActions(response, interaction, channel, false))
         .catch(async error => {
             try { await doActions(error.response, interaction, channel, true); }
@@ -110,7 +123,7 @@ function toOneLiner(string, maxLength=75) {
     return oneLiner;
 }
 
-// Execute a single action requested by the backend
+// Execute a single action requested by the server
 function doAction(action, interaction, channel, isError=false) {
     if (typeof action.type !== "string" || typeof action.value !== "string") {
         return;

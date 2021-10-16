@@ -1,5 +1,5 @@
 """
-A Discord frontend for http_backend.py
+A Discord client for server.py
 
 Requires Python 3.6+ and discord.py 1.0 or higher.
 """
@@ -29,7 +29,7 @@ def get_prefix(text: str, prefixes_: List[str]):
 
 
 async def do_action(action: dict, message: discord.Message, *, is_error: bool = False):
-    """Perform a single action requested by the backend."""
+    """Perform a single action requested by the server."""
     if not isinstance(action.get("type"), str) \
     or not isinstance(action.get("value"), str):
         return
@@ -62,13 +62,15 @@ def main():
 
     with open("config.json") as config_file:
         config = json.load(config_file)
-    backend_port_number = config.get("backend_port_number", 9980)
-    prefixes = []
 
-    assert (isinstance(config.get("discord_token"), str)), "Bot token not valid."
+    assert "port_number" in config, "port_number must be set."
+    port_number = config["port_number"]
+    assert (isinstance(port_number, int)), "port_number must be an integer."
 
     client = discord.AutoShardedClient()
     client_session = aiohttp.ClientSession(loop=client.loop)
+
+    prefixes = []
 
     @client.event
     async def on_ready():
@@ -118,7 +120,7 @@ def main():
 
         try:
             async with client_session.post(
-                f"http://localhost:{backend_port_number}",
+                f"http://localhost:{port_number}",
                 json=request_body,
                 timeout=10
             ) as response:
@@ -136,7 +138,10 @@ def main():
             else:
                 await message.channel.send(str(error))
 
-    client.run(config["discord_token"])
+    assert "discord_token" in config, "discord_token must be set."
+    discord_token = config["discord_token"]
+    assert (isinstance(discord_token, str)), "discord_token must be a string."
+    client.run(discord_token)
 
 
 if __name__ == "__main__":

@@ -174,13 +174,19 @@ def main():
 
     processor.load_config()
 
-    assert (isinstance(processor.config.get("module_blocklist", []), list)), "Blocklist must be a list."
+    module_blocklist = processor.config.get("module_blocklist", [])
+    assert isinstance(module_blocklist, list) and all(isinstance(m, str) for m in module_blocklist), \
+           "module_blocklist must be an array of string."
 
-    processor.add_modules_from_dir("cogs", blocklist=processor.config.get("module_blocklist", []))
+    assert "port_number" in processor.config, "port_number must be set."
+    port_number = processor.config["port_number"]
+    assert isinstance(port_number, int), "port_number must be an integer."
+
+    processor.add_modules_from_dir("cogs", blocklist=module_blocklist)
 
     app = web.Application()
     app.add_routes(routes)
-    web.run_app(app, port=processor.config.get("backend_port_number", 9980))
+    web.run_app(app, port=port_number)
 
 
 if __name__ == "__main__":
