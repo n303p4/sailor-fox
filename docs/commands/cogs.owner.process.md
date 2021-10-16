@@ -2,8 +2,6 @@
 
 ## `halt`
 
----------
-
 **Aliases:** `exit, shutdown, kys`
 
 Halt the bot. Owner only.

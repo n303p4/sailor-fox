@@ -2,15 +2,11 @@
 
 ## `8ball`
 
-----------
-
 **Aliases:** `eightball`
 
 Ask the Magic 8-Ball a question.
 
 ## `kball`
-
-----------
 
 **Aliases:** `kitsuball`
 

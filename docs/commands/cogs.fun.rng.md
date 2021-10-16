@@ -2,8 +2,6 @@
 
 ## `choice`
 
------------
-
 **Aliases:** `choose, c`
 
 **Arguments:** `choices`
@@ -14,15 +12,11 @@ Multi-word choices should be enclosed in "quotes like this".
 
 ## `coin`
 
----------
-
 **Aliases:** `cflip, coinflip`
 
 Flip a coin.
 
 ## `rng`
-
---------
 
 **Aliases:** `randint`
 
@@ -34,8 +28,6 @@ Random number generator.
 * `end` - The highest number that can be generated.
 
 ## `roll`
-
----------
 
 **Aliases:** `r`
 

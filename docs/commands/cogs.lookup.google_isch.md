@@ -2,8 +2,6 @@
 
 ## `image`
 
-----------
-
 **Aliases:** `img, gimage, gimg`
 
 **Arguments:** `query`

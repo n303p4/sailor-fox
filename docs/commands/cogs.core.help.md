@@ -2,8 +2,6 @@
 
 ## `help`
 
----------
-
 **Aliases:** `commands`
 
 **Arguments:** `[command_name=None]`

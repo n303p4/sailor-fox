@@ -29,10 +29,7 @@ def main():
     for command in sorted(processor.commands.values(), key=lambda c: c.coro.__module__):
         if command.coro.__module__ not in commands_for_modules:
             commands_for_modules[command.coro.__module__] = []
-        command_info = [
-            f"## `{command.name}`",
-            "-" * (len(command.name) + 5)
-        ]
+        command_info = [f"## `{command.name}`"]
         if command.aliases:
             command_info.append(f"**Aliases:** `{', '.join(command.aliases)}`")
         arguments = []

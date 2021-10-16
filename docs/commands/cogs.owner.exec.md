@@ -2,15 +2,11 @@
 
 ## `exec`
 
----------
-
 **Arguments:** `code`
 
 Execute arbitrary Python code. Bot owner only.
 
 ## `sh`
-
--------
 
 **Arguments:** `args`
 

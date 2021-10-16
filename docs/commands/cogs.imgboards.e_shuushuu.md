@@ -2,8 +2,6 @@
 
 ## `eshuushuu`
 
---------------
-
 **Aliases:** `es, shuushuu`
 
 **Arguments:** `tags`
@@ -20,8 +18,6 @@ Fetch a random image from e-shuushuu. You must provide at least one tag.
 
 ## `eshuushuutag`
 
------------------
-
 **Aliases:** `est`
 
 **Arguments:** `search_text`
@@ -31,8 +27,6 @@ Search e-shuushuu for valid tags.
 This command does **not** currently accept character names.
 
 ## `senko`
-
-----------
 
 **Aliases:** `senko-san`
 

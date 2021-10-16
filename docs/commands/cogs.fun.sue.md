@@ -2,8 +2,6 @@
 
 ## `sue`
 
---------
-
 **Arguments:** `[target=]`
 
 Sue somebody!

@@ -2,8 +2,6 @@
 
 ## `fluffsaw`
 
--------------
-
 **Aliases:** `foxsaw, fsaw`
 
 **Arguments:** `[length=12]`
@@ -14,15 +12,11 @@ You may specify a length - max 20, min 0.
 
 ## `foxascii`
 
--------------
-
 **Aliases:** `fa`
 
 An ASCII fox.
 
 ## `foxfish`
-
-------------
 
 **Aliases:** `ff`
 
@@ -33,8 +27,6 @@ Generate a foxfish.
 You may specify a length - max 20, min 0.
 
 ## `foxinvaders`
-
-----------------
 
 **Aliases:** `foxinvader, fi`
 
@@ -47,8 +39,6 @@ You may specify a number of columns - max 6, min 1.
 
 ## `foxjellyfish`
 
------------------
-
 **Aliases:** `fj`
 
 **Arguments:** `[rows=1] [columns=1]`
@@ -60,8 +50,6 @@ You may specify a number of columns - max 6, min 1.
 
 ## `foxsquid`
 
--------------
-
 **Aliases:** `fs`
 
 **Arguments:** `[height=1]`
@@ -72,15 +60,11 @@ You may specify a height - max 10, min 0.
 
 ## `foxtotempole`
 
------------------
-
 **Aliases:** `ftp`
 
 :<:::3<:::>:3><:><><<:3:><>:3:<
 
 ## `foxwhale`
-
--------------
 
 **Aliases:** `fw`
 
@@ -91,8 +75,6 @@ The foxwhale, a creature of the ocean.
 You may specify a length - max 20, min 0.
 
 ## `foxwhaleeat`
-
-----------------
 
 **Aliases:** `fwe`
 

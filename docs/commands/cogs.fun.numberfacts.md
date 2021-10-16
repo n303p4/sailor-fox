@@ -2,8 +2,6 @@
 
 ## `numfact`
 
-------------
-
 **Aliases:** `numberfact, number`
 
 **Arguments:** `[number=None]`

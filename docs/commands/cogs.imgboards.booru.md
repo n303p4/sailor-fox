@@ -2,8 +2,6 @@
 
 ## `animeme`
 
-------------
-
 **Aliases:** `animememe`
 
 **Arguments:** `tags`
@@ -12,15 +10,11 @@ Find a random anime meme. Optional tags.
 
 ## `:<`
 
--------
-
 **Arguments:** `tags`
 
 :<
 
 ## `maid`
-
----------
 
 **Aliases:** `meido`
 
@@ -29,8 +23,6 @@ Find a random anime meme. Optional tags.
 Find a random maid. Optional tags.
 
 ## `safebooru`
-
---------------
 
 **Aliases:** `sbooru, sb`
 
@@ -48,8 +40,6 @@ Fetch a random image from Safebooru. Tags accepted.
 See http://safebooru.org/index.php?page=help&topic=cheatsheet for more details.
 
 ## `safeboorutag`
-
------------------
 
 **Aliases:** `sbt`
 

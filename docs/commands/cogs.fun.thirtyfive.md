@@ -2,15 +2,11 @@
 
 ## `a`
 
-------
-
 **Aliases:** `aa, aaa`
 
 Aaaaaaa!
 
 ## `throw`
-
-----------
 
 **Aliases:** `snipe`
 

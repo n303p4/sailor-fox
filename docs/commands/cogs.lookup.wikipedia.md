@@ -2,8 +2,6 @@
 
 ## `wiki`
 
----------
-
 **Aliases:** `wikipedia`
 
 **Arguments:** `query`

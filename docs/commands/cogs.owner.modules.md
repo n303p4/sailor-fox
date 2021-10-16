@@ -2,8 +2,6 @@
 
 ## `load`
 
----------
-
 **Arguments:** `name`
 
 Load a sailor module by name. Owner only.
@@ -14,8 +12,6 @@ Load a sailor module by name. Owner only.
 
 ## `reload`
 
------------
-
 **Arguments:** `name`
 
 Reload a sailor module by name. Owner only.
@@ -25,8 +21,6 @@ Reload a sailor module by name. Owner only.
 * `reload cogs.core.ping`
 
 ## `unload`
-
------------
 
 **Arguments:** `name`
 

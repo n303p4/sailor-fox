@@ -2,8 +2,6 @@
 
 ## `time`
 
----------
-
 **Aliases:** `timein, tz, timezone`
 
 **Arguments:** `location`

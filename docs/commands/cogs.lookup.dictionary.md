@@ -2,8 +2,6 @@
 
 ## `define`
 
------------
-
 **Arguments:** `word`
 
 Define a word.
