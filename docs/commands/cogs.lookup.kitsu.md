@@ -1,5 +1,9 @@
 # cogs.lookup.kitsu
 
+Extension that handles kitsu.io queries.
+
+Ported from Oxylibrium's Nestbot.
+
 ## `anime`
 
 **Aliases:** `kitsu`

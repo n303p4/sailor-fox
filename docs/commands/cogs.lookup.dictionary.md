@@ -1,5 +1,7 @@
 # cogs.lookup.dictionary
 
+Dictionary lookup command.
+
 ## `define`
 
 **Arguments:** `word`

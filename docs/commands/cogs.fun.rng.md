@@ -1,5 +1,7 @@
 # cogs.fun.rng
 
+Commands used for random number generation.
+
 ## `choice`
 
 **Aliases:** `choose, c`

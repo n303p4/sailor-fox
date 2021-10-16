@@ -1,5 +1,7 @@
 # cogs.fun.eightball
 
+A Magic 8-Ball command.
+
 ## `8ball`
 
 **Aliases:** `eightball`

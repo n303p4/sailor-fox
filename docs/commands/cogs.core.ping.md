@@ -1,5 +1,7 @@
 # cogs.core.ping
 
+Ping command for a sailor-based bot.
+
 ## `ping`
 
 Ping the bot.

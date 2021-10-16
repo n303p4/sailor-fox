@@ -1,5 +1,7 @@
 # cogs.core.help
 
+Bot help command.
+
 ## `help`
 
 **Aliases:** `commands`

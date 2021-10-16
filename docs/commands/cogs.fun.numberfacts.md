@@ -1,5 +1,7 @@
 # cogs.fun.numberfacts
 
+Trivia module with a trivia command.
+
 ## `numfact`
 
 **Aliases:** `numberfact, number`

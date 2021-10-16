@@ -1,5 +1,7 @@
 # cogs.utils.color
 
+Contains a cog that fetches colors.
+
 ## `color`
 
 **Aliases:** `colour`

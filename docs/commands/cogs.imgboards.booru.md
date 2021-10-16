@@ -1,5 +1,7 @@
 # cogs.imgboards.booru
 
+Imageboard lookup commands.
+
 ## `animeme`
 
 **Aliases:** `animememe`

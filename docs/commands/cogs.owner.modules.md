@@ -1,5 +1,7 @@
 # cogs.owner.modules
 
+Module loading and unloading commands.
+
 ## `load`
 
 **Arguments:** `name`

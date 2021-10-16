@@ -1,5 +1,7 @@
 # cogs.owner.exec
 
+Expression evaluation commands.
+
 ## `exec`
 
 **Arguments:** `code`

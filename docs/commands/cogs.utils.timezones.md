@@ -1,5 +1,7 @@
 # cogs.utils.timezones
 
+A time command.
+
 ## `time`
 
 **Aliases:** `timein, tz, timezone`

@@ -1,5 +1,7 @@
 # cogs.reactions.misc
 
+Lookup commands that query various image APIs.
+
 ## `beaver`
 
 Fetch a random beaver.

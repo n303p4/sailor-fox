@@ -1,5 +1,7 @@
 # cogs.reactions.foxcreatures
 
+Commands that produce fox creatures.
+
 ## `fluffsaw`
 
 **Aliases:** `foxsaw, fsaw`

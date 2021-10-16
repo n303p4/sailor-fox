@@ -1,5 +1,7 @@
 # cogs.fun.rhino
 
+An assorted collection of meme commands.
+
 ## `np`
 
 **Aliases:** `noproblem`

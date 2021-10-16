@@ -1,5 +1,7 @@
 # cogs.fun.thirtyfive
 
+Commands inspired by Roadcrosser's bots.
+
 ## `a`
 
 **Aliases:** `aa, aaa`

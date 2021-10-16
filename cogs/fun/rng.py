@@ -1,4 +1,4 @@
-"""Commands that invoke random things, part 1."""
+"""Commands used for random number generation."""
 
 # pylint: disable=invalid-name
 

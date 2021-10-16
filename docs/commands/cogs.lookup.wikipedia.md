@@ -1,5 +1,7 @@
 # cogs.lookup.wikipedia
 
+This cog contains a Wikipedia query command.
+
 ## `wiki`
 
 **Aliases:** `wikipedia`

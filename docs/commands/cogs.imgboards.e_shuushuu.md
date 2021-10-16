@@ -1,5 +1,7 @@
 # cogs.imgboards.e_shuushuu
 
+e-shuushuu module.
+
 ## `eshuushuu`
 
 **Aliases:** `es, shuushuu`

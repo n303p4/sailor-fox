@@ -1,5 +1,7 @@
 # cogs.lookup.google_isch
 
+This cog contains an image query command.
+
 ## `image`
 
 **Aliases:** `img, gimage, gimg`

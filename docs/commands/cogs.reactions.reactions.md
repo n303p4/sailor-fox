@@ -1,5 +1,7 @@
 # cogs.reactions.reactions
 
+Generic reaction image commands.
+
 ## `baka`
 
 **Aliases:** `tsundere, idiot`

@@ -1,5 +1,7 @@
 # cogs.core.info
 
+Bot information command.
+
 ## `info`
 
 **Aliases:** `about, stats`
