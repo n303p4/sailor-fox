@@ -13,4 +13,4 @@ In particular, it provides Discord and Twitch bots that may be of actual use.
 sailor-fox is based on a client-server model that allows multiple chat clients to share a common
 command handler server, and/or a single client to use multiple servers.
 
-For instructions on how to use sailor-fox, refer to [the documentation](docs)
+For instructions on how to use sailor-fox, refer to [the documentation](docs).
