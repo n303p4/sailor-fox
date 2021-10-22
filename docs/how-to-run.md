@@ -82,7 +82,7 @@ npm install axios discord.js
 
 ## Configuration
 
-The bot should include a sample configuration file called `config.example.json`.
+The bot should include a sample configuration file called [config.example.json](config.example.json).
 Rename or copy it to `config.json` and fill it out accordingly.
 For most chat services, you will need a token to authenticate with the service.
 

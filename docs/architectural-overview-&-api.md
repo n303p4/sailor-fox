@@ -33,7 +33,8 @@ The server contains a subclass of `sailor.commands.Processor`, which interprets 
 > `{"message": "halt", "is_owner": true}`.
 
 Commands are sent to the server by sending an HTTP POST request to `localhost`, containing a JSON object.
-The port number is set in `config.json`.
+The port number is set in `config.json`. This file is described in more detail in
+[docs/how-to-run.md#Configuration](docs/how-to-run.md#Configuration).
 
 The server processes the command request and responds with a flat JSON array that contains zero or more objects, where
 each object represents an action to take.
