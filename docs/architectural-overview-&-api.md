@@ -1,5 +1,7 @@
 # Architectural overview & API
 
+Before reading this, you should read [docs/how-to-run.md](docs/how-to-run.md).
+
 sailor-fox is designed around a client-server architecture.
 The server is the service `server.py`,
 and there are multiple client services that interact directly with chat APIs.
