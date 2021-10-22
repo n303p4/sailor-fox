@@ -34,7 +34,7 @@ The server contains a subclass of `sailor.commands.Processor`, which interprets 
 
 Commands are sent to the server by sending an HTTP POST request to `localhost`, containing a JSON object.
 The port number is set in `config.json`. This file is described in more detail in
-[docs/how-to-run.md](docs/how-to-run.md#user-content-configuration).
+[docs/how-to-run.md](docs/how-to-run.md), under **Configuration**.
 
 The server processes the command request and responds with a flat JSON array that contains zero or more objects, where
 each object represents an action to take.
