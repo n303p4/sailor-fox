@@ -57,7 +57,7 @@ async function onInteractionCreate(interaction) {
     if (commandArguments === undefined) return await deleteOriginalReply(interaction);
 
     let channel = interaction.channel;
-	let commandName = interaction.commandName;
+    let commandName = interaction.commandName;
     let fullCommand;
     if (commandName === discord_slash_prefix) {
         if (commandArguments) fullCommand = commandArguments;
