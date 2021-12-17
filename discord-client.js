@@ -67,6 +67,7 @@ async function onInteractionCreate(interaction) {
         if (commandArguments) fullCommand = `${commandName} ${commandArguments}`;
         else fullCommand = commandName;
     }
+    let originalCommand = `/${commandName} ${commandArguments}`;
 
     console.info(
         `id=${interaction.id} ` +
@@ -88,9 +89,9 @@ async function onInteractionCreate(interaction) {
 
     axios
         .post(sailorServerURL, requestBody)
-        .then(async response => await doActions(response, interaction, channel, false))
+        .then(async response => await doActions(response, interaction, channel, false, originalCommand))
         .catch(async error => {
-            try { await doActions(error.response, interaction, channel, true); }
+            try { await doActions(error.response, interaction, channel, true, originalCommand); }
             catch {
                 let errorMessage;
                 if (error.code) errorMessage = `An error occurred: ${error.code}`
@@ -161,7 +162,7 @@ function doAction(action, interaction, channel, isError=false) {
 }
 
 // Read over a response with a list of actions and perform the actions in sequence
-async function doActions(response, interaction, channel, isError=false) {
+async function doActions(response, interaction, channel, isError=false, originalCommand=null) {
     if (isError) await deleteOriginalReply(interaction);
     if (response.data.length && response.status !== 404) {
         let numReplies = 0;
@@ -170,6 +171,12 @@ async function doActions(response, interaction, channel, isError=false) {
             if (action.type === "reply") numReplies++;
         });
         if (numReplies === 0) await deleteOriginalReply(interaction);
+    }
+    else if (originalCommand) {
+        await interaction.followUp({
+            content: `\`${originalCommand}\` is not a valid command. Type /${discord_slash_prefix} help for a list of commands.`,
+            ephemeral: true
+        });
     }
     else {
         await interaction.followUp({
