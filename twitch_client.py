@@ -44,7 +44,7 @@ def main():
 
     @client.event()
     async def event_message(message: twitchio.Message):
-        """Handle on_message events from Discord and forward them to the processor."""
+        """Handle on_message events from Twitch and forward them to the processor."""
 
         prefix_or_none, message_text = get_prefix(message.content, prefix)
         if prefix_or_none is None or not message_text:
