@@ -45,7 +45,7 @@ async def do_action(action: dict, message: discord.Message, *, is_error: bool = 
         except discord.HTTPException as error:
             logger.warning("%s | Rename failed: %s", log_message, error)
         else:
-            logger.warning("%s | Rename succeeded", log_message)
+            logger.info("%s | Rename succeeded", log_message)
     elif action["type"] == "reply":
         log_message += f" | {to_one_liner(action['value'])}"
         if is_error:
