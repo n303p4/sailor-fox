@@ -49,7 +49,7 @@ function updatePlayingStatus() {
 
 // Command handling
 async function onInteractionCreate(interaction) {
-	if (!interaction.isCommand()) return;
+    if (!interaction.isCommand()) return;
 
     await interaction.deferReply();
 
