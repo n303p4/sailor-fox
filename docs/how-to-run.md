@@ -48,8 +48,8 @@ python3 twitch_client.py
 ## Getting sailor-fox
 
 [Download](https://gitlab.com/n303p4/sailor-fox/-/archive/master/sailor-fox-master.zip) and
-extract sailor-fox to a folder. Afterwards, set your working directory to the folder you
-extracted to:
+extract sailor-fox to a folder. Afterwards, in a terminal, set your working directory to
+the folder you extracted to:
 
 ```bash
 cd sailor-fox
@@ -170,6 +170,12 @@ python3 server.py
 ```
 
 The following commands should be run in a separate terminal:
+
+### Change directories (if needed)
+
+```bash
+cd sailor-fox
+```
 
 ### Command line
 
