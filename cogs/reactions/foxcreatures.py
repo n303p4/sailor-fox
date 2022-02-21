@@ -63,13 +63,13 @@ async def _foxgrid(event, rows, columns, creature_segments):
         raise UserInputError("Rows must be from 1 to 5.")
     if columns not in range(1, 7):
         raise UserInputError("Columns must be from 1 to 6.")
-    invaders = []
+    creatures = []
     for index in range(rows):
         for segment in creature_segments:
-            invaders.append(segment*columns)
+            creatures.append(segment*columns)
         if index != rows-1:
-            invaders.append("")
-    await event.reply(event.f.codeblock("\n".join(invaders)))
+            creatures.append("")
+    await event.reply(event.f.codeblock("\n".join(creatures)))
 
 
 @commands.cooldown(4, 1)
