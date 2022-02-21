@@ -48,12 +48,14 @@ python3 twitch_client.py
 ## Getting sailor-fox
 
 [Download](https://gitlab.com/n303p4/sailor-fox/-/archive/master/sailor-fox-master.zip) and
-extract sailor-fox to a folder. Afterwards, in a terminal, set your working directory to
-the folder you extracted to:
+extract sailor-fox to a folder. Afterwards, open a terminal or command prompt, and set
+your working directory to the folder you extracted to:
 
 ```bash
 cd sailor-fox
 ```
+
+Keep the terminal/command prompt open, as you will need to use it for future commands.
 
 ## Installing dependencies
 
@@ -63,11 +65,17 @@ If you run Windows or macOS, you should download and install Python from the
 If you run Linux, you should probably install Python from your package manager.
 Most Linux distributions currently ship Python 3.7 or higher (as of September 2021).
 
+On Windows and macOS, consider
+[adding Python to your `PATH` environment variable](https://www.geeksforgeeks.org/how-to-add-python-to-windows-path/).
+Otherwise, you will have to enter the full path to the Python executable for many
+subsequent commands.
+
 After installing Python, install additional dependencies:
 
 ```bash
 python3 -m pip install --user -r requirements.txt
 ```
+
 > ### Note
 > If the above Python command does not work, note that `pip` is provided by a separate package
 on many Linux distros (e.g. `python3-pip` on Ubuntu).
