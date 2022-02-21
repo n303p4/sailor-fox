@@ -3,6 +3,10 @@
 This guide walks you through how to prepare your PC or server to run sailor-fox.
 It assumes that you have working knowledge of a terminal/command line.
 
+> ### Note
+> The commands in this guide may need to be adjusted depending on your operating system
+> and the location of your Python installation.
+
 ## Quickstart on Linux
 
 ```bash
@@ -44,8 +48,8 @@ python3 twitch_client.py
 ## Getting sailor-fox
 
 [Download](https://gitlab.com/n303p4/sailor-fox/-/archive/master/sailor-fox-master.zip) and
-extract sailor-fox to a folder. Afterwards, set your working directory to the folder you
-extracted to:
+extract sailor-fox to a folder. Afterwards, in a terminal, set your working directory to
+the folder you extracted to:
 
 ```bash
 cd sailor-fox
@@ -73,6 +77,9 @@ on many Linux distros (e.g. `python3-pip` on Ubuntu).
 The Discord client additionally depends on Node.js 16 or higher.
 Most distributions don't ship this version, so you may have to follow
 [these instructions](https://github.com/nodesource/distributions/blob/master/README.md).
+
+On Windows and macOS, Node.js should be downloaded and installed from the
+[official website](https://nodejs.org/en/).
 
 After installing Node, install additional dependencies:
 
@@ -156,9 +163,6 @@ In `config.json`, fill out the fields that start with `twitch_`.
 
 ## Running sailor-fox
 
-You may have to change the following commands slightly, depending on your operating system and the
-location of your Python installation.
-
 In a terminal, run:
 
 ```bash
@@ -166,6 +170,12 @@ python3 server.py
 ```
 
 The following commands should be run in a separate terminal:
+
+### Change directories (if needed)
+
+```bash
+cd sailor-fox
+```
 
 ### Command line
 
