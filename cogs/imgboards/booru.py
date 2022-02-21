@@ -17,13 +17,13 @@ BASE_URLS = {"safebooru": {"image_search": "https://safebooru.org/index.php?{0}"
                            "tag_search": "https://safebooru.org/autocomplete.php?{0}",
                            "image_post": "https://safebooru.org/index.php?page=post&s=view&id={0}"}}
 MAX_LENGTH_TAGS = 200
-TAGS_BLACKLIST = ["loli", "shota", "lolicon", "shotacon", "scat"]
+TAGS_BLOCKLIST = ["loli", "shota", "lolicon", "shotacon", "scat"]
 
 
-async def _booru_tag_search(session, base_url: str, search_text: str = "", blacklist: list = None):
+async def _booru_tag_search(session, base_url: str, search_text: str = "", blocklist: list = None):
     """Generic helper that can find tags on booru-type sites."""
-    if not blacklist:
-        blacklist = TAGS_BLACKLIST
+    if not blocklist:
+        blocklist = TAGS_BLOCKLIST
     query_params = urllib.parse.urlencode({"q": search_text.replace(" ", "_")})
     url = base_url.format(query_params)
     async with session.get(url, timeout=10) as response:
@@ -35,17 +35,17 @@ async def _booru_tag_search(session, base_url: str, search_text: str = "", black
             raise WebAPIInvalidResponse(service="Safebooru") from error
         if not results:
             raise WebAPINoResultsFound(message="No tags found.")
-        return [result["label"] for result in results if result["value"] not in blacklist]
+        return [result["label"] for result in results if result["value"] not in blocklist]
 
 
-async def _booru(session, base_url_api: str, tags: list = None, blacklist: list = None):
+async def _booru(session, base_url_api: str, tags: list = None, blocklist: list = None):
     """Generic helper command that can retrieve image posts from most 'booru-type sites."""
     if not tags:
         tags = []
     tags = [tag.replace(" ", "_") for tag in tags]
-    if not blacklist:
-        blacklist = TAGS_BLACKLIST
-    for tag in blacklist:
+    if not blocklist:
+        blocklist = TAGS_BLOCKLIST
+    for tag in blocklist:
         tags.append(f"-{tag}")
     query_params = urllib.parse.urlencode({
         "page": "dapi",
