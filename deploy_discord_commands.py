@@ -20,7 +20,7 @@ def main():
 
     discord_slash_prefix = processor.config.get("discord_slash_prefix", "")
     assert isinstance(discord_slash_prefix, str) \
-           and discord_slash_prefix.replace("_", "").isalnum() \
+           and discord_slash_prefix.replace("_", "").replace("-", "").isalnum() \
            and len(discord_slash_prefix) <= 32, \
            "In config.json, discord_slash_prefix must be a 1-32 character alphanumeric string; _- are also allowed."
 
