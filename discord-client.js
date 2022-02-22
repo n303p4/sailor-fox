@@ -3,13 +3,17 @@
 const axios = require("axios");
 const { Client, Intents } = require("discord.js");
 
-const { discord_slash_prefix, discord_token, port_number } = require("./config.json");
+const { discord_slash_prefix, discord_token, discord_owner_ids, port_number } = require("./config.json");
 if (typeof discord_slash_prefix !== "string") {
     console.error("discord_slash_prefix must be a string.");
     process.exit(1);
 }
 if (typeof discord_token !== "string") {
     console.error("discord_token must be a string.");
+    process.exit(1);
+}
+if (!Array.isArray(discord_owner_ids)) {
+    console.error("discord_owner_ids must be an array.");
     process.exit(1);
 }
 if (!Number.isInteger(port_number)) {
@@ -79,7 +83,7 @@ async function onInteractionCreate(interaction) {
     let requestBody = {
         id: `discord.js:${interaction.id}`,
         message: fullCommand,
-        is_owner: false,
+        is_owner: discord_owner_ids.includes(interaction.user.id),
         character_limit: 2000,
         format_name: "discord"
     }

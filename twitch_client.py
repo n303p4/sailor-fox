@@ -27,6 +27,8 @@ def main():
     assert "twitch_token" in config, "twitch_token must be set."
     token = config["twitch_token"]
     assert isinstance(token, str), "twitch_token must be a string."
+    twitch_owner_ids = config.get("twitch_owner_ids", [])
+    assert isinstance(twitch_owner_ids, list), "twitch_owner_ids must be an array."
 
     assert "port_number" in config, "port_number must be set."
     port_number = config["port_number"]
@@ -55,7 +57,7 @@ def main():
         message_id = tags.get("id", secrets.token_hex(16))
         author_id = tags.get("user-id", "unknown")
 
-        is_owner = (author_id == config.get("twitch_owner_id"))
+        is_owner = (author_id in twitch_owner_ids)
 
         logger.info(
             "id=%s user=%s userId=%s channel=%s | %s",

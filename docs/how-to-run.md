@@ -1,7 +1,8 @@
 # How to run sailor-fox
 
 This guide walks you through how to prepare your PC or server to run sailor-fox.
-It assumes that you have working knowledge of a terminal/command line.
+It assumes that you have working knowledge of a terminal/command line,
+as well as working knowledge of JSON.
 
 > ### Note
 > The commands in this guide may need to be adjusted depending on your operating system
@@ -107,11 +108,13 @@ You should ideally set it to something that's easy to type.
 If the bot will share a chat with other bots, the prefix should be unique to avoid collisions.
 
 > ### Note
-> You can set the prefix to an empty string, which will make the bot respond to every message.
+> You can set the prefix to an empty string, which will make the bot respond to every message in chat.
 However, this is discouraged.
 
 > ### Note
-> The Discord client uses `discord_slash_prefix` instead.
+> The Discord client uses `discord_slash_prefix` instead, and you will need to put a `/` in front
+of it to activate the bot. For example, if `discord_slash_prefix` is `c`, then you will have to
+type `/c` as your prefix.
 
 ## Disable unwanted commands
 
@@ -143,16 +146,26 @@ to create an application.
 When you create your application, click the "Bot" tab and click "Add Bot".
 You will have to copy your bot token from here.
 
-In `config.json`, fill out the fields that start with `discord_`.
+In `config.json`, fill out the fields that start with `discord_`. `discord_token`
+should be the token from the bot page earlier.
 
-Afterwards, run the following command in a terminal:
+To get the user ID for a Discord user (to fill out `discord_owner_ids`), refer to
+[this support page](https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-).
+User IDs in `config.json` should be strings, not integers!
+
+> ### Note
+> If `discord_owner_ids` is left empty, then none of the owner-only
+commands will work through Discord.
+
+Once `config.json` is filled out, run the following command in a terminal:
 
 ```bash
 python3 deploy_discord_commands.py
 ```
 
-This will register a command on Discord's servers for interacting with the bot.
-Command registration can take from a few minutes to one hour, so hang tight!
+This will register a command on Discord's servers for interacting with the bot, named
+after `discord_slash_prefix` in `config.json`. Command registration can take from a
+few minutes to one hour, so hang tight!
 
 Finally, to invite the bot to your server, use this link:
 
@@ -165,9 +178,21 @@ https://discord.com/oauth2/authorize?client_id=APPLICATION_ID&scope=bot%20applic
 
 Skip this step if you don't plan to run sailor-fox as a Twitch bot.
 
-Refer to the [Twitch IRC bot documentation](https://dev.twitch.tv/docs/irc) for details.
-
 In `config.json`, fill out the fields that start with `twitch_`.
+
+Create a new Twitch account for the bot. `twitch_username` should be the
+account name you created for the bot, not your own Twitch username!
+
+To get a valid token for `twitch_token`, refer to the
+[Twitch IRC bot documentation](https://dev.twitch.tv/docs/irc).
+
+To get the user ID for a Twitch user (to fill out `twitch_owner_ids`), you can use
+[this StreamWeasels tool](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/).
+User IDs in `config.json` should be strings, not integers!
+
+> ### Note
+> If `twitch_owner_ids` is left empty, then none of the owner-only
+commands will work through Twitch chat.
 
 ## Running sailor-fox
 

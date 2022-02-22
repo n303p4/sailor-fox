@@ -9,13 +9,22 @@
 
     "port_number": 9980,
 
+    "discord_slash_prefix": "onlylettersandnumbersallowed",
     "discord_token": "Discord token",
     "discord_guild_id": "this is optional but recommended",
-    "discord_slash_prefix": "onlylettersandnumbersallowed",
+    "discord_owner_ids": [
+        "User IDs",
+        "of bot owners",
+        "strings not integers"
+    ],
 
-    "twitch_owner_id": "User ID of bot owner",
     "twitch_username": "Twitch username",
     "twitch_token": "Twitch token",
+    "twitch_owner_ids": [
+        "User IDs",
+        "of bot owners",
+        "strings not integers"
+    ],
     "twitch_channels": [
         "Twitch channel"
     ]
