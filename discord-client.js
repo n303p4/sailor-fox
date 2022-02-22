@@ -1,25 +1,20 @@
 // Discord slash command client for server.py
 
+const assert = require("assert");
 const axios = require("axios");
 const { Client, Intents } = require("discord.js");
 
 const { discord_slash_prefix, discord_token, discord_owner_ids, port_number } = require("./config.json");
-if (typeof discord_slash_prefix !== "string") {
-    console.error("discord_slash_prefix must be a string.");
-    process.exit(1);
-}
-if (typeof discord_token !== "string") {
-    console.error("discord_token must be a string.");
-    process.exit(1);
-}
-if (!Array.isArray(discord_owner_ids)) {
-    console.error("discord_owner_ids must be an array.");
-    process.exit(1);
-}
-if (!Number.isInteger(port_number)) {
-    console.error("port_number must be an integer.");
-    process.exit(1);
-}
+assert.ok(
+    typeof discord_slash_prefix === "string" && discord_slash_prefix.match(/^[\w-]{1,32}$/),
+    "In config.json, discord_slash_prefix must be a 1-32 character alphanumeric string; _ is also allowed."
+);
+assert.ok(typeof discord_token === "string", "In config.json, discord_token must be a string.");
+assert.ok(
+    Array.isArray(discord_owner_ids) && discord_owner_ids.every(userId => typeof userId === "string"),
+    "In config.json, discord_owner_ids must be an array of strings."
+);
+assert.ok(Number.isInteger(port_number), "In config.json, port_number must be an integer.");
 
 const sailorServerURL = `http://localhost:${port_number}`;
 

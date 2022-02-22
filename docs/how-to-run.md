@@ -149,6 +149,9 @@ You will have to copy your bot token from here.
 In `config.json`, fill out the fields that start with `discord_`. `discord_token`
 should be the token from the bot page earlier.
 
+`discord_slash_prefix` must be a string matching the regex `^[\w-]{1,32}$`
+(1-32 character alphanumeric string; `_` is also allowed).
+
 To get the user ID for a Discord user (to fill out `discord_owner_ids`), refer to
 [this support page](https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-).
 User IDs in `config.json` should be strings, not integers!

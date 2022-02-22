@@ -2,8 +2,6 @@
 
 # pylint: disable=invalid-name
 
-import sys
-
 import aiohttp
 import discord
 
@@ -20,9 +18,11 @@ def main():
     processor = ProcessorWithConfig(loop=client.loop)
     processor.load_config()
 
-    if "discord_slash_prefix" not in processor.config:
-        logger.error("discord_slash_prefix must be filled in config.json!")
-        return
+    discord_slash_prefix = processor.config.get("discord_slash_prefix", "")
+    assert isinstance(discord_slash_prefix, str) \
+           and discord_slash_prefix.replace("_", "").isalnum() \
+           and len(discord_slash_prefix) <= 32, \
+           "In config.json, discord_slash_prefix must be a 1-32 character alphanumeric string; _ is also allowed."
 
     @client.event
     async def on_ready():
@@ -64,9 +64,7 @@ def main():
 
         await processor.session.close()
 
-        await client.logout()
-
-        sys.exit(0)
+        await client.close()
 
     client.run(processor.config["discord_token"])
 

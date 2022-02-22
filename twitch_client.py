@@ -24,15 +24,13 @@ def main():
     with open("config.json") as config_file:
         config = json.load(config_file)
 
-    assert "twitch_token" in config, "twitch_token must be set."
-    token = config["twitch_token"]
-    assert isinstance(token, str), "twitch_token must be a string."
+    token = config.get("twitch_token")
+    assert isinstance(token, str), "In config.json, twitch_token must be a string."
     twitch_owner_ids = config.get("twitch_owner_ids", [])
-    assert isinstance(twitch_owner_ids, list), "twitch_owner_ids must be an array."
-
-    assert "port_number" in config, "port_number must be set."
-    port_number = config["port_number"]
-    assert (isinstance(port_number, int)), "port_number must be an integer."
+    assert isinstance(twitch_owner_ids, list) and all(isinstance(i, str) for i in twitch_owner_ids), \
+           "In config.json, twitch_owner_ids must be an array of strings."
+    port_number = config.get("port_number")
+    assert (isinstance(port_number, int)), "In config.json, port_number must be an integer."
 
     prefix = str(config.get("prefix", ""))
 
