@@ -7,7 +7,7 @@ const { Client, Intents } = require("discord.js");
 const { discord_slash_prefix, discord_token, discord_owner_ids, port_number } = require("./config.json");
 assert.ok(
     typeof discord_slash_prefix === "string" && discord_slash_prefix.match(/^[\w-]{1,32}$/),
-    "In config.json, discord_slash_prefix must be a 1-32 character alphanumeric string; _ is also allowed."
+    "In config.json, discord_slash_prefix must be a 1-32 character alphanumeric string; _- are also allowed."
 );
 assert.ok(typeof discord_token === "string", "In config.json, discord_token must be a string.");
 assert.ok(

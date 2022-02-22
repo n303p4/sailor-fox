@@ -22,7 +22,7 @@ def main():
     assert isinstance(discord_slash_prefix, str) \
            and discord_slash_prefix.replace("_", "").isalnum() \
            and len(discord_slash_prefix) <= 32, \
-           "In config.json, discord_slash_prefix must be a 1-32 character alphanumeric string; _ is also allowed."
+           "In config.json, discord_slash_prefix must be a 1-32 character alphanumeric string; _- are also allowed."
 
     @client.event
     async def on_ready():
