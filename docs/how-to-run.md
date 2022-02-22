@@ -114,7 +114,7 @@ However, this is discouraged.
 > ### Note
 > The Discord client uses `discord_slash_prefix` instead, and you will need to put a `/` in front
 of it to activate the bot. For example, if `discord_slash_prefix` is `c`, then you will have to
-type `/c` as your prefix.
+type `/c` as your prefix. Unlike `prefix`, `discord_slash_prefix` cannot be an empty string.
 
 ## Disable unwanted commands
 
