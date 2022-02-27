@@ -27,7 +27,7 @@ async def list_(event):
 
 
 @webhook.command(aliases=["a"])
-async def add(event, name: str, url: str, *, content):
+async def add(event, name: str, url: str, *, content: str):
     """Add a Discord webhook. Owner only.
 
     **Example usage**
@@ -45,7 +45,7 @@ async def add(event, name: str, url: str, *, content):
 
 
 @webhook.command(aliases=["del", "d", "remove", "rm", "r"])
-async def delete(event, *, name):
+async def delete(event, name: str):
     """Delete a Discord webhook by name. Owner only.
 
     **Example usage**
@@ -62,20 +62,30 @@ async def delete(event, *, name):
 
 
 @webhook.command(aliases=["p"])
-async def post(event, *, name):
+async def post(event, name: str, *, prefix: str = None):
     """Trigger a registered webhook. Owner only.
+
+    Accepts an optional argument `prefix` that will be prepended to the webhook's content.
 
     **Example usage**
 
     * `webhook post test-webhook`
+    * `webhook post test-webhook Hello!`
     """
     event.processor.config.setdefault("discord_webhooks", {})
     if name not in event.processor.config["discord_webhooks"]:
         await event.reply(f"{name} is not a webhook that exists.")
         return
     url = event.processor.config["discord_webhooks"][name][0]
-    content = event.processor.config["discord_webhooks"][name][1]
+    base_content = event.processor.config["discord_webhooks"][name][1]
+    if prefix:
+        content = f"{prefix} {base_content}"
+    else:
+        content = base_content
     async with event.processor.session.post(url, json={"content": content}, timeout=10) as response:
         if response.status >= 400:
             raise WebAPIUnreachable(service="Discord")
-    await event.reply(f"Activated webhook \"{name}\".")
+    if content:
+        await event.reply(f"Activated webhook \"{name}\" with prefix {event.f.monospace(prefix)}")
+    else:
+        await event.reply(f"Activated webhook \"{name}\".")
