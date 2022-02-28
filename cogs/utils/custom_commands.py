@@ -2,6 +2,7 @@
 
 from copy import deepcopy
 import secrets
+from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 from sailor import commands
@@ -10,13 +11,19 @@ from sailor.web_exceptions import WebAPIUnreachable, WebAPIInvalidResponse
 
 from sailor_fox.helpers import FancyMessage
 
+USER_AGENT = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.105 "
+              "Safari/537.36")
+HEADERS = {"User-Agent": USER_AGENT}
 
-async def _handle_json_token(session, response_cache, token):
+
+async def _handle_json_token(session, response_cache, token, *, headers: dict = None):
+    if not headers:
+        headers = HEADERS
     json_address, source_url = token[5:].split(":", 1)
     if source_url in response_cache:
         json_data = response_cache[source_url]
     else:
-        async with session.get(source_url, timeout=10) as response:
+        async with session.get(source_url, headers=headers, timeout=10) as response:
             if response.status >= 400:
                 raise WebAPIUnreachable(service=source_url)
             try:
@@ -35,12 +42,14 @@ async def _handle_json_token(session, response_cache, token):
     return json_object_at_address
 
 
-async def _handle_raw_token(session, response_cache, token):
+async def _handle_raw_token(session, response_cache, token, *, headers: dict = None):
+    if not headers:
+        headers = HEADERS
     source_url = token[4:]
     if source_url in response_cache:
         raw_data = response_cache[source_url]
     else:
-        async with session.get(source_url, timeout=10) as response:
+        async with session.get(source_url, headers=headers, timeout=10) as response:
             if response.status >= 400:
                 raise WebAPIUnreachable(service=source_url)
             try:
@@ -51,12 +60,14 @@ async def _handle_raw_token(session, response_cache, token):
     return raw_data
 
 
-async def _handle_html_token(session, response_cache, token):
+async def _handle_html_token(session, response_cache, token, *, headers: dict = None):
+    if not headers:
+        headers = HEADERS
     css_selector, source_url = token[5:].split(":", 1)
     if source_url in response_cache:
         html_data = response_cache[source_url]
     else:
-        async with session.get(source_url, timeout=10) as response:
+        async with session.get(source_url, headers=headers, timeout=10) as response:
             if response.status >= 400:
                 raise WebAPIUnreachable(service=source_url)
             try:
@@ -65,17 +76,26 @@ async def _handle_html_token(session, response_cache, token):
                 raise WebAPIInvalidResponse(service=source_url) from error
         response_cache[source_url] = html_data
     soup = BeautifulSoup(html_data, "html.parser")
-    element = secrets.choice(soup.select(css_selector))
-    return element.text
+    tag = secrets.choice(soup.select(css_selector))
+    if tag.name == "a" and tag.get("href"):
+        return urljoin(source_url, tag["href"])
+    if tag.name == "img" and tag.get("src"):
+        return urljoin(source_url, tag["src"])
+    return tag.text
 
 
 @commands.cooldown(2, 1)
 @commands.command(aliases=["cc", "c"])
-async def custom(event, name: str = None):
+async def custom(event, name: str = None, *args):
     """Execute a custom command.
 
     **Example usage**
 
+    * `custom ping`
+    * `custom hello world`
+    * `custom ddg "bat eared fox"`
+    * `custom xkcdtitle 2000`
+    * `custom xkcdprev`
     * `custom bb`
     """
     event.processor.config.setdefault("custom_commands", {})
@@ -93,14 +113,19 @@ async def custom(event, name: str = None):
         raise NotBotOwner("Webhook custom commands can only be used by a bot owner.")
     tokens = deepcopy(custom_command["tokens"])
     response_cache = {}
-    for index, token in enumerate(tokens):
+    for token_index, token in enumerate(tokens):
+        updated_token = token
+        for arg_index, arg in enumerate(args):
+            updated_token = updated_token.replace(f"{{{arg_index}}}", arg)
         token_lower = token.lower()
         if token_lower.startswith("json:"):
-            tokens[index] = await _handle_json_token(event.processor.session, response_cache, token)
+            tokens[token_index] = await _handle_json_token(event.processor.session, response_cache, updated_token)
         elif token_lower.startswith("raw:"):
-            tokens[index] = await _handle_raw_token(event.processor.session, response_cache, token)
+            tokens[token_index] = await _handle_raw_token(event.processor.session, response_cache, updated_token)
         elif token_lower.startswith("html:"):
-            tokens[index] = await _handle_html_token(event.processor.session, response_cache, token)
+            tokens[token_index] = await _handle_html_token(event.processor.session, response_cache, updated_token)
+        else:
+            tokens[token_index] = updated_token
     output = " ".join(tokens)
     if discord_webhook_url:
         async with event.processor.session.post(discord_webhook_url, json={"content": output}, timeout=10) as response:
@@ -129,12 +154,15 @@ async def list_(event):
 @custom.command(aliases=["a"], owner_only=True)
 async def add(event, name: str, *tokens):
     """Add a custom command. Owner only.
-    
+
     **Example usage**
 
     * `custom add ping Pong! :3`
-    * `custom add xkcdtitle html:#ctitle:https://xkcd.com`
-    * `custom add bb From r/battlebots: JSON:data.children.random.data.url:https://old.reddit.com/r/battlebots/.json`
+    * `custom add hello Hello, {0}!`
+    * `custom add ddg DuckDuckGo search result for {0}: html:a.result-link:https://lite.duckduckgo.com/lite?q={0}`
+    * `custom add xkcdtitle The title of xkcd {0} is html:#ctitle:https://xkcd.com/{0}`
+    * `custom add xkcdprev The second-most recent xkcd comic is html:a[rel=prev]:https://xkcd.com`
+    * `custom add bb From r/battlebots: json:data.children.random.data.url:https://old.reddit.com/r/battlebots/.json`
     """
     if not tokens:
         raise UserInputError("Must provide at least one command token.")
