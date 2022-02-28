@@ -10,7 +10,7 @@ from urllib.parse import urljoin, quote_plus
 
 from bs4 import BeautifulSoup
 from sailor import commands
-from sailor.exceptions import UserInputError, NotBotOwner
+from sailor.exceptions import CommandNotFound, UserInputError, NotBotOwner
 from sailor.web_exceptions import WebAPIUnreachable, WebAPIInvalidResponse
 
 from sailor_fox.helpers import FancyMessage
@@ -205,9 +205,13 @@ async def custom(event, name: str = None, *args):
 async def list_(event):
     """List all registered custom commands."""
     event.processor.config.setdefault("custom_commands", {})
+    custom_commands = event.processor.config["custom_commands"]
+    if not custom_commands:
+        await event.reply("No custom commands are registered.")
+        return
     message = FancyMessage(event.f, sep="\n\n")
     message.add_line(event.f.bold("List of custom commands:"))
-    for name, custom_command in event.processor.config["custom_commands"].items():
+    for name, custom_command in custom_commands.items():
         if custom_command.get("discord_webhook_url"):
             name += f" (webhook)"
         value = event.f.monospace(" ".join(custom_command.get("tokens", [])))
@@ -261,6 +265,7 @@ async def discordwebhook(event, name: str, discord_webhook_url: str, *tokens):
             f"Custom command \"{name}\" already exists. Run {event.f.monospace('webhook delete ' + name)} first."
         )
         return
+    validate_tokens_and_get_prefixes(tokens)
     event.processor.config["custom_commands"][name] = {
         "discord_webhook_url": discord_webhook_url,
         "tokens": list(tokens)
@@ -277,10 +282,10 @@ async def delete(event, name: str):
 
     * `custom delete bb`
     """
+    name = name.lower()
     event.processor.config.setdefault("custom_commands", {})
     if name not in event.processor.config["custom_commands"]:
-        await event.reply(f"\"{name}\" is not a valid custom command.")
-        return
+        raise CommandNotFound(name=f"{name} (custom command)")
     del event.processor.config["custom_commands"][name]
     event.processor.save_config()
     await event.reply(f"Deleted custom command \"{name}\".")
