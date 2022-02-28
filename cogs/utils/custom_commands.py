@@ -5,7 +5,7 @@ These can be potentially dangerous! Be careful out there.
 
 from copy import deepcopy
 import secrets
-from urllib.parse import urljoin
+from urllib.parse import urljoin, quote_plus
 
 from bs4 import BeautifulSoup
 from sailor import commands
@@ -125,9 +125,15 @@ async def custom(event, name: str = None, *args):
     response_cache = {}
     for token_index, token in enumerate(tokens):
         updated_token = token
-        for arg_index, arg in enumerate(args):
-            updated_token = updated_token.replace(f"{{{arg_index}}}", arg)
         token_lower = token.lower()
+        if token_lower.startswith("json:") \
+        or token_lower.startswith("raw:") \
+        or token_lower.startswith("html:"):
+            for arg_index, arg in enumerate(args):
+                updated_token = updated_token.replace(f"{{{arg_index}}}", quote_plus(arg))
+        else:
+            for arg_index, arg in enumerate(args):
+                updated_token = updated_token.replace(f"{{{arg_index}}}", arg)
         if token_lower.startswith("json:"):
             tokens[token_index] = await _handle_json_token(event.processor.session, response_cache, updated_token)
         elif token_lower.startswith("raw:"):
