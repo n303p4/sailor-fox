@@ -35,13 +35,16 @@ async def _handle_json_token(session, response_cache, token, *, headers: dict = 
                 raise WebAPIInvalidResponse(service=source_url) from error
         response_cache[source_url] = json_data
     json_address = json_address.split(".")
-    json_object_at_address = json_data
-    for key_or_index in json_address:
-        if key_or_index.isdigit():
-            key_or_index = int(key_or_index)
-        elif isinstance(json_object_at_address, list) and key_or_index.lower() == "random":
-            key_or_index = secrets.randbelow(len(json_object_at_address))
-        json_object_at_address = json_object_at_address[key_or_index]
+    try:
+        json_object_at_address = json_data
+        for key_or_index in json_address:
+            if key_or_index.isdigit():
+                key_or_index = int(key_or_index)
+            elif isinstance(json_object_at_address, list) and key_or_index.lower() == "random":
+                key_or_index = secrets.randbelow(len(json_object_at_address))
+            json_object_at_address = json_object_at_address[key_or_index]
+    except Exception as error:
+        raise WebAPIInvalidResponse(service=source_url) from error
     return json_object_at_address
 
 
@@ -78,9 +81,12 @@ async def _handle_html_token(session, response_cache, token, *, headers: dict = 
             except Exception as error:
                 raise WebAPIInvalidResponse(service=source_url) from error
         response_cache[source_url] = html_data
-    soup = BeautifulSoup(html_data, "html.parser")
-    tag = secrets.choice(soup.select(css_selector))
-    if tag.name == "a" and tag.get("href"):
+    try:
+        soup = BeautifulSoup(html_data, "html.parser")
+        tag = secrets.choice(soup.select(css_selector))
+    except Exception as error:
+        raise WebAPIInvalidResponse(service=source_url) from error
+    if tag.name == "a" and tag.get("href") and not tag["href"].startswith("#"):
         return urljoin(source_url, tag["href"])
     if tag.name == "img" and tag.get("src"):
         return urljoin(source_url, tag["src"])
