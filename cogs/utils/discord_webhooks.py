@@ -85,7 +85,7 @@ async def post(event, name: str, *, prefix: str = None):
     async with event.processor.session.post(url, json={"content": content}, timeout=10) as response:
         if response.status >= 400:
             raise WebAPIUnreachable(service="Discord")
-    if content:
+    if prefix:
         await event.reply(f"Activated webhook \"{name}\" with prefix {event.f.monospace(prefix)}")
     else:
         await event.reply(f"Activated webhook \"{name}\".")
