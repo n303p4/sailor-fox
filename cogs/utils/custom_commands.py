@@ -1,4 +1,7 @@
-"""Manage and activate Discord webhooks."""
+"""Manage and activate custom commands.
+
+These can be potentially dangerous! Be careful out there.
+"""
 
 from copy import deepcopy
 import secrets

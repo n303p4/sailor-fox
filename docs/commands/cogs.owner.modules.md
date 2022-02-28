@@ -24,6 +24,12 @@ Reload a sailor module by name. Owner only.
 
 * `reload cogs.core.ping`
 
+## `reload --all`
+
+**Aliases:** `-a`
+
+Reload all modules.
+
 ## `unload`
 
 **Arguments:** `name`

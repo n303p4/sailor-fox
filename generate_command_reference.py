@@ -7,6 +7,36 @@ import sys
 from sailor.commands import Processor
 
 
+def generate_command_doc(command, commands_for_modules, *, parent=None):
+    if command.coro.__module__ not in commands_for_modules:
+        commands_for_modules[command.coro.__module__] = [
+            sys.modules[command.coro.__module__].__doc__.strip(),
+            "Note: Arguments enclosed in `[]` are optional."
+        ]
+    if parent:
+        parent_chain = []
+        while not isinstance(parent, Processor):
+            parent_chain.append(parent.name)
+            parent = parent.parent
+        command_info = [f"## `{' '.join(reversed(parent_chain))} {command.name}`"]
+    else:
+        command_info = [f"## `{command.name}`"]
+    if command.aliases:
+        command_info.append(f"**Aliases:** `{', '.join(command.aliases)}`")
+    arguments = []
+    for parameter in list(command.signature.parameters.values())[1:]:
+        if parameter.default == inspect.Parameter.empty:
+            arguments.append(parameter.name)
+        else:
+            arguments.append(f"[{parameter.name}={parameter.default}]")
+    if arguments:
+        command_info.append(f"**Arguments:** `{' '.join(arguments)}`")
+    command_info.append(command.help)
+    commands_for_modules[command.coro.__module__].append("\n\n".join(command_info))
+    for child_command in command.commands.values():
+        generate_command_doc(child_command, commands_for_modules, parent=command)
+
+
 def main():
     """Factory to create and run everything."""
 
@@ -24,24 +54,7 @@ def main():
     commands_for_modules = {}
 
     for command in sorted(processor.commands.values(), key=lambda c: c.coro.__module__):
-        if command.coro.__module__ not in commands_for_modules:
-            commands_for_modules[command.coro.__module__] = [
-                sys.modules[command.coro.__module__].__doc__.strip(),
-                "Note: Arguments enclosed in `[]` are optional."
-            ]
-        command_info = [f"## `{command.name}`"]
-        if command.aliases:
-            command_info.append(f"**Aliases:** `{', '.join(command.aliases)}`")
-        arguments = []
-        for parameter in list(command.signature.parameters.values())[1:]:
-            if parameter.default == inspect.Parameter.empty:
-                arguments.append(parameter.name)
-            else:
-                arguments.append(f"[{parameter.name}={parameter.default}]")
-        if arguments:
-            command_info.append(f"**Arguments:** `{' '.join(arguments)}`")
-        command_info.append(command.help)
-        commands_for_modules[command.coro.__module__].append("\n\n".join(command_info))
+        generate_command_doc(command, commands_for_modules)
 
     for module, commands in commands_for_modules.items():
         commands_markdown = "\n\n".join(commands)
