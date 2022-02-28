@@ -1,5 +1,7 @@
 """Manage and activate Discord webhooks."""
 
+import secrets
+
 from sailor import commands
 from sailor.web_exceptions import WebAPIUnreachable, WebAPIInvalidResponse
 
@@ -27,7 +29,7 @@ async def list_(event):
 
 
 @webhook.command(aliases=["a"])
-async def add(event, name: str, url: str, *, content: str):
+async def add(event, name: str, webhook_url: str, *, content: str):
     """Add a Discord webhook. Owner only.
 
     **Example usage**
@@ -39,7 +41,31 @@ async def add(event, name: str, url: str, *, content: str):
     if name in event.processor.config["discord_webhooks"]:
         await event.reply(f"{name} is a webhook that already exists. Run {event.f.monospace('webhook delete')} first.")
         return
-    event.processor.config["discord_webhooks"][name] = [url, content]
+    event.processor.config["discord_webhooks"][name] = {
+        "webhook_url": webhook_url,
+        "content": content
+    }
+    event.processor.save_config()
+    await event.reply(f"Registered webhook \"{name}\".")
+
+
+@webhook.command(aliases=["aj"])
+async def addjson(event, name: str, webhook_url: str, source_url: str, *, json_address: str):
+    """Add a Discord webhook based on an JSON source URL. Owner only.
+    
+    **Example usage**
+
+    * `webhook add battlebots https://webhook-url https://old.reddit.com/r/battlebots/.json data.children.random.data.url`
+    """
+    event.processor.config.setdefault("discord_webhooks", {})
+    if name in event.processor.config["discord_webhooks"]:
+        await event.reply(f"{name} is a webhook that already exists. Run {event.f.monospace('webhook delete')} first.")
+        return
+    event.processor.config["discord_webhooks"][name] = {
+        "webhook_url": webhook_url,
+        "source_url": source_url,
+        "json_address": json_address
+    }
     event.processor.save_config()
     await event.reply(f"Registered webhook \"{name}\".")
 
@@ -76,13 +102,33 @@ async def post(event, name: str, *, prefix: str = None):
     if name not in event.processor.config["discord_webhooks"]:
         await event.reply(f"{name} is not a webhook that exists.")
         return
-    url = event.processor.config["discord_webhooks"][name][0]
-    base_content = event.processor.config["discord_webhooks"][name][1]
+    webhook = event.processor.config["discord_webhooks"][name]
+    webhook_url = webhook["webhook_url"]
+    if webhook.get("content"):
+        base_content = webhook["content"]
+    else:
+        source_url = webhook["source_url"]
+        json_address = webhook["json_address"].split(".")
+        async with event.processor.session.get(source_url, timeout=10) as response:
+            if response.status >= 400:
+                raise WebAPIUnreachable(service="Bot owner")
+            try:
+                response_content = await response.json()
+            except Exception as error:
+                raise WebAPIInvalidResponse(service="Bot owner") from error
+        json_object_for_level = response_content
+        for field_name_or_index in json_address:
+            if field_name_or_index.isdigit():
+                field_name_or_index = int(field_name_or_index)
+            elif isinstance(json_object_for_level, list) and field_name_or_index == "random":
+                field_name_or_index = secrets.randbelow(len(json_object_for_level))
+            json_object_for_level = json_object_for_level[field_name_or_index]
+        base_content = json_object_for_level
     if prefix:
         content = f"{prefix} {base_content}"
     else:
-        content = base_content
-    async with event.processor.session.post(url, json={"content": content}, timeout=10) as response:
+        content = str(base_content)
+    async with event.processor.session.post(webhook_url, json={"content": content}, timeout=10) as response:
         if response.status >= 400:
             raise WebAPIUnreachable(service="Discord")
     if prefix:
