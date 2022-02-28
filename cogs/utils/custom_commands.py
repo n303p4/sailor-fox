@@ -23,22 +23,25 @@ async def custom(event):
 async def list_(event):
     """List all registered custom commands. Owner only."""
     event.processor.config.setdefault("custom_commands", {})
-    message = FancyMessage(event.f)
-    message.add_line(event.f.bold("List of webhooks:"))
-    for name, command in event.processor.config["custom_commands"].items():
-        message.add_line(name)
+    message = FancyMessage(event.f, sep="\n\n")
+    message.add_line(event.f.bold("List of custom commands:"))
+    for name, custom_command in event.processor.config["custom_commands"].items():
+        if custom_command.get("discord_webhook_url"):
+            name += f" (webhook)"
+        value = event.f.monospace(" ".join(custom_command.get("tokens", [])))
+        message.add_field(name=name, value=value, sep="\n")
     await event.reply(message)
 
 
 @custom.command(aliases=["a"])
-async def add(event, name: str, *command_tokens):
+async def add(event, name: str, *tokens):
     """Add a custom command. Owner only.
     
     **Example usage**
 
     * `custom add bb From r/battlebots: {https://old.reddit.com/r/battlebots/.json|data.children.random.data.url}`
     """
-    if not command_tokens:
+    if not tokens:
         raise UserInputError("Must provide at least one command token.")
     event.processor.config.setdefault("custom_commands", {})
     if name in event.processor.config["custom_commands"]:
@@ -47,16 +50,16 @@ async def add(event, name: str, *command_tokens):
         )
         return
     event.processor.config["custom_commands"][name] = {
-        "tokens": command_tokens
+        "tokens": tokens
     }
     event.processor.save_config()
     await event.reply(f"Added custom command \"{name}\".")
 
 
 @add.command(aliases=["dw"])
-async def discordwebhook(event, name: str, discord_webhook_url: str, *command_tokens):
+async def discordwebhook(event, name: str, discord_webhook_url: str, *tokens):
     """Add a custom command that POSTs to a Discord webhook. Owner only."""
-    if not command_tokens:
+    if not tokens:
         raise UserInputError("Must provide at least one command token.")
     event.processor.config.setdefault("custom_commands", {})
     if name in event.processor.config["custom_commands"]:
@@ -66,7 +69,7 @@ async def discordwebhook(event, name: str, discord_webhook_url: str, *command_to
         return
     event.processor.config["custom_commands"][name] = {
         "discord_webhook_url": discord_webhook_url,
-        "tokens": command_tokens
+        "tokens": tokens
     }
     event.processor.save_config()
     await event.reply(f"Added custom command \"{name}\".")
