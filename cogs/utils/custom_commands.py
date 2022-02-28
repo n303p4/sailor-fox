@@ -29,7 +29,7 @@ async def custom(event, name: str = None):
     tokens = deepcopy(custom_command["tokens"])
     json_data_cache = {}
     for index, token in enumerate(tokens):
-        if not (token.startswith("<") and token.endswith(">")):
+        if not (token.startswith("{") and token.endswith("}")):
             continue
         try:
             source_url, json_address = token[1:-1].split("|")
@@ -86,7 +86,7 @@ async def add(event, name: str, *tokens):
     
     **Example usage**
 
-    * `custom add bb From r/battlebots: <https://old.reddit.com/r/battlebots/.json|data.children.random.data.url>`
+    * `custom add bb From r/battlebots: {https://old.reddit.com/r/battlebots/.json|data.children.random.data.url}`
     """
     if not tokens:
         raise UserInputError("Must provide at least one command token.")
