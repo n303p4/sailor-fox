@@ -26,6 +26,7 @@ async def custom(event, name: str = None):
         except Exception:
             await event.reply(f"Run {event.f.monospace('help custom')} for more details.")
         return
+    name = name.lower()
     custom_command = event.processor.config["custom_commands"][name]
     tokens = deepcopy(custom_command["tokens"])
     json_data_cache = {}
