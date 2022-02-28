@@ -90,7 +90,10 @@ async def _execute_html_token(session, response_cache, token, *, headers: dict =
     if tag.name == "a" and tag.get("href") and not tag["href"].startswith("#"):
         return urljoin(source_url, tag["href"])
     if tag.name == "img" and tag.get("src"):
-        return urljoin(source_url, tag["src"])
+        img_url = urljoin(source_url, tag["src"])
+        if tag.get("title"):
+            return f"{img_url}\nHovertext: {tag['title']}"
+        return img_url
     return tag.text
 
 
@@ -229,7 +232,7 @@ async def add(event, name: str, *tokens):
     * `custom add hello Hello, {0}!`
     * `custom add multiargtest {0} {1} {2} {3}`
     * `custom add ddg DuckDuckGo search result for {0}: html|a.result-link|https://lite.duckduckgo.com/lite?q={0}`
-    * `custom add xkcd html|#ctitle|https://xkcd.com/{0} "html|#comic img|https://xkcd.com/{0}"`
+    * `custom add xkcd html|#ctitle|https://xkcd.com/{0} | "html|#comic img|https://xkcd.com/{0}"`
     * `custom add xkcdprev The second-most recent xkcd comic is html|a[rel=prev]|https://xkcd.com`
     * `custom add bb0 From r/battlebots: json|data.children.0.data.url|https://old.reddit.com/r/battlebots/.json`
     * `custom add bbr From r/battlebots: json|data.children.random.data.url|https://old.reddit.com/r/battlebots/.json`
