@@ -4,7 +4,7 @@ from copy import deepcopy
 import secrets
 
 from sailor import commands
-from sailor.exceptions import UserInputError
+from sailor.exceptions import UserInputError, NotBotOwner
 from sailor.web_exceptions import WebAPIUnreachable, WebAPIInvalidResponse
 
 from sailor_fox.helpers import FancyMessage
@@ -29,6 +29,9 @@ async def custom(event, name: str = None):
             await event.reply(f"Run {event.f.monospace('help custom')} for more details.")
         return
     custom_command = event.processor.config["custom_commands"][name]
+    discord_webhook_url = custom_command.get("discord_webhook_url")
+    if discord_webhook_url and not event.is_owner:
+        raise NotBotOwner("Webhook custom commands can only be used by a bot owner.")
     tokens = deepcopy(custom_command["tokens"])
     json_data_cache = {}
     for index, token in enumerate(tokens):
@@ -59,7 +62,6 @@ async def custom(event, name: str = None):
         except Exception:
             continue
     output = " ".join(tokens)
-    discord_webhook_url = custom_command.get("discord_webhook_url")
     if discord_webhook_url:
         async with event.processor.session.post(discord_webhook_url, json={"content": output}, timeout=10) as response:
             if response.status >= 400:
