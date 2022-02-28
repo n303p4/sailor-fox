@@ -10,7 +10,7 @@ from sailor_fox.helpers import FancyMessage
 
 @commands.cooldown(6, 12)
 @commands.command(name="help", aliases=["commands"])
-async def help_(event, *, command_name: str = None):
+async def help_(event, *command_name):
     """Help command. Run `help (command name)` for more information on a specific command.
 
     **Example usage**
@@ -20,9 +20,14 @@ async def help_(event, *, command_name: str = None):
     * `help info`
     """
     if command_name:
-        cmd = event.processor.all_commands.get(command_name)
+        parent = event.processor
+        for token in command_name:
+            cmd = parent.all_commands.get(token)
+            if not cmd:
+                break
+            parent = cmd
         if not cmd:
-            raise CommandNotFound(name=command_name)
+            raise CommandNotFound(name=" ".join(command_name))
         else:
             help_text = [f"# {cmd.name}"]
             if cmd.aliases:
@@ -39,7 +44,7 @@ async def help_(event, *, command_name: str = None):
             if cmd.commands:
                 help_text.append("\n#Child commands:")
                 for child_cmd_name in cmd.commands.keys():
-                    help_text.append(f"{command_name} {child_cmd_name}")
+                    help_text.append(f"{cmd.name} {child_cmd_name}")
             await event.reply(event.f.codeblock("\n".join(help_text)))
     else:
         command_categories = {}
