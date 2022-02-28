@@ -10,6 +10,46 @@ from sailor.web_exceptions import WebAPIUnreachable, WebAPIInvalidResponse
 from sailor_fox.helpers import FancyMessage
 
 
+async def _handle_json_token(session, response_cache, token):
+    json_address, source_url = token[5:].split(":", 1)
+    if source_url in response_cache:
+        json_data = response_cache[source_url]
+    else:
+        async with session.get(source_url, timeout=10) as response:
+            if response.status >= 400:
+                raise WebAPIUnreachable(service=source_url)
+            try:
+                json_data = await response.json()
+            except Exception as error:
+                raise WebAPIInvalidResponse(service=source_url) from error
+        response_cache[source_url] = json_data
+    json_address = json_address.split(".")
+    json_object_at_address = json_data
+    for key_or_index in json_address:
+        if key_or_index.isdigit():
+            key_or_index = int(key_or_index)
+        elif isinstance(json_object_at_address, list) and key_or_index.lower() == "random":
+            key_or_index = secrets.randbelow(len(json_object_at_address))
+        json_object_at_address = json_object_at_address[key_or_index]
+    return json_object_at_address
+
+
+async def _handle_raw_token(session, response_cache, token):
+    source_url = token[4:]
+    if source_url in response_cache:
+        raw_data = response_cache[source_url]
+    else:
+        async with session.get(source_url, timeout=10) as response:
+            if response.status >= 400:
+                raise WebAPIUnreachable(service=source_url)
+            try:
+                raw_data = await response.text()
+            except Exception as error:
+                raise WebAPIInvalidResponse(service=source_url) from error
+        response_cache[source_url] = raw_data
+    return raw_data
+
+
 @commands.cooldown(2, 1)
 @commands.command(aliases=["cc", "c"])
 async def custom(event, name: str = None):
@@ -33,34 +73,12 @@ async def custom(event, name: str = None):
     if discord_webhook_url and not event.is_owner:
         raise NotBotOwner("Webhook custom commands can only be used by a bot owner.")
     tokens = deepcopy(custom_command["tokens"])
-    json_data_cache = {}
+    response_cache = {}
     for index, token in enumerate(tokens):
-        if not (token.startswith("{") and token.endswith("}")):
-            continue
-        try:
-            source_url, json_address = token[1:-1].split("|")
-            if source_url in json_data_cache:
-                json_data = json_data_cache[source_url]
-            else:
-                async with event.processor.session.get(source_url, timeout=10) as response:
-                    if response.status >= 400:
-                        raise WebAPIUnreachable(service=source_url)
-                    try:
-                        json_data = await response.json()
-                    except Exception as error:
-                        raise WebAPIInvalidResponse(service=source_url) from error
-                json_data_cache[source_url] = json_data
-            json_address = json_address.split(".")
-            json_object_at_address = json_data
-            for key_or_index in json_address:
-                if key_or_index.isdigit():
-                    key_or_index = int(key_or_index)
-                elif isinstance(json_object_at_address, list) and key_or_index.lower() == "random":
-                    key_or_index = secrets.randbelow(len(json_object_at_address))
-                json_object_at_address = json_object_at_address[key_or_index]
-            tokens[index] = json_object_at_address
-        except Exception:
-            continue
+        if token.lower().startswith("json:"):
+            tokens[index] = await _handle_json_token(event.processor.session, response_cache, token)
+        elif token.lower().startswith("raw:"):
+            tokens[index] = await _handle_raw_token(event.processor.session, response_cache, token)
     output = " ".join(tokens)
     if discord_webhook_url:
         async with event.processor.session.post(discord_webhook_url, json={"content": output}, timeout=10) as response:
@@ -92,7 +110,8 @@ async def add(event, name: str, *tokens):
     
     **Example usage**
 
-    * `custom add bb From r/battlebots: {https://old.reddit.com/r/battlebots/.json|data.children.random.data.url}`
+    * `custom add ping Pong! :3`
+    * `custom add bb From r/battlebots: JSON:data.children.random.data.url:https://old.reddit.com/r/battlebots/.json`
     """
     if not tokens:
         raise UserInputError("Must provide at least one command token.")
