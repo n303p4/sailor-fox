@@ -8,7 +8,7 @@ Note: Arguments enclosed in `[]` are optional.
 
 **Aliases:** `commands`
 
-**Arguments:** `[command_name=None]`
+**Arguments:** `command_name`
 
 Help command. Run `help (command name)` for more information on a specific command.
 
