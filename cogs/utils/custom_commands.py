@@ -10,9 +10,10 @@ from sailor.web_exceptions import WebAPIUnreachable, WebAPIInvalidResponse
 from sailor_fox.helpers import FancyMessage
 
 
-@commands.command(aliases=["cc", "c"], owner_only=True)
+@commands.cooldown(2, 1)
+@commands.command(aliases=["cc", "c"])
 async def custom(event, name: str = None):
-    """Execute a custom command. Owner only.
+    """Execute a custom command.
 
     **Example usage**
 
@@ -66,9 +67,10 @@ async def custom(event, name: str = None):
         await event.reply(output)
 
 
+@commands.cooldown(2, 1)
 @custom.command(name="list", aliases=["ls", "l"])
 async def list_(event):
-    """List all registered custom commands. Owner only."""
+    """List all registered custom commands."""
     event.processor.config.setdefault("custom_commands", {})
     message = FancyMessage(event.f, sep="\n\n")
     message.add_line(event.f.bold("List of custom commands:"))
@@ -80,7 +82,7 @@ async def list_(event):
     await event.reply(message)
 
 
-@custom.command(aliases=["a"])
+@custom.command(aliases=["a"], owner_only=True)
 async def add(event, name: str, *tokens):
     """Add a custom command. Owner only.
     
@@ -124,7 +126,7 @@ async def discordwebhook(event, name: str, discord_webhook_url: str, *tokens):
     await event.reply(f"Added custom command \"{name}\".")
 
 
-@custom.command(aliases=["del", "d", "remove", "rm", "r"])
+@custom.command(aliases=["del", "d", "remove", "rm", "r"], owner_only=True)
 async def delete(event, name: str):
     """Delete a custom command by name. Owner only.
 
