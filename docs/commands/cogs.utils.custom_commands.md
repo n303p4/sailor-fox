@@ -45,7 +45,7 @@ Add a custom command. Owner only.
 * `custom add hello Hello, {0}!`
 * `custom add multiargtest {0} {1} {2} {3}`
 * `custom add ddg DuckDuckGo search result for {0}: html|a.result-link|https://lite.duckduckgo.com/lite?q={0}`
-* `custom add xkcd html|#ctitle|https://xkcd.com/{0} "html|#comic img|https://xkcd.com/{0}"`
+* `custom add xkcd html|#ctitle|https://xkcd.com/{0} | "html|#comic img|https://xkcd.com/{0}"`
 * `custom add xkcdprev The second-most recent xkcd comic is html|a[rel=prev]|https://xkcd.com`
 * `custom add bb0 From r/battlebots: json|data.children.0.data.url|https://old.reddit.com/r/battlebots/.json`
 * `custom add bbr From r/battlebots: json|data.children.random.data.url|https://old.reddit.com/r/battlebots/.json`
