@@ -20,13 +20,14 @@ async def custom(event, name: str = None):
     * `custom bb`
     """
     event.processor.config.setdefault("custom_commands", {})
+    if name:
+        name = name.lower()
     if name not in event.processor.config["custom_commands"]:
         try:
             await event.processor.all_commands["help"].invoke(event, "custom")
         except Exception:
             await event.reply(f"Run {event.f.monospace('help custom')} for more details.")
         return
-    name = name.lower()
     custom_command = event.processor.config["custom_commands"][name]
     tokens = deepcopy(custom_command["tokens"])
     json_data_cache = {}
