@@ -44,11 +44,11 @@ async def custom(event, name: str = None):
             else:
                 async with event.processor.session.get(source_url, timeout=10) as response:
                     if response.status >= 400:
-                        raise WebAPIUnreachable(service="Bot owner")
+                        raise WebAPIUnreachable(service=source_url)
                     try:
                         json_data = await response.json()
                     except Exception as error:
-                        raise WebAPIInvalidResponse(service="Bot owner") from error
+                        raise WebAPIInvalidResponse(service=source_url) from error
                 json_data_cache[source_url] = json_data
             json_address = json_address.split(".")
             json_object_at_address = json_data
