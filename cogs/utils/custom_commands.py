@@ -23,7 +23,7 @@ HEADERS = {"User-Agent": USER_AGENT}
 async def _execute_json_token(session, response_cache, token, *, headers: dict = None):
     if not headers:
         headers = HEADERS
-    json_address, source_url = token[5:].split(":", 1)
+    json_address, source_url = token[5:].split("|", 1)
     if source_url in response_cache:
         json_data = response_cache[source_url]
     else:
@@ -70,7 +70,7 @@ async def _execute_raw_token(session, response_cache, token, *, headers: dict = 
 async def _execute_html_token(session, response_cache, token, *, headers: dict = None):
     if not headers:
         headers = HEADERS
-    css_selector, source_url = token[5:].split(":", 1)
+    css_selector, source_url = token[5:].split("|", 1)
     if source_url in response_cache:
         html_data = response_cache[source_url]
     else:
@@ -96,9 +96,9 @@ async def _execute_html_token(session, response_cache, token, *, headers: dict =
 
 RE_ARGUMENT = r"{[0-9]+}"
 SPECIAL_TOKEN_EXECUTORS = {
-    "json:": _execute_json_token,
-    "raw:": _execute_raw_token,
-    "html:": _execute_html_token
+    "json|": _execute_json_token,
+    "raw|": _execute_raw_token,
+    "html|": _execute_html_token
 }
 
 
@@ -139,7 +139,7 @@ async def custom(event, name: str = None, *args):
     * `custom hello world`
     * `custom multiargtest a b c d`
     * `custom ddg "bat eared fox"`
-    * `custom xkcdtitle 2000`
+    * `custom xkcd 2000`
     * `custom xkcdprev`
     * `custom bb0`
     * `custom bbr`
@@ -188,7 +188,6 @@ async def custom(event, name: str = None, *args):
             continue
         executor = SPECIAL_TOKEN_EXECUTORS[prefix]
         executed_tokens[index] = await executor(event.processor.session, response_cache, parsed_token)
-        break
 
     output = " ".join(executed_tokens)
 
@@ -225,11 +224,11 @@ async def add(event, name: str, *tokens):
     * `custom add ping Pong! :3`
     * `custom add hello Hello, {0}!`
     * `custom add multiargtest {0} {1} {2} {3}`
-    * `custom add ddg DuckDuckGo search result for {0}: html:a.result-link:https://lite.duckduckgo.com/lite?q={0}`
-    * `custom add xkcdtitle The title of xkcd {0} is html:#ctitle:https://xkcd.com/{0}`
-    * `custom add xkcdprev The second-most recent xkcd comic is html:a[rel=prev]:https://xkcd.com`
-    * `custom add bb0 From r/battlebots: json:data.children.0.data.url:https://old.reddit.com/r/battlebots/.json`
-    * `custom add bbr From r/battlebots: json:data.children.random.data.url:https://old.reddit.com/r/battlebots/.json`
+    * `custom add ddg DuckDuckGo search result for {0}: html|a.result-link|https://lite.duckduckgo.com/lite?q={0}`
+    * `custom add xkcd html|#ctitle|https://xkcd.com/{0} "html|#comic img|https://xkcd.com/{0}"`
+    * `custom add xkcdprev The second-most recent xkcd comic is html|a[rel=prev]|https://xkcd.com`
+    * `custom add bb0 From r/battlebots: json:data.children.0.data.url|https://old.reddit.com/r/battlebots/.json`
+    * `custom add bbr From r/battlebots: json:data.children.random.data.url|https://old.reddit.com/r/battlebots/.json`
     """
     if not tokens:
         raise UserInputError("Must provide at least one command token.")
