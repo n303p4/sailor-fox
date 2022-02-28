@@ -113,6 +113,8 @@ async def discordwebhook(event, name: str, discord_webhook_url: str, *tokens):
     """Add a custom command that POSTs to a Discord webhook. Owner only."""
     if not tokens:
         raise UserInputError("Must provide at least one command token.")
+    if not discord_webhook_url.startswith("https://discord.com/api/webhooks/"):
+        raise UserInputError("Not a valid Discord webhook URL.")
     name = name.lower()
     event.processor.config.setdefault("custom_commands", {})
     if name in event.processor.config["custom_commands"]:
