@@ -180,7 +180,7 @@ async def custom(event, name: str = None, *args):
             for arg_index, arg in enumerate(args):
                 parsed_token = parsed_token.replace(f"{{{arg_index}}}", arg)
         if re.findall(RE_ARGUMENT, parsed_token):
-            raise UserInputError("Command requires at least one argument.")
+            raise UserInputError("Command requires at least one more argument.")
         parsed_tokens.append(parsed_token)
 
     # Execution phase
