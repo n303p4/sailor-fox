@@ -3,6 +3,7 @@
 from copy import deepcopy
 import secrets
 
+from bs4 import BeautifulSoup
 from sailor import commands
 from sailor.exceptions import UserInputError, NotBotOwner
 from sailor.web_exceptions import WebAPIUnreachable, WebAPIInvalidResponse
@@ -50,6 +51,24 @@ async def _handle_raw_token(session, response_cache, token):
     return raw_data
 
 
+async def _handle_html_token(session, response_cache, token):
+    css_selector, source_url = token[5:].split(":", 1)
+    if source_url in response_cache:
+        html_data = response_cache[source_url]
+    else:
+        async with session.get(source_url, timeout=10) as response:
+            if response.status >= 400:
+                raise WebAPIUnreachable(service=source_url)
+            try:
+                html_data = await response.text()
+            except Exception as error:
+                raise WebAPIInvalidResponse(service=source_url) from error
+        response_cache[source_url] = html_data
+    soup = BeautifulSoup(html_data, "html.parser")
+    element = soup.select_one(css_selector)
+    return element.text
+
+
 @commands.cooldown(2, 1)
 @commands.command(aliases=["cc", "c"])
 async def custom(event, name: str = None):
@@ -75,10 +94,13 @@ async def custom(event, name: str = None):
     tokens = deepcopy(custom_command["tokens"])
     response_cache = {}
     for index, token in enumerate(tokens):
-        if token.lower().startswith("json:"):
+        token_lower = token.lower()
+        if token_lower.startswith("json:"):
             tokens[index] = await _handle_json_token(event.processor.session, response_cache, token)
-        elif token.lower().startswith("raw:"):
+        elif token_lower.startswith("raw:"):
             tokens[index] = await _handle_raw_token(event.processor.session, response_cache, token)
+        elif token_lower.startswith("html:"):
+            tokens[index] = await _handle_html_token(event.processor.session, response_cache, token)
     output = " ".join(tokens)
     if discord_webhook_url:
         async with event.processor.session.post(discord_webhook_url, json={"content": output}, timeout=10) as response:
@@ -111,6 +133,7 @@ async def add(event, name: str, *tokens):
     **Example usage**
 
     * `custom add ping Pong! :3`
+    * `custom add xkcdtitle html:#ctitle:https://xkcd.com`
     * `custom add bb From r/battlebots: JSON:data.children.random.data.url:https://old.reddit.com/r/battlebots/.json`
     """
     if not tokens:
@@ -123,7 +146,7 @@ async def add(event, name: str, *tokens):
         )
         return
     event.processor.config["custom_commands"][name] = {
-        "tokens": tokens
+        "tokens": list(tokens)
     }
     event.processor.save_config()
     await event.reply(f"Added custom command \"{name}\".")
@@ -145,7 +168,7 @@ async def discordwebhook(event, name: str, discord_webhook_url: str, *tokens):
         return
     event.processor.config["custom_commands"][name] = {
         "discord_webhook_url": discord_webhook_url,
-        "tokens": tokens
+        "tokens": list(tokens)
     }
     event.processor.save_config()
     await event.reply(f"Added custom command \"{name}\".")
