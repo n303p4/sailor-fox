@@ -10,7 +10,7 @@ Note: Arguments enclosed in `[]` are optional.
 
 **Arguments:** `[name=None]`
 
-Execute a custom command. Owner only.
+Execute a custom command.
 
 **Example usage**
 
