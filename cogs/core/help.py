@@ -42,7 +42,7 @@ async def help_(event, *command_name):
                 help_text.append(f"Arguments: {' '.join(arguments)}")
             help_text.append(f"\n{cmd.help}")
             if cmd.commands:
-                help_text.append("\n#Child commands:")
+                help_text.append("\n# Child commands:")
                 for child_cmd_name in cmd.commands.keys():
                     help_text.append(f"{cmd.name} {child_cmd_name}")
             await event.reply(event.f.codeblock("\n".join(help_text)))
