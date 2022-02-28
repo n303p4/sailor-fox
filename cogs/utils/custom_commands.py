@@ -4,6 +4,7 @@ These can be potentially dangerous! Be careful out there.
 """
 
 from copy import deepcopy
+import re
 import secrets
 from urllib.parse import urljoin, quote_plus
 
@@ -19,7 +20,7 @@ USER_AGENT = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like G
 HEADERS = {"User-Agent": USER_AGENT}
 
 
-async def _handle_json_token(session, response_cache, token, *, headers: dict = None):
+async def _execute_json_token(session, response_cache, token, *, headers: dict = None):
     if not headers:
         headers = HEADERS
     json_address, source_url = token[5:].split(":", 1)
@@ -48,7 +49,7 @@ async def _handle_json_token(session, response_cache, token, *, headers: dict = 
     return json_object_at_address
 
 
-async def _handle_raw_token(session, response_cache, token, *, headers: dict = None):
+async def _execute_raw_token(session, response_cache, token, *, headers: dict = None):
     if not headers:
         headers = HEADERS
     source_url = token[4:]
@@ -66,7 +67,7 @@ async def _handle_raw_token(session, response_cache, token, *, headers: dict = N
     return raw_data
 
 
-async def _handle_html_token(session, response_cache, token, *, headers: dict = None):
+async def _execute_html_token(session, response_cache, token, *, headers: dict = None):
     if not headers:
         headers = HEADERS
     css_selector, source_url = token[5:].split(":", 1)
@@ -109,6 +110,7 @@ async def custom(event, name: str = None, *args):
     * `custom bb`
     """
     event.processor.config.setdefault("custom_commands", {})
+
     if name:
         name = name.lower()
     if name not in event.processor.config["custom_commands"]:
@@ -117,32 +119,48 @@ async def custom(event, name: str = None, *args):
         except Exception:
             await event.reply(f"Run {event.f.monospace('help custom')} for more details.")
         return
+
     custom_command = event.processor.config["custom_commands"][name]
+
     discord_webhook_url = custom_command.get("discord_webhook_url")
     if discord_webhook_url and not event.is_owner:
         raise NotBotOwner("Webhook custom commands can only be used by a bot owner.")
-    tokens = deepcopy(custom_command["tokens"])
+
+    base_tokens = tuple(custom_command["tokens"])
+    special_token_executors = {
+        "json:": _execute_json_token,
+        "raw:": _execute_raw_token,
+        "html:": _execute_html_token
+    }
+
+    parsed_tokens = []
+    for token_index, base_token in enumerate(base_tokens):
+        parsed_token = base_token
+        base_token_lower = base_token.lower()
+        if any(base_token_lower.startswith(prefix) for prefix in special_token_executors):
+            for arg_index, arg in enumerate(args):
+                parsed_token = parsed_token.replace(f"{{{arg_index}}}", quote_plus(arg))
+        else:
+            for arg_index, arg in enumerate(args):
+                parsed_token = parsed_token.replace(f"{{{arg_index}}}", arg)
+        if re.findall(r"{[0-9]+}", parsed_token):
+            raise UserInputError("Command requires at least one argument.")
+        parsed_tokens.append(parsed_token)
+
+    executed_tokens = deepcopy(parsed_tokens)
     response_cache = {}
-    for token_index, token in enumerate(tokens):
-        updated_token = token
-        token_lower = token.lower()
-        if token_lower.startswith("json:") \
-        or token_lower.startswith("raw:") \
-        or token_lower.startswith("html:"):
-            for arg_index, arg in enumerate(args):
-                updated_token = updated_token.replace(f"{{{arg_index}}}", quote_plus(arg))
-        else:
-            for arg_index, arg in enumerate(args):
-                updated_token = updated_token.replace(f"{{{arg_index}}}", arg)
-        if token_lower.startswith("json:"):
-            tokens[token_index] = await _handle_json_token(event.processor.session, response_cache, updated_token)
-        elif token_lower.startswith("raw:"):
-            tokens[token_index] = await _handle_raw_token(event.processor.session, response_cache, updated_token)
-        elif token_lower.startswith("html:"):
-            tokens[token_index] = await _handle_html_token(event.processor.session, response_cache, updated_token)
-        else:
-            tokens[token_index] = updated_token
-    output = " ".join(tokens)
+    for index, (parsed_token, base_token) in enumerate(zip(executed_tokens, base_tokens)):
+        base_token_lower = base_token.lower()
+        parsed_token_lower = parsed_token.lower()
+        for prefix, executor in special_token_executors.items():
+            if parsed_token_lower.startswith(prefix):
+                raise UserInputError("Arguments cannot be used to add special prefixes.")
+            elif base_token_lower.startswith(prefix):
+                executed_tokens[index] = await executor(event.processor.session, response_cache, parsed_token)
+                break
+
+    output = " ".join(executed_tokens)
+
     if discord_webhook_url:
         async with event.processor.session.post(discord_webhook_url, json={"content": output}, timeout=10) as response:
             if response.status >= 400:
