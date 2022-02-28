@@ -94,6 +94,40 @@ async def _execute_html_token(session, response_cache, token, *, headers: dict =
     return tag.text
 
 
+RE_ARGUMENT = r"{[0-9]+}"
+SPECIAL_TOKEN_EXECUTORS = {
+    "json:": _execute_json_token,
+    "raw:": _execute_raw_token,
+    "html:": _execute_html_token
+}
+
+
+def get_special_token_prefix(token: str):
+    token_lower = token.lower()
+    for prefix in SPECIAL_TOKEN_EXECUTORS:
+        if token_lower.startswith(prefix):
+            return prefix
+    return None
+
+
+def validate_special_token(token: str):
+    if token.count("}") > 1:
+        return False
+    if token.count("}") == 1 and not token.endswith("}"):
+        return False
+    return True
+
+
+def validate_tokens_and_get_prefixes(tokens):
+    prefixes = []
+    for token in tokens:
+        special_token_prefix = get_special_token_prefix(token)
+        if special_token_prefix and not validate_special_token(token):
+           raise ValueError("Special tokens cannot have arguments anywhere but the end.")
+        prefixes.append(special_token_prefix)
+    return prefixes
+
+
 @commands.cooldown(2, 1)
 @commands.command(aliases=["cc", "c"])
 async def custom(event, name: str = None, *args):
@@ -127,37 +161,33 @@ async def custom(event, name: str = None, *args):
         raise NotBotOwner("Webhook custom commands can only be used by a bot owner.")
 
     base_tokens = tuple(custom_command["tokens"])
-    special_token_executors = {
-        "json:": _execute_json_token,
-        "raw:": _execute_raw_token,
-        "html:": _execute_html_token
-    }
 
+    # Validation phase
+    token_prefixes = validate_tokens_and_get_prefixes(base_tokens)
+
+    # Parsing phase
     parsed_tokens = []
-    for token_index, base_token in enumerate(base_tokens):
+    for token_index, (base_token, prefix) in enumerate(zip(base_tokens, token_prefixes)):
         parsed_token = base_token
-        base_token_lower = base_token.lower()
-        if any(base_token_lower.startswith(prefix) for prefix in special_token_executors):
+        if prefix:
             for arg_index, arg in enumerate(args):
                 parsed_token = parsed_token.replace(f"{{{arg_index}}}", quote_plus(arg))
         else:
             for arg_index, arg in enumerate(args):
                 parsed_token = parsed_token.replace(f"{{{arg_index}}}", arg)
-        if re.findall(r"{[0-9]+}", parsed_token):
+        if re.findall(RE_ARGUMENT, parsed_token):
             raise UserInputError("Command requires at least one argument.")
         parsed_tokens.append(parsed_token)
 
+    # Execution phase
     executed_tokens = deepcopy(parsed_tokens)
     response_cache = {}
-    for index, (parsed_token, base_token) in enumerate(zip(executed_tokens, base_tokens)):
-        base_token_lower = base_token.lower()
-        parsed_token_lower = parsed_token.lower()
-        for prefix, executor in special_token_executors.items():
-            if parsed_token_lower.startswith(prefix):
-                raise UserInputError("Arguments cannot be used to add special prefixes.")
-            elif base_token_lower.startswith(prefix):
-                executed_tokens[index] = await executor(event.processor.session, response_cache, parsed_token)
-                break
+    for index, (parsed_token, prefix) in enumerate(zip(executed_tokens, token_prefixes)):
+        if not prefix:
+            continue
+        executor = SPECIAL_TOKEN_EXECUTORS[prefix]
+        executed_tokens[index] = await executor(event.processor.session, response_cache, parsed_token)
+        break
 
     output = " ".join(executed_tokens)
 
@@ -208,6 +238,7 @@ async def add(event, name: str, *tokens):
             f"Custom command \"{name}\" already exists. Run {event.f.monospace('webhook delete ' + name)} first."
         )
         return
+    validate_tokens_and_get_prefixes(tokens)
     event.processor.config["custom_commands"][name] = {
         "tokens": list(tokens)
     }
