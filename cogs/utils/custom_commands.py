@@ -65,7 +65,7 @@ async def _handle_html_token(session, response_cache, token):
                 raise WebAPIInvalidResponse(service=source_url) from error
         response_cache[source_url] = html_data
     soup = BeautifulSoup(html_data, "html.parser")
-    element = soup.select_one(css_selector)
+    element = secrets.choice(soup.select(css_selector))
     return element.text
 
 
