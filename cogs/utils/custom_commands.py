@@ -59,7 +59,7 @@ async def custom(event, name: str = None):
     output = " ".join(tokens)
     discord_webhook_url = custom_command.get("discord_webhook_url")
     if discord_webhook_url:
-        async with event.processor.session.post(discord_webhook_url, json={"content": output}, timeout=10):
+        async with event.processor.session.post(discord_webhook_url, json={"content": output}, timeout=10) as response:
             if response.status >= 400:
                 raise WebAPIUnreachable(service="Discord")
         await event.reply(f"Activated Discord webhook command \"{name}\".")
