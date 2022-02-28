@@ -108,7 +108,6 @@ async def post(event, name: str, *, prefix: str = None):
         base_content = webhook["content"]
     else:
         source_url = webhook["source_url"]
-        json_address = webhook["json_address"].split(".")
         async with event.processor.session.get(source_url, timeout=10) as response:
             if response.status >= 400:
                 raise WebAPIUnreachable(service="Bot owner")
@@ -116,14 +115,15 @@ async def post(event, name: str, *, prefix: str = None):
                 response_content = await response.json()
             except Exception as error:
                 raise WebAPIInvalidResponse(service="Bot owner") from error
-        json_object_for_level = response_content
-        for field_name_or_index in json_address:
-            if field_name_or_index.isdigit():
-                field_name_or_index = int(field_name_or_index)
-            elif isinstance(json_object_for_level, list) and field_name_or_index == "random":
-                field_name_or_index = secrets.randbelow(len(json_object_for_level))
-            json_object_for_level = json_object_for_level[field_name_or_index]
-        base_content = json_object_for_level
+        json_address = webhook["json_address"].split(".")
+        json_object_at_address = response_content
+        for key_or_index in json_address:
+            if key_or_index.isdigit():
+                key_or_index = int(key_or_index)
+            elif isinstance(json_object_at_address, list) and key_or_index.lower() == "random":
+                key_or_index = secrets.randbelow(len(json_object_at_address))
+            json_object_at_address = json_object_at_address[key_or_index]
+        base_content = json_object_at_address
     if prefix:
         content = f"{prefix} {base_content}"
     else:
