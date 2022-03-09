@@ -171,7 +171,7 @@ async def custom(event, name: str = None, *args):
 
     # Pre-parsing phase
     if not args:
-        args.append("")
+        args = ("",)
 
     # Parsing phase
     parsed_tokens = []
