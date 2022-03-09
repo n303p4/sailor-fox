@@ -11,7 +11,7 @@ from urllib.parse import urljoin, quote_plus
 from bs4 import BeautifulSoup
 from sailor import commands
 from sailor.exceptions import CommandNotFound, UserInputError, NotBotOwner
-from sailor.web_exceptions import WebAPIUnreachable, WebAPIInvalidResponse
+from sailor.web_exceptions import WebAPIUnreachable, WebAPIInvalidResponse, WebAPINoResultsFound
 
 from sailor_fox.helpers import FancyMessage
 
@@ -45,7 +45,7 @@ async def _execute_json_token(session, response_cache, token, *, headers: dict =
                 key_or_index = secrets.randbelow(len(json_object_at_address))
             json_object_at_address = json_object_at_address[key_or_index]
     except Exception as error:
-        raise WebAPIInvalidResponse(service=source_url) from error
+        raise WebAPINoResultsFound(message="No results found.") from error
     return json_object_at_address
 
 
@@ -86,7 +86,7 @@ async def _execute_html_token(session, response_cache, token, *, headers: dict =
         soup = BeautifulSoup(html_data, "html.parser")
         tag = secrets.choice(soup.select(css_selector))
     except Exception as error:
-        raise WebAPIInvalidResponse(service=source_url) from error
+        raise WebAPINoResultsFound(message="No results found.") from error
     if tag.name == "a" and tag.get("href") and not tag["href"].startswith("#"):
         return urljoin(source_url, tag["href"])
     if tag.name == "img" and tag.get("src"):
