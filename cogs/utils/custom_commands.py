@@ -195,7 +195,12 @@ async def custom(event, name: str = None, *args):
         if not prefix:
             continue
         executor = SPECIAL_TOKEN_EXECUTORS[prefix]
-        executed_tokens[index] = await executor(event.processor.session, response_cache, parsed_token)
+        try:
+            executed_tokens[index] = await executor(event.processor.session, response_cache, parsed_token)
+        except WebAPINoResultsFound as error:
+            if args[0] == "":
+                raise UserInputError("Command requires at least one more argument.") from error
+            raise error
 
     output = " ".join(executed_tokens)
 
