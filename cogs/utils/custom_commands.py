@@ -142,6 +142,7 @@ async def custom(event, name: str = None, *args):
     * `custom hello world`
     * `custom multiargtest a b c d`
     * `custom ddg "bat eared fox"`
+    * `custom xkcd`
     * `custom xkcd 2000`
     * `custom xkcdprev`
     * `custom bb0`
