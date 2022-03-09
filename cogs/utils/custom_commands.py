@@ -169,6 +169,10 @@ async def custom(event, name: str = None, *args):
     # Validation phase
     token_prefixes = validate_tokens_and_get_prefixes(base_tokens)
 
+    # Pre-parsing phase
+    if not args:
+        args.append("")
+
     # Parsing phase
     parsed_tokens = []
     for token_index, (base_token, prefix) in enumerate(zip(base_tokens, token_prefixes)):
