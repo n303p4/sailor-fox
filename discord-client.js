@@ -23,7 +23,7 @@ const client = new Client({ intents: [ Intents.FLAGS.GUILDS ] });
 client.on("ready", onceReady);
 client.on("interactionCreate", async (interaction) => {
     try { await onInteractionCreate(interaction); }
-    catch {}
+    catch (error) { console.error(error); }
 });
 
 client.login(discord_token);
