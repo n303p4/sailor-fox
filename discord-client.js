@@ -21,7 +21,10 @@ const sailorServerURL = `http://localhost:${port_number}`;
 const client = new Client({ intents: [ Intents.FLAGS.GUILDS ] });
 
 client.on("ready", onceReady);
-client.on("interactionCreate", onInteractionCreate);
+client.on("interactionCreate", async (interaction) => {
+    try { await onInteractionCreate(interaction); }
+    catch {}
+});
 
 client.login(discord_token);
 
