@@ -61,7 +61,7 @@ async function onInteractionCreate(interaction) {
         await interaction.deferReply();
         await interaction.deleteReply();
     }
-    catch (error) {
+    catch {
         discordInvalidResponse = true;
         console.error(`id=${interaction.id} | Discord returned an invalid response`);
     }
