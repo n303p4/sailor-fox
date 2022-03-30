@@ -23,7 +23,10 @@ const client = new Client({ intents: [ Intents.FLAGS.GUILDS ] });
 client.on("ready", onceReady);
 client.on("interactionCreate", async (interaction) => {
     try { await onInteractionCreate(interaction); }
-    catch (error) { console.error(error); }
+    catch (error) {
+        console.error(`id=${interaction.id} interaction=${interaction} | Interaction encountered an error`);
+        console.error(error);
+    }
 });
 
 client.login(discord_token);
@@ -53,23 +56,43 @@ function updatePlayingStatus() {
 async function onInteractionCreate(interaction) {
     if (!interaction.isCommand()) return;
 
-    await interaction.deferReply();
+    let discordInvalidResponse = false;
+    try {
+        await interaction.deferReply();
+        await interaction.deleteReply();
+    }
+    catch (error) {
+        discordInvalidResponse = true;
+        console.error(`id=${interaction.id} | Discord returned an invalid response`);
+    }
 
     let commandArguments = await interaction.options.getString("input", false);
-    if (commandArguments === undefined) return await deleteOriginalReply(interaction);
+    if (commandArguments === undefined) return;
 
     let channel = interaction.channel;
     let commandName = interaction.commandName;
     let fullCommand;
     if (commandName === discord_slash_prefix) {
         if (commandArguments) fullCommand = commandArguments;
-        else return await deleteOriginalReply(interaction);
+        else {
+            return;
+        }
     }
     else {
         if (commandArguments) fullCommand = `${commandName} ${commandArguments}`;
         else fullCommand = commandName;
     }
     let originalCommand = `/${commandName} ${commandArguments}`;
+    if (discordInvalidResponse) {
+        try { await interaction.user.send(`\`${originalCommand}\` was requested.`); }
+        catch {}
+    }
+    else {
+        await interaction.followUp({
+            content: `\`${originalCommand}\` was requested.`,
+            ephemeral: true
+        });
+    }
 
     console.info(
         `id=${interaction.id} ` +
@@ -101,19 +124,13 @@ async function onInteractionCreate(interaction) {
 
                 console.error(`id=${interaction.id} | ${errorMessage}`);
                 if (error.code === "ECONNREFUSED") {
-                    await interaction.editReply("My brain stopped working. Please contact my owner. :<");
+                    await channel.send("My brain stopped working. Please contact my owner. :<");
                 }
                 else if (error.code !== "ECONNRESET") {
-                    await interaction.editReply(errorMessage);
+                    await channel.send(errorMessage);
                 }
             }
         });
-}
-
-// Delete original reply to interaction (assumes reply or deferReply is called already)
-async function deleteOriginalReply(interaction) {
-    await interaction.editReply("…");
-    await interaction.deleteReply();
 }
 
 // Truncates a string to a single line for logging
@@ -127,7 +144,7 @@ function toOneLiner(string, maxLength=75) {
 }
 
 // Execute a single action requested by the server
-function doAction(action, interaction, channel, isError=false) {
+async function doAction(action, interaction, channel, isError=false) {
     if (typeof action.type !== "string" || typeof action.value !== "string") {
         return;
     }
@@ -149,14 +166,9 @@ function doAction(action, interaction, channel, isError=false) {
             break;
         case "reply":
             logMessage += ` | ${toOneLiner(action.value)}`;
-            if (isError) {
-                console.error(logMessage);
-                interaction.followUp({ content: action.value, ephemeral: true });
-            }
-            else {
-                console.info(logMessage);
-                interaction.followUp(action.value);
-            }
+            if (isError) console.error(logMessage);
+            else console.info(logMessage);
+            await channel.send(action.value);
             break;
         default:
             console.warn(`${logMessage} | Unsupported action`);
@@ -165,25 +177,19 @@ function doAction(action, interaction, channel, isError=false) {
 
 // Read over a response with a list of actions and perform the actions in sequence
 async function doActions(response, interaction, channel, isError=false, originalCommand=null) {
-    if (isError) await deleteOriginalReply(interaction);
     if (response.data.length && response.status !== 404) {
-        let numReplies = 0;
-        response.data.forEach(action => {
-            doAction(action, interaction, channel, isError);
-            if (action.type === "reply") numReplies++;
+        response.data.forEach(async (action) => {
+            await doAction(action, interaction, channel, isError); 
         });
-        if (numReplies === 0) await deleteOriginalReply(interaction);
     }
     else if (originalCommand) {
-        await interaction.followUp({
-            content: `\`${originalCommand}\` is not a valid command. Type /${discord_slash_prefix} help for a list of commands.`,
-            ephemeral: true
-        });
+        await channel.send(
+            `\`${originalCommand}\` is not a valid command. Type /${discord_slash_prefix} help for a list of commands.`
+        );
     }
     else {
-        await interaction.followUp({
-            content: `Not a valid command. Type /${discord_slash_prefix} help for a list of commands.`,
-            ephemeral: true
-        });
+        await channel.send(
+            `Not a valid command. Type /${discord_slash_prefix} help for a list of commands.`
+        );
     }
 }
