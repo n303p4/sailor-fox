@@ -83,11 +83,7 @@ async function onInteractionCreate(interaction) {
         else fullCommand = commandName;
     }
     let originalCommand = `/${commandName} ${commandArguments}`;
-    if (discordInvalidResponse) {
-        try { await interaction.user.send(`\`${originalCommand}\` was requested.`); }
-        catch {}
-    }
-    else {
+    if (!discordInvalidResponse) {
         await interaction.followUp({
             content: `\`${originalCommand}\` was requested.`,
             ephemeral: true
