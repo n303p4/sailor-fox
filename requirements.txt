@@ -1,7 +1,9 @@
 discord.py
 twitchio
 -e git+https://gitlab.com/n303p4/sailor#egg=sailor
-requests
+bs4
+lxml
 pytz
+requests
 webcolors
 colour
