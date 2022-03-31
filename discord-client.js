@@ -69,10 +69,7 @@ async function onInteractionCreate(interaction) {
     let commandArguments = await interaction.options.getString("input", false);
     if (commandArguments === undefined) return;
 
-    let channel = interaction.channel;
-    if (channel === null) {
-        channel = interaction.user;
-    }
+    let channel = interaction.channel || interaction.user;
     let commandName = interaction.commandName;
     let fullCommand;
     if (commandName === discord_slash_prefix) {
