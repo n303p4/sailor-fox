@@ -132,7 +132,7 @@ def validate_tokens_and_get_prefixes(tokens):
 
 
 @commands.cooldown(2, 1)
-@commands.command(aliases=["cc"])
+@commands.command(aliases=["cc", "k"])
 async def custom(event, name: str = None, *args):
     """Execute a custom command.
 
