@@ -71,7 +71,7 @@ async function onInteractionCreate(interaction) {
 
     let channel = interaction.channel;
     if (channel === null) {
-        return;
+        channel = interaction.user;
     }
     let commandName = interaction.commandName;
     let fullCommand;
