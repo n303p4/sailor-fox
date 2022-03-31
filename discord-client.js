@@ -74,9 +74,7 @@ async function onInteractionCreate(interaction) {
     let fullCommand;
     if (commandName === discord_slash_prefix) {
         if (commandArguments) fullCommand = commandArguments;
-        else {
-            return;
-        }
+        else return;
     }
     else {
         if (commandArguments) fullCommand = `${commandName} ${commandArguments}`;
@@ -180,12 +178,12 @@ async function doActions(response, interaction, channel, isError=false, original
     }
     else if (originalCommand) {
         await channel.send(
-            `\`${originalCommand}\` is not a valid command. Type /${discord_slash_prefix} help for a list of commands.`
+            `\`${originalCommand}\` is not a valid command. Type \`/${discord_slash_prefix} help\` for a list of commands.`
         );
     }
     else {
         await channel.send(
-            `Not a valid command. Type /${discord_slash_prefix} help for a list of commands.`
+            `Not a valid command. Type \`/${discord_slash_prefix} help\` for a list of commands.`
         );
     }
 }
