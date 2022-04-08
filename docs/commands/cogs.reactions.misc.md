@@ -54,11 +54,15 @@ Image sources: raccoon.club, r/Raccoons
 
 ## `raccoon club`
 
+**Aliases:** `c`
+
 Fetch a random raccoon.
 
 Image source: raccoon.club
 
 ## `raccoon reddit`
+
+**Aliases:** `r`
 
 Fetch a random raccoon.
 

@@ -150,7 +150,7 @@ async def raccoon(event):
 
 
 @commands.cooldown(6, 12)
-@raccoon.command()
+@raccoon.command(aliases=["c"])
 async def club(event):
     """Fetch a random raccoon.
 
@@ -169,7 +169,7 @@ async def club(event):
 
 
 @commands.cooldown(6, 12)
-@raccoon.command()
+@raccoon.command(aliases=["r"])
 async def reddit(event):
     """Fetch a random raccoon.
 
