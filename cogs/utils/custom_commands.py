@@ -250,6 +250,8 @@ async def add(event, name: str, *tokens):
     if not tokens:
         raise UserInputError("Must provide at least one command token.")
     name = name.lower()
+    if name in custom.all_commands:
+        raise UserInputError(f"{name} is a reserved name and cannot be used.")
     event.processor.config.setdefault("custom_commands", {})
     if name in event.processor.config["custom_commands"]:
         await event.reply(
