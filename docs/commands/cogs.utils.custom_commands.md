@@ -8,7 +8,7 @@ Note: Arguments enclosed in `[]` are optional.
 
 ## `custom`
 
-**Aliases:** `cc, c`
+**Aliases:** `cc, k`
 
 **Arguments:** `[name=None] args`
 
