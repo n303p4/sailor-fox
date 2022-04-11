@@ -52,6 +52,12 @@ function updatePlayingStatus() {
     setTimeout(updatePlayingStatus, 1000*60*30);
 }
 
+// Helper function for the first reply of a command
+async function editReply(interaction, channel, message) {
+    await interaction.editReply(message)
+        .catch(async () => await channel.send(message));
+}
+
 // Command handling
 async function onInteractionCreate(interaction) {
     if (!interaction.isCommand()) return;
@@ -154,8 +160,7 @@ async function doAction(action, interaction, channel, isError=false, isFirstRepl
             if (isError) console.error(logMessage);
             else console.info(logMessage);
             if (isFirstReply) {
-                await interaction.editReply(action.value)
-                    .catch(async () => await channel.send(action.value));
+                await editReply(interaction, channel, action.value);
             }
             else await channel.send(action.value);
             break;
@@ -180,12 +185,16 @@ async function doActions(response, interaction, channel, isError=false, original
         }
     }
     else if (originalCommand) {
-        await channel.send(
+        await editReply(
+            interaction,
+            channel,
             `\`${originalCommand}\` is not a valid command. Type \`/${discord_slash_prefix} help\` for a list of commands.`
         );
     }
     else {
-        await channel.send(
+        await editReply(
+            interaction,
+            channel,
             `Not a valid command. Type \`/${discord_slash_prefix} help\` for a list of commands.`
         );
     }
