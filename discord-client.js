@@ -57,10 +57,7 @@ async function onInteractionCreate(interaction) {
     if (!interaction.isCommand()) return;
 
     let discordInvalidResponse = false;
-    try {
-        await interaction.deferReply();
-        await interaction.deleteReply();
-    }
+    try { await interaction.deferReply(); }
     catch {
         discordInvalidResponse = true;
         console.error(`id=${interaction.id} | Discord returned an invalid response`);
@@ -81,12 +78,6 @@ async function onInteractionCreate(interaction) {
         else fullCommand = commandName;
     }
     let originalCommand = `/${commandName} ${commandArguments}`;
-    if (!discordInvalidResponse) {
-        await interaction.followUp({
-            content: `\`${originalCommand}\` was requested.`,
-            ephemeral: true
-        });
-    }
 
     console.info(
         `id=${interaction.id} ` +
@@ -138,7 +129,7 @@ function toOneLiner(string, maxLength=75) {
 }
 
 // Execute a single action requested by the server
-async function doAction(action, interaction, channel, isError=false) {
+async function doAction(action, interaction, channel, isError=false, isFirstReply=false) {
     if (typeof action.type !== "string" || typeof action.value !== "string") {
         return;
     }
@@ -162,7 +153,11 @@ async function doAction(action, interaction, channel, isError=false) {
             logMessage += ` | ${toOneLiner(action.value)}`;
             if (isError) console.error(logMessage);
             else console.info(logMessage);
-            await channel.send(action.value);
+            if (isFirstReply) {
+                await interaction.editReply(action.value)
+                    .catch(async () => await channel.send(action.value));
+            }
+            else await channel.send(action.value);
             break;
         default:
             console.warn(`${logMessage} | Unsupported action`);
@@ -172,9 +167,17 @@ async function doAction(action, interaction, channel, isError=false) {
 // Read over a response with a list of actions and perform the actions in sequence
 async function doActions(response, interaction, channel, isError=false, originalCommand=null) {
     if (response.data.length && response.status !== 404) {
-        response.data.forEach(async (action) => {
-            await doAction(action, interaction, channel, isError); 
-        });
+        let isFirstReply = true;
+        for (let actionIndex = 0; actionIndex < response.data.length; actionIndex++) {
+            let action = response.data[actionIndex];
+            await doAction(action, interaction, channel, isError, isFirstReply);
+            if (action.type === "reply") {
+                isFirstReply = false;
+            }
+            if (isFirstReply && (actionIndex + 1) === response.data.length) {
+                await interaction.deleteReply();
+            }
+        }
     }
     else if (originalCommand) {
         await channel.send(
