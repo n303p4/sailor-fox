@@ -62,12 +62,8 @@ async function editReply(interaction, channel, message) {
 async function onInteractionCreate(interaction) {
     if (!interaction.isCommand()) return;
 
-    let discordInvalidResponse = false;
     try { await interaction.deferReply(); }
-    catch {
-        discordInvalidResponse = true;
-        console.error(`id=${interaction.id} | Discord returned an invalid response`);
-    }
+    catch { console.error(`id=${interaction.id} | Discord returned an invalid response`); }
 
     let commandArguments = await interaction.options.getString("input", false);
     if (commandArguments === undefined) return;
