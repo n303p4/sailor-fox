@@ -55,6 +55,14 @@ FOXWHALE_EAT = R"""
 :<>:<  ,,,,,,/          _   /  /
        \_______________/ \__\_/
 """.strip("\n")
+PUFFERFOXFISH = R"""
+  /\_/\_/\/\/\/\/\   ______
+ /     > > > > >  \_/  /  /
+<  . .   > > > > >     \  \
+<   w    > > > > > _   /  /
+ \     > > > > >  / \__\__\
+  \/\/\/\/\/\/\/\/
+""".strip("\n")
 
 
 async def _foxgrid(event, rows, columns, creature_segments):
@@ -173,3 +181,10 @@ async def foxjellyfish(event, rows: int = 1, columns: int = 1):
     You may specify a number of columns - max 6, min 1.
     """
     await _foxgrid(event, rows, columns, FOXJELLYFISH)
+
+
+@commands.cooldown(4, 1)
+@commands.command(aliases=["pff"])
+async def pufferfoxfish(event):
+    """The pufferfoxfish - fluffy yet spiny, a swimming paradox."""
+    await event.reply(event.f.codeblock(PUFFERFOXFISH))
