@@ -63,6 +63,18 @@ PUFFERFOXFISH = R"""
  \     > > > > >  / \__\__\
   \/\/\/\/\/\/\/\/
 """.strip("\n")
+FLUFFVIRUS = R"""
+   o         o
+    \       /
+     \/\_/\/
+     /     \
+o___/  . .  \___o
+    \   ^   /
+     \_____/
+     /     \
+    /       \
+   o         o
+""".strip("\n")
 
 
 async def _foxgrid(event, rows, columns, creature_segments):
@@ -184,7 +196,14 @@ async def foxjellyfish(event, rows: int = 1, columns: int = 1):
 
 
 @commands.cooldown(4, 1)
-@commands.command(aliases=["pff"])
+@commands.command(aliases=["pf", "pff"])
 async def pufferfoxfish(event):
     """The pufferfoxfish - fluffy yet spiny, a swimming paradox."""
     await event.reply(event.f.codeblock(PUFFERFOXFISH))
+
+
+@commands.cooldown(4, 1)
+@commands.command(aliases=["fv"])
+async def fluffvirus(event):
+    """The fluff virus - everything that it infects turns into a fluffy animal."""
+    await event.reply(event.f.codeblock(FLUFFVIRUS))
