@@ -75,6 +75,14 @@ o___/  . .  \___o
     /       \
    o         o
 """.strip("\n")
+FOXTHWOMP = R"""
+ /\___/\
+<|     |>
+<| . . |>
+<|  ^  |>
+<|_____|>
+ \/\|/\/
+""".strip("\n")
 
 
 async def _foxgrid(event, rows, columns, creature_segments):
@@ -207,3 +215,10 @@ async def pufferfoxfish(event):
 async def fluffvirus(event):
     """The fluff virus - everything that it infects turns into a fluffy animal."""
     await event.reply(event.f.codeblock(FLUFFVIRUS))
+
+
+@commands.cooldown(4, 1)
+@commands.command(aliases=["ft"])
+async def foxthwomp(event):
+    """The foxthwomp, a creature that smashes people with its fluffy body."""
+    await event.reply(event.f.codeblock(FOXTHWOMP))
