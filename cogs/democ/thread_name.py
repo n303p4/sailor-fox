@@ -13,6 +13,6 @@ from sailor import commands
 @commands.command(aliases=["cn", "title", "threadname", "tn", "thread"])
 async def channelname(event, *, channel_name: str):
     """Change the name of a channel."""
-    channel_name = re.sub(r"\?+", "Unknown", channel_name)
+    channel_name = re.sub(r"\?\?+", "Unknown", channel_name)
     await event.reply(event.f.bold(channel_name))
     await event.channel.edit(name=channel_name)
