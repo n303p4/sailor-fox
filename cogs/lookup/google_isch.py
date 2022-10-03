@@ -78,6 +78,6 @@ async def image(event, *, query: str):
     message = FancyMessage(event.f)
     message.add_field(name="Website", value=event.f.no_embed_link(website_url))
     message.add_field(name="Full-size image", value=image_url)
-    message.add_line("Powered (but not endorsed) by Google Images")
+    message.add_line("This command is powered (but not endorsed) by Google Images")
 
     await event.reply(message)
